@@ -73,7 +73,7 @@ function phphoto_upload() {
             echo "\n<div class='error'>not a valid filetype: $extension</div>";
         }
         elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
-            echo "\n<div class='error'>the file is too big (".format_byte($filesize)."), allowed is less than " . format_byte(IMAGE_MAX_FILESIZE) . "!</div>";
+            echo "\n<div class='error'>the file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE)."!</div>";
         }
         else {
             $db = phphoto_db_connect();
@@ -93,7 +93,7 @@ function phphoto_upload() {
     echo "\n    <form method='post' action='".CURRENT_PAGE."' enctype='multipart/form-data'>";
     echo "\n        allowed formats: $filetypes";
     echo "\n        <br>";
-    echo "\n        maximum size: " . format_byte(IMAGE_MAX_FILESIZE);
+    echo "\n        maximum size: ".format_byte(IMAGE_MAX_FILESIZE);
     echo "\n        <br>";
     echo "\n        <input type='file' name='image'>";
     echo "\n        <input type='submit' value='upload'>";

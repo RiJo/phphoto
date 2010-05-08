@@ -1,9 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-
 <?php
     require_once('phphoto.php');
+
+    session_start();
+    $password = 'abc';
 ?>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
@@ -19,8 +22,20 @@
             <br>
 
 <?php
-    phphoto_upload();
-    phphoto_admin_links();
+    if (isset($_POST['login']) && $_POST['login'] == $password) {
+        $_SESSION['authorized'] = true;
+    }
+    if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
+        phphoto_upload();
+        phphoto_admin_links();
+    }
+    else {
+        echo "\n    <form method='post' action='".basename($_SERVER['PHP_SELF'])."'>";
+        echo "\n        <input type='password' name='login'>";
+        echo "\n        <br>";
+        echo "\n        <input type='submit' value='Authorize'>";
+        echo "\n    </form>";
+    }
 ?>
 
         </div>
