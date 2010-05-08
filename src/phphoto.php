@@ -73,7 +73,7 @@ function phphoto_upload() {
             echo "\n<div class='error'>not a valid filetype: $extension</div>";
         }
         elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
-            echo "\n<div class='error'>the file is too big ($filesize bytes), allowed is less than " . IMAGE_MAX_FILESIZE . " bytes!</div>";
+            echo "\n<div class='error'>the file is too big (".format_byte($filesize)."), allowed is less than " . format_byte(IMAGE_MAX_FILESIZE) . "!</div>";
         }
         else {
             $db = phphoto_db_connect();
@@ -93,7 +93,7 @@ function phphoto_upload() {
     echo "\n    <form method='post' action='".CURRENT_PAGE."' enctype='multipart/form-data'>";
     echo "\n        allowed formats: $filetypes";
     echo "\n        <br>";
-    echo "\n        maximum size: " . IMAGE_MAX_FILESIZE/1024 . " kB (" . (IMAGE_MAX_FILESIZE / 1024) / 1024 . " MB)";
+    echo "\n        maximum size: " . format_byte(IMAGE_MAX_FILESIZE);
     echo "\n        <br>";
     echo "\n        <input type='file' name='image'>";
     echo "\n        <input type='submit' value='upload'>";
@@ -104,6 +104,25 @@ function phphoto_upload() {
 ////////////////////////////////////////////////////////////////////////////////
 //   GENERATORS
 ////////////////////////////////////////////////////////////////////////////////
+
+function format_byte($bytes) {
+    $bounds = array(
+        array("GB", 1024 * 1024 * 1024),
+        array("MB", 1024 * 1024),
+        array("kB", 1024),
+        array("bytes", 1)
+    );
+    
+    for ($i = 0; $i < count($bounds); $i++) {
+        if ($bytes >= $bounds[$i][1]) {
+            if ($i == count($bounds)-1)
+                return sprintf("%d %s", $bytes/$bounds[$i][1], $bounds[$i][0]);
+            else
+                return sprintf("%d %s (%d %s)", $bytes/$bounds[$i+1][1], $bounds[$i+1][0], $bytes/$bounds[$i][1], $bounds[$i][0]);
+        }
+    }
+    return $bytes; // should not come here
+}
 
 // Returns a date-time string with proper formatting
 function format_date_time($string) {

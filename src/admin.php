@@ -165,7 +165,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array("&nbsp;",         "<img src='image.php?".GET_KEY_IMAGE_ID."=".$image_id."t'>"));
     array_push($table_data, array("Filename",       $image_data['filename']));
     array_push($table_data, array("Format",         image_type_to_mime_type($image_data['type'])));
-    array_push($table_data, array("Filesize",       round($image_data['filesize']/1024).' kB'));
+    array_push($table_data, array("Filesize",       format_byte($image_data['filesize'])));
     array_push($table_data, array("Resolution",     $image_data['width'].'x'.$image_data['height'].' ('.
                                                     aspect_ratio($image_data['width'], $image_data['height']).')'));
     array_push($table_data, array("Filename",       $image_data['filename']));
@@ -199,7 +199,7 @@ function phphoto_echo_admin_images($db) {
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
             $row['width'].'x'.$row['height'],
             aspect_ratio($row['width'], $row['height']),
-            round($row['filesize'] / 1024)." kB",
+            format_byte($row['filesize']),
             $row['filename'],
             $row['title'],
             $row['description']
