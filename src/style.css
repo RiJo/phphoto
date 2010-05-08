@@ -6,13 +6,18 @@
     color: #000000;
 }
 
+/* FORM */
+
+form {
+    margin-bottom: 10px;
+}
+
 /* TABLE */
 
 table {
     width: 100%;
     border: 1px #345921 solid;
     border-spacing: 0px;
-    margin-bottom: 10px;
 }
 
 table tr td {
@@ -77,12 +82,14 @@ div.thumbnail p {
 }
 
 div.info {
+    margin-bottom: 10px;
     color: #009900;
     background-color: #cccccc;
     border: 1px #009900 solid;
 }
 
 div.error {
+    margin-bottom: 10px;
     color: #ff0000;
     background-color: #cccccc;
     border: 1px #ff0000 solid;

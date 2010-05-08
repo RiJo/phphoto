@@ -9,7 +9,14 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     echo "\n<div class='settings'>";
     echo "\n    <h1><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Admin galleries</a> >>> Edit gallery</h1>";
 
+    // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
+        if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE && isset($_POST[GET_KEY_IMAGE_ID])) {
+            $sql = "INSERT INTO image_to_gallery (gallery_id, image_id) VALUES ($gallery_id, ".$_POST[GET_KEY_IMAGE_ID].")";
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo "\n    <div class='info'>Image has has been added</div>";
+            }
+        }
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
             $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = ".$_GET[GET_KEY_IMAGE_ID];
             if (phphoto_db_query($db, $sql) == 1) {
@@ -40,7 +47,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $table_data = array();
     array_push($table_data, array("Views",          $gallery_data['views']));
     array_push($table_data, array("Images",         $gallery_data['images']));
-    array_push($table_data, array("Title",          "<input type='input' name='title' value='$gallery_data[title]'>"));
+    array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
     array_push($table_data, array("Description",    "<textarea name='description'>$gallery_data[description]</textarea>"));
     array_push($table_data, array("Changed",        format_date_time($gallery_data['changed'])));
     array_push($table_data, array("Created",        format_date_time($gallery_data['created'])));
@@ -52,6 +59,23 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             GET_KEY_GALLERY_ID."=$gallery_id'>";
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
+
+    // images not in this gallery
+    $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
+    $images = phphoto_db_query($db, $sql);
+    if (count($images) > 0) {
+        echo "\n    <form method='post' action='".CURRENT_PAGE."?".
+                GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
+                GET_KEY_OPERATION."=".GET_VALUE_CREATE."&".
+                GET_KEY_GALLERY_ID."=$gallery_id'>";
+        echo "\n        <select name='".GET_KEY_IMAGE_ID."'>";
+        foreach ($images as $row) {
+            echo "\n            <option value='$row[id]'>".((empty($row['title'])?$row['filename']:$row['title']))."</option>";
+        }
+        echo "\n        </select>";
+        echo "\n        <input type='submit' value='Add'>";
+        echo "\n    </form>";
+    }
 
     // images in this gallery
     $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
@@ -108,6 +132,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     echo "\n<div class='settings'>";
     echo "\n    <h1><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>Admin images</a> >>> Edit image</h1>";
 
+    // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
             $title = $_POST['title'];
@@ -145,7 +170,7 @@ function phphoto_echo_admin_image($db, $image_id) {
                                                     aspect_ratio($image_data['width'], $image_data['height']).')'));
     array_push($table_data, array("Filename",       $image_data['filename']));
     array_push($table_data, array("Used in",        implode(', ', $gallery_names)));
-    array_push($table_data, array("Title",          "<input type='input' name='title' value='$image_data[title]'>"));
+    array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array("Description",    "<textarea name='description'>$image_data[description]</textarea>"));
     array_push($table_data, array("Changed",        format_date_time($image_data['changed'])));
     array_push($table_data, array("Created",        format_date_time($image_data['created'])));
