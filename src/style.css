@@ -11,6 +11,7 @@
 table {
     border: 1px #345921 solid;
     border-spacing: 0px;
+    margin-bottom: 10px;
 }
 
 table tr td {

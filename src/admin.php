@@ -9,7 +9,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     echo "\n<div class='settings'>";
     echo "\n    <h1><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Admin galleries</a> >>> Edit gallery</h1>";
     
-    $sql = "SELECT id, title, description, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
+    $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
     $gallery_data = phphoto_db_query($db, $sql);
 
     if (count($gallery_data) != 1) {
@@ -20,6 +20,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = $gallery_data[0];
 
     $table_data = array();
+    array_push($table_data, array("Views",          $gallery_data['views']));
     array_push($table_data, array("Images",         $gallery_data['images']));
     array_push($table_data, array("Title",          "<input type='input' name='title' value='$gallery_data[title]'>"));
     array_push($table_data, array("Description",    "<textarea name='description'>$gallery_data[description]</textarea>"));
@@ -31,6 +32,17 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery_id'>";
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
+
+    // images in this gallery
+    $sql = "SELECT id, title, description, filename FROM images";
+
+    $header = array('Thumbnail', 'Filename', 'Title', 'Description');
+    $images = array();
+    foreach (phphoto_db_query($db, $sql) as $row) {
+        array_push($images, array("<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>", $row['filename'], $row['title'], $row['description']));
+    }
+    phphoto_to_html_table($header, $images);
+
     echo "\n</div>";
 }
 
@@ -38,14 +50,16 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     * Table showing all galleries available for editing
     */
 function phphoto_echo_admin_galleries($db) {
-    $sql = "SELECT id, title, description FROM galleries";
+    $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images FROM galleries";
 
-    $header = array('Title', 'Description');
+    $header = array('Title', 'Description', 'Views', 'Images');
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$row[id]'>$row[title]</a>",
-            $row['description']
+            $row['description'],
+            $row['views'],
+            $row['images']
         ));
     }
 
