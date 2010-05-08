@@ -5,6 +5,7 @@
         * masking image/gallery editing
         * put texts in database
         * function printing statistics on the first page (images, galleries, used images, unused images)
+        * table widths should be 100%
 */
 
 require_once('./config.php');
@@ -104,6 +105,11 @@ function phphoto_upload() {
 ////////////////////////////////////////////////////////////////////////////////
 //   GENERATORS
 ////////////////////////////////////////////////////////////////////////////////
+
+// Returns a date-time string with proper formatting
+function format_date_time($string) {
+    return date(DATE_FORMAT, strtotime($string));
+}
 
 // Returns formatted aspect ratio for the width and height
 function aspect_ratio($width, $height) {

@@ -29,6 +29,8 @@ define("GET_VALUE_ADMIN_IMAGE",         "i");
 define("INVALID_ID",                    -1);
 define("CURRENT_PAGE",                  basename($_SERVER['PHP_SELF']));
 
+define("DATE_FORMAT",                   "Y-m-d (H:i)");
+
 
 define("IMAGE_TEMP_FILE",               "/tmp/phphoto.tmp");
 define("IMAGE_MAX_FILESIZE",            1048576); // 1MB (same as MySQL's 'max allowed packet')
