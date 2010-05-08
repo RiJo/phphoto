@@ -9,6 +9,7 @@
 /* TABLE */
 
 table {
+    width: 100%;
     border: 1px #345921 solid;
     border-spacing: 0px;
     margin-bottom: 10px;

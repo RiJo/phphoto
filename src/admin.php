@@ -1,14 +1,32 @@
 <?php
 
 /*
-    * Form for updating an existing gallery
-    */
+ * Form for updating an existing gallery
+ */
 function phphoto_echo_admin_gallery($db, $gallery_id) {
     assert(is_numeric($gallery_id));
 
     echo "\n<div class='settings'>";
     echo "\n    <h1><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Admin galleries</a> >>> Edit gallery</h1>";
-    
+
+    if (isset($_GET[GET_KEY_OPERATION])) {
+        if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
+            $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = ".$_GET[GET_KEY_IMAGE_ID];
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo "\n    <div class='info'>Image has has been removed</div>";
+            }
+        }
+        if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+
+            $sql = "UPDATE galleries SET title = '$title', description = '$description' WHERE id = $gallery_id";
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo "\n    <div class='info'>Gallery has been updated</div>";
+            }
+        }
+    }
+
     $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
     $gallery_data = phphoto_db_query($db, $sql);
 
@@ -28,18 +46,30 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     array_push($table_data, array("Created",        format_date_time($gallery_data['created'])));
     array_push($table_data, array("&nbsp;",         "<input type='submit' value='Save'>"));
 
-    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".
-            GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery_id'>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".
+            GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
+            GET_KEY_OPERATION."=".GET_VALUE_UPDATE."&".
+            GET_KEY_GALLERY_ID."=$gallery_id'>";
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
 
     // images in this gallery
-    $sql = "SELECT id, title, description, filename FROM images";
+    $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
 
-    $header = array('Thumbnail', 'Filename', 'Title', 'Description');
+    $header = array('Thumbnail', 'Filename', 'Title', 'Description', '&nbsp;');
     $images = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
-        array_push($images, array("<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>", $row['filename'], $row['title'], $row['description']));
+        array_push($images, array(
+            "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
+            $row['filename'],
+            $row['title'],
+            $row['description'],
+            "<a href='".CURRENT_PAGE."?".
+                    GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
+                    GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".
+                    GET_KEY_GALLERY_ID."=".$gallery_id."&".
+                    GET_KEY_IMAGE_ID."=$row[id]'>Remove</a>"
+        ));
     }
     phphoto_to_html_table($header, $images);
 
@@ -47,8 +77,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 }
 
 /*
-    * Table showing all galleries available for editing
-    */
+ * Table showing all galleries available for editing
+ */
 function phphoto_echo_admin_galleries($db) {
     $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images FROM galleries";
 
@@ -70,21 +100,23 @@ function phphoto_echo_admin_galleries($db) {
 }
 
 /*
-    * Form for updating an existing image
-    */
+ * Form for updating an existing image
+ */
 function phphoto_echo_admin_image($db, $image_id) {
     assert(is_numeric($image_id));
 
     echo "\n<div class='settings'>";
     echo "\n    <h1><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>Admin images</a> >>> Edit image</h1>";
 
-    if(isset($_POST['title']) && isset($_POST['description'])) {
-        $title = $_POST['title'];
-        $description = $_POST['description'];
+    if (isset($_GET[GET_KEY_OPERATION])) {
+        if($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
+            $title = $_POST['title'];
+            $description = $_POST['description'];
 
-        $sql = "UPDATE images SET title = '$title', description = '$description' WHERE id = $image_id";
-        if (phphoto_db_query($db, $sql) == 1) {
-            echo "\n    <div class='info'>Image has been updated</div>";
+            $sql = "UPDATE images SET title = '$title', description = '$description' WHERE id = $image_id";
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo "\n    <div class='info'>Image has been updated</div>";
+            }
         }
     }
 
@@ -119,16 +151,18 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array("Created",        format_date_time($image_data['created'])));
     array_push($table_data, array("&nbsp;",         "<input type='submit' value='Save'>"));
 
-    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".
-            GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$image_id'>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".
+            GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".
+            GET_KEY_OPERATION."=".GET_VALUE_UPDATE."&".
+            GET_KEY_IMAGE_ID."=$image_id'>";
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
     echo "\n</div>";
 }
 
 /*
-    * Table showing all images available for editing
-    */
+ * Table showing all images available for editing
+ */
 function phphoto_echo_admin_images($db) {
     $sql = "SELECT id, width, height, filesize, filename, title, description FROM images";
 

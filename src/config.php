@@ -23,8 +23,12 @@ define("DATABASE_TABLE_PREFIX",         ""); /* not implemented */
 define("GET_KEY_GALLERY_ID",            "gid");
 define("GET_KEY_IMAGE_ID",              "iid");
 define("GET_KEY_ADMIN_QUERY",           "adm");
+define("GET_KEY_OPERATION",             "op");
 define("GET_VALUE_ADMIN_GALLERY",       "g");
 define("GET_VALUE_ADMIN_IMAGE",         "i");
+define("GET_VALUE_CREATE",              "mk");
+define("GET_VALUE_DELETE",              "rm");
+define("GET_VALUE_UPDATE",              "up");
 
 define("INVALID_ID",                    -1);
 define("CURRENT_PAGE",                  basename($_SERVER['PHP_SELF']));
