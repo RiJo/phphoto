@@ -37,6 +37,17 @@ table tr.data1 td {
     background-color: #aaaaaa;
 }
 
+/* LIST */
+
+ul {
+    border: 1px #00ff00 dotted;
+}
+
+li {
+    border: 1px #0000ff dotted;
+    display: inline;
+}
+
 /* DIV */
 
 div.settings {

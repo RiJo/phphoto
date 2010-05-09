@@ -1,11 +1,4 @@
 <?php
-/*
-    todo:
-        * avoid sql-injections
-        * masking image/gallery editing
-        * put texts in database
-        * function printing statistics on the first page (images, galleries, used images, unused images)
-*/
 
 require_once('./config.php');
 require_once('./database.php');
@@ -16,7 +9,7 @@ $allowed_filetypes = array('gif','jpg','jpeg','png');
 
 function phphoto_main() {
     $db = phphoto_db_connect();
-    $admin = (isset($_GET[GET_KEY_ADMIN_QUERY])) ? $_GET[GET_KEY_ADMIN_QUERY] : false;
+    $admin = (isset($_GET[GET_KEY_ADMIN_QUERY])) ? $_GET[GET_KEY_ADMIN_QUERY] : '';
     if (strlen($admin) > 0)
         phphoto_admin($db, $admin);
     else
@@ -54,51 +47,10 @@ function phphoto_admin($db, $admin) {
 }
 
 function phphoto_admin_links() {
-    echo "\n<div class='settings'>";
-    echo "\n    <h1>Administrate</h1>";
-    echo "\n    <a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Galleries</a>";
-    echo "\n    <br>";
-    echo "\n    <a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>Images</a>";
-    echo "\n</div>";
-}
-
-function phphoto_upload() {
-    global $allowed_filetypes;
-    if(isset($_FILES['image'])) {
-        $uploaded_image = $_FILES['image'];
-        $extension = end(explode(".", $uploaded_image['name']));
-        $filesize = filesize($uploaded_image['tmp_name']);
-
-        if (!in_array($extension, $allowed_filetypes)) {
-            echo "\n<div class='error'>not a valid filetype: $extension</div>";
-        }
-        elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
-            echo "\n<div class='error'>the file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE)."!</div>";
-        }
-        else {
-            $db = phphoto_db_connect();
-            $image_id = store_image($db, $uploaded_image);
-            phphoto_db_disconnect($db);
-            // $image_id ignored... so far...
-            //~ header("Location: ".CURRENT_PAGE);
-            echo "\n<meta http-equiv='Refresh' content='0; url='.CURRENT_PAGE'>";
-            exit;
-        }
-    }
-
-    $filetypes = implode(', ', $allowed_filetypes);
-
-    echo "\n<div class='settings'>";
-    echo "\n    <h1>Upload image</h1>";
-    echo "\n    <form method='post' action='".CURRENT_PAGE."' enctype='multipart/form-data'>";
-    echo "\n        allowed formats: $filetypes";
-    echo "\n        <br>";
-    echo "\n        maximum size: ".format_byte(IMAGE_MAX_FILESIZE);
-    echo "\n        <br>";
-    echo "\n        <input type='file' name='image'>";
-    echo "\n        <input type='submit' value='upload'>";
-    echo "\n    </form>";
-    echo "\n</div>";
+    echo "\n<ul>";
+    echo "\n    <li><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
+    echo "\n    <li><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
+    echo "\n</ul>";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

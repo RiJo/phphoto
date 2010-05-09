@@ -37,7 +37,7 @@ define("DATE_FORMAT",                   "Y-m-d (H:i)");
 
 
 define("IMAGE_TEMP_FILE",               "/tmp/phphoto.tmp");
-define("IMAGE_MAX_FILESIZE",            1048576); // 1MB (same as MySQL's 'max allowed packet')
+define("IMAGE_MAX_FILESIZE",            1024*1024*10); // should be same as MySQL's 'max allowed packet'
 define("IMAGE_RESIZED_WIDTH",           400);
 define("IMAGE_THUMBNAIL_WIDTH",         150);
 define("IMAGE_THUMBNAIL_PANEL_COLOR",   "#FFFFFF7F");

@@ -1,5 +1,44 @@
 <?php
 
+function phphoto_upload() {
+    global $allowed_filetypes;
+    if(isset($_FILES['image'])) {
+        $uploaded_image = $_FILES['image'];
+        $extension = end(explode(".", $uploaded_image['name']));
+        $filesize = filesize($uploaded_image['tmp_name']);
+
+        if (!in_array($extension, $allowed_filetypes)) {
+            echo "\n<div class='error'>not a valid filetype: $extension</div>";
+        }
+        elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
+            echo "\n<div class='error'>the file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE)."!</div>";
+        }
+        else {
+            $db = phphoto_db_connect();
+            $image_id = store_image($db, $uploaded_image);
+            phphoto_db_disconnect($db);
+            // $image_id ignored... so far...
+            //~ header("Location: ".CURRENT_PAGE);
+            echo "\n<meta http-equiv='Refresh' content='0; url='.CURRENT_PAGE'>";
+            exit;
+        }
+    }
+
+    $filetypes = implode(', ', $allowed_filetypes);
+
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Upload image</h1>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."' enctype='multipart/form-data'>";
+    echo "\n        allowed formats: $filetypes";
+    echo "\n        <br>";
+    echo "\n        maximum size: ".format_byte(IMAGE_MAX_FILESIZE);
+    echo "\n        <br>";
+    echo "\n        <input type='file' name='image'>";
+    echo "\n        <input type='submit' value='upload'>";
+    echo "\n    </form>";
+    echo "\n</div>";
+}
+
 /*
  * Form for updating an existing gallery
  */
@@ -189,6 +228,8 @@ function phphoto_echo_admin_image($db, $image_id) {
  * Table showing all images available for editing
  */
 function phphoto_echo_admin_images($db) {
+    phphoto_upload();
+
     $sql = "SELECT id, width, height, filesize, filename, title, description FROM images";
 
     $header = array('Thumbnail', 'Resolution', 'Aspect', 'Filesize', 'Filename', 'Title', 'Description');

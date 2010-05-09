@@ -17,22 +17,19 @@
     </head>
     <body>
 
-        <div style="margin:30px; float:right; border: 3px dashed #bbbbbb">
+        <div style="margin:10px; width: 100%; border: 3px dashed #bbbbbb">
             <a href='index.php'>First page</a>
-            <br>
 
 <?php
     if (isset($_POST['login']) && $_POST['login'] == $password) {
         $_SESSION['authorized'] = true;
     }
     if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
-        phphoto_upload();
         phphoto_admin_links();
     }
     else {
         echo "\n    <form method='post' action='".basename($_SERVER['PHP_SELF'])."'>";
         echo "\n        <input type='password' name='login'>";
-        echo "\n        <br>";
         echo "\n        <input type='submit' value='Authorize'>";
         echo "\n    </form>";
     }
