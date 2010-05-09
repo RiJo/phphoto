@@ -37,7 +37,7 @@
 
         </div>
 
-        <div style="margin:30px; width:750px; border: 3px dashed #bbbbbb">
+        <div style="margin:10px; width:750px; border: 3px dashed #bbbbbb">
 
 <?php
     phphoto_main();

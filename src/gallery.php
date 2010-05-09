@@ -51,8 +51,6 @@ function phphoto_echo_gallery($db, $gallery_id) {
 }
 
 function phphoto_echo_galleries($db) {
-    echo "\n<br>Show all galleries<br>";
-
     $sql = 'SELECT id, title, description, changed FROM galleries';
 
     $header = array('Title', 'Description', 'Updated');
