@@ -1,6 +1,6 @@
 <?php
 
-function phphoto_upload() {
+function phphoto_upload_image() {
     global $allowed_filetypes;
     if(isset($_FILES['image'])) {
         $uploaded_image = $_FILES['image'];
@@ -16,11 +16,11 @@ function phphoto_upload() {
         else {
             $db = phphoto_db_connect();
             $image_id = store_image($db, $uploaded_image);
-            phphoto_db_disconnect($db);
-            // $image_id ignored... so far...
-            //~ header("Location: ".CURRENT_PAGE);
-            echo "\n<meta http-equiv='Refresh' content='0; url='.CURRENT_PAGE'>";
-            exit;
+            echo "\n    <div class='info'>Image uploaded successfully</div>";
+            //~ phphoto_db_disconnect($db);
+
+            //~ echo "\n<meta http-equiv='Refresh' content='0; url='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
+            //~ exit;
         }
     }
 
@@ -34,7 +34,24 @@ function phphoto_upload() {
     echo "\n        maximum size: ".format_byte(IMAGE_MAX_FILESIZE);
     echo "\n        <br>";
     echo "\n        <input type='file' name='image'>";
-    echo "\n        <input type='submit' value='upload'>";
+    echo "\n        <input type='submit' value='Upload'>";
+    echo "\n    </form>";
+    echo "\n</div>";
+}
+
+function phphoto_create_gallery($db) {
+    if(isset($_POST['title'])) {
+        $title = $_POST['title'];
+        $sql = "INSERT INTO galleries (title, description) VALUES ('$title', '')";
+        if (phphoto_db_query($db, $sql) == 1) {
+            echo "\n    <div class='info'>Gallery has has been added</div>";
+        }
+    }
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Create gallery</h1>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>";
+    echo "\n        <input type='input' name='title' maxlength='255'>";
+    echo "\n        <input type='submit' value='Create'>";
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -143,6 +160,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
  * Table showing all galleries available for editing
  */
 function phphoto_echo_admin_galleries($db) {
+    phphoto_create_gallery($db);
+
     $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images FROM galleries";
 
     $header = array('Title', 'Description', 'Views', 'Images');
@@ -228,7 +247,10 @@ function phphoto_echo_admin_image($db, $image_id) {
  * Table showing all images available for editing
  */
 function phphoto_echo_admin_images($db) {
-    phphoto_upload();
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Admin images</h1>";
+
+    phphoto_upload_image();
 
     $sql = "SELECT id, width, height, filesize, filename, title, description FROM images";
 
@@ -247,8 +269,6 @@ function phphoto_echo_admin_images($db) {
         ));
     }
 
-    echo "\n<div class='settings'>";
-    echo "\n    <h1>Admin images</h1>";
     phphoto_to_html_table($header, $data);
     echo "\n</div>";
 }
