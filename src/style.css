@@ -6,6 +6,17 @@
     color: #000000;
 }
 
+/* TEXT */
+
+a {
+    text-decoration: none;
+    color: #333333;
+}
+
+a:hover {
+    color: #000000;
+}
+
 /* FORM */
 
 form {
@@ -25,56 +36,63 @@ table tr td {
 }
 
 table tr.header td {
-    background-color: #eeeeee;
+    background-color: #dddddd;
     border-bottom: 1px #aaaaaa solid;
 }
 
 table tr.data0 td {
-    background-color: #cccccc;
+    background-color: #eeeeee;
 }
 
 table tr.data1 td {
-    background-color: #aaaaaa;
+    background-color: #dddddd;
 }
 
 /* LIST */
 
 ul {
-    border: 1px #00ff00 dotted;
+    margin-bottom: 10px;
 }
 
 li {
-    border: 1px #0000ff dotted;
+    margin-right: 10px;
+    padding: 3px;
+    border: 1px #dddddd solid;
+    background-color: #eeeeee;
     display: inline;
+    font-weight: bold;
 }
 
 /* DIV */
 
 div.settings {
-    background-color: #0000ff;
+    border: 1px #000000 solid;
+    background-color: #999999;
     padding: 10px;
     margin: 0 0 10px 0;
     overflow: auto;
 }
 
 div.gallery {
-    background-color: #00ff00;
+    border: 1px #dddddd solid;
+    background-color: #eeeeee;
     padding: 10px;
     overflow: auto;
 }
 
 div.gallery h1 {
-    color: #333333;
+    color: #000000;
     font-weight: bold;
 }
 
 div.gallery p {
-    color: #ff00ff;
+    margin-bottom: 10px;
+    color: #333333;
 }
 
 div.thumbnail {
-    background-color: #ff0000;
-    border: 1px #000000 solid;
+    border: 1px #777777 solid;
+    background-color: #cccccc;
     margin: 3px;
     float: left;
     width: 200px;
@@ -85,11 +103,11 @@ div.thumbnail {
 
 div.thumbnail img {
     margin: 10px auto 0 auto;
-    border: 1px #ffffff solid;
+    border: 1px #000000 solid;
 }
 
 div.thumbnail p {
-    color: #00f0ff;
+    color: #000000;
 }
 
 div.info {

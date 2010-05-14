@@ -42,7 +42,7 @@ function phphoto_upload_image() {
 function phphoto_create_gallery($db) {
     if(isset($_POST['title'])) {
         $title = $_POST['title'];
-        $sql = "INSERT INTO galleries (title, description) VALUES ('$title', '')";
+        $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
         if (phphoto_db_query($db, $sql) == 1) {
             echo "\n    <div class='info'>Gallery has has been added</div>";
         }
@@ -68,7 +68,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE && isset($_POST[GET_KEY_IMAGE_ID])) {
-            $sql = "INSERT INTO image_to_gallery (gallery_id, image_id) VALUES ($gallery_id, ".$_POST[GET_KEY_IMAGE_ID].")";
+            $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, ".$_POST[GET_KEY_IMAGE_ID].", NOW())";
             if (phphoto_db_query($db, $sql) == 1) {
                 echo "\n    <div class='info'>Image has has been added</div>";
             }
