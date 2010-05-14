@@ -5,7 +5,7 @@ require_once('./database.php');
 require_once('./admin.php');
 require_once('./gallery.php');
 
-$allowed_filetypes = array('gif','jpg','jpeg','png');
+$allowed_filetypes = array('jpg','jpeg',);
 
 function phphoto_main() {
     $db = phphoto_db_connect();
@@ -46,10 +46,12 @@ function phphoto_admin($db, $admin) {
     }
 }
 
-function phphoto_admin_links() {
+function phphoto_admin_links($additional_items = array()) {
     echo "\n<ul>";
     echo "\n    <li><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
     echo "\n    <li><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
+    foreach ($additional_items as $name=>$url)
+        echo "\n    <li><a href='$url'>$name</a></li>";
     echo "\n</ul>";
 }
 

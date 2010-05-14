@@ -7,7 +7,7 @@ function phphoto_upload_image() {
         $extension = end(explode(".", $uploaded_image['name']));
         $filesize = filesize($uploaded_image['tmp_name']);
 
-        if (!in_array($extension, $allowed_filetypes)) {
+        if (!in_array(strtolower($extension), $allowed_filetypes)) {
             echo "\n<div class='error'>not a valid filetype: $extension</div>";
         }
         elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
@@ -247,9 +247,6 @@ function phphoto_echo_admin_image($db, $image_id) {
  * Table showing all images available for editing
  */
 function phphoto_echo_admin_images($db) {
-    echo "\n<div class='settings'>";
-    echo "\n    <h1>Admin images</h1>";
-
     phphoto_upload_image();
 
     $sql = "SELECT id, width, height, filesize, filename, title, description FROM images";
@@ -269,6 +266,8 @@ function phphoto_echo_admin_images($db) {
         ));
     }
 
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Admin images</h1>";
     phphoto_to_html_table($header, $data);
     echo "\n</div>";
 }

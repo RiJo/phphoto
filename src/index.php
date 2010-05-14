@@ -3,6 +3,11 @@
 
     session_start();
     $password = 'abc';
+    
+    /*$exif = exif_read_data('./IMAGE_399_s.jpg');
+    $filter = array_flip(array('DateTime', 'ISOSpeedRatings', 'Model', 'ExposureTime'));
+    $exif2 = array_intersect_key($exif, $filter);
+    echo '<pre>'.print_r($exif, true).'</pre>';*/
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -16,34 +21,32 @@
         <link rel='stylesheet' href='<?php echo GALLERY_STYLESHEET; ?>' type='text/css'>
     </head>
     <body>
-
-        <div style="margin:10px; width: 100%; border: 3px dashed #bbbbbb">
-            <a href='index.php'>First page</a>
+        <a href='index.php'>First page</a>
+        <div style="margin:10px; width: 850px; border: 3px dashed #bbbbbb">
+            
 
 <?php
     if (isset($_POST['login']) && $_POST['login'] == $password) {
         $_SESSION['authorized'] = true;
     }
-    if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
-        phphoto_admin_links();
+    elseif (isset($_GET['q']) && $_GET['q'] == 'logout') {
+        unset($_SESSION['authorized']);
     }
-    else {
+    if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
+        $additional_items = array('Logout' => basename($_SERVER['PHP_SELF'])."?q=logout");
+        phphoto_admin_links($additional_items);
+    }
+    if (isset($_GET['q']) && $_GET['q'] == 'login') {
         echo "\n    <form method='post' action='".basename($_SERVER['PHP_SELF'])."'>";
         echo "\n        <input type='password' name='login'>";
         echo "\n        <input type='submit' value='Authorize'>";
         echo "\n    </form>";
     }
+    else {
+        phphoto_main();
+    }
 ?>
 
         </div>
-
-        <div style="margin:10px; width:750px; border: 3px dashed #bbbbbb">
-
-<?php
-    phphoto_main();
-?>
-
-        </div>
-
     </body>
 </html>

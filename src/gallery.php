@@ -51,14 +51,15 @@ function phphoto_echo_gallery($db, $gallery_id) {
 }
 
 function phphoto_echo_galleries($db) {
-    $sql = 'SELECT id, title, description, changed FROM galleries';
+    $sql = 'SELECT id, title, description, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed FROM galleries WHERE (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) > 0';
 
-    $header = array('Title', 'Description', 'Updated');
+    $header = array('Title', 'Description', 'Images', 'Updated');
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='index.php?".GET_KEY_GALLERY_ID."=".$row['id']."'>".$row['title']."</a>",
             $row['description'],
+            $row['images'],
             $row['changed']
         ));
     }
