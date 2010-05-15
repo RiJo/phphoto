@@ -6,7 +6,7 @@
  */
 
 define("GALLERY_NAME",                  "phphoto");
-define("GALLERY_VERSION",               "0.1.0");
+define("GALLERY_VERSION",               "1.0.0-beta");
 define("GALLERY_DATE",                  "xxxx-xx-xx");
 
 define("GALLERY_CHARSET",               "iso-8859-1");
@@ -46,7 +46,7 @@ define("IMAGE_THUMBNAIL_QUALITY",       80);
 define("GALLERY_THUMBNAIL_WIDTH",       400);
 define("GALLERY_THUMBNAIL_HEIGHT",      300);
 define("GALLERY_THUMBNAIL_PANEL_COLOR", "#ffffff");
-define("GALLERY_THUMBNAIL_QUALITY",     100);
+define("GALLERY_THUMBNAIL_QUALITY",     50);
 
 /*
 
