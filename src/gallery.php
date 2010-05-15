@@ -42,7 +42,9 @@ function phphoto_echo_gallery($db, $gallery_id) {
     
     $gallery = $gallery[0];
 
-    echo "\n<div class='gallery'><h1>$gallery[title]</h1><p>$gallery[description]</p>";
+    echo "\n<div class='gallery'>";
+    echo "\n    <h1>$gallery[title]</h1>";
+    echo "\n    <p>$gallery[description]</p>";
     foreach ($images as $image) {
         $image_id_full = $image['id'];
         $image_id_thumbnail = $image['id'] . "t";
@@ -101,7 +103,7 @@ function phphoto_echo_galleries($db) {
     ";*/
 
 
-    $header = array('Title', 'Description', 'Images', 'Updated');
+    /*$header = array('Title', 'Description', 'Images', 'Updated');
     $data = array();
     foreach (phphoto_db_query($db, $gallery_sql) as $row) {
         array_push($data, array(
@@ -111,7 +113,23 @@ function phphoto_echo_galleries($db) {
             format_date_time($row['changed'])
         ));
     }
-    phphoto_to_html_table($header, $data);
+    phphoto_to_html_table($header, $data);*/
+
+    echo "\n<div class='gallery'>";
+    echo "\n    <h1>Galleries</h1>";
+    foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
+        echo "\n    <div class='thumbnail'>";
+        echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
+        echo "\n        <img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]'>";
+        echo "\n        </a>";
+        echo "\n        <br>";
+        echo "\n        <p>$gallery[title]</p>";
+        echo "\n    </div>";
+    }
+    echo "\n</div>";
+    echo "\n<div class='footer'>";
+    echo "\n    ..:: " . GALLERY_NAME.' v.'.GALLERY_VERSION . " ::";
+    echo "\n</div>";
 }
 
 ?>
