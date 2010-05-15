@@ -60,7 +60,7 @@ function phphoto_echo_galleries($db) {
             "<a href='index.php?".GET_KEY_GALLERY_ID."=".$row['id']."'>".$row['title']."</a>",
             $row['description'],
             $row['images'],
-            $row['changed']
+            format_date_time($row['changed'])
         ));
     }
     phphoto_to_html_table($header, $data);

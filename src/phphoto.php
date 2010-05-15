@@ -105,183 +105,137 @@ function store_image($db, $uploaded_image){
     $width =  $imageInfo[0];
     $height =  $imageInfo[1];
     $type =  $imageInfo[2];
-    $imageData = generate_image($image);
-    $resizedData = generate_image($image, IMAGE_RESIZED_WIDTH);
-    $thumbnailData = generate_thumbnail($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_PANEL_COLOR);
+
+    $imageData = generate_image_data($image);
+    $thumbnailData = generate_image_data($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
 
     // Check if exists
     $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM images WHERE filename = '$filename';");
     if ($result[0]['exist'] > 0) {
-        return INVALID_ID;
+        return -2;
     }
 
     // Insert into database
-    $result = phphoto_db_query($db,
-        "INSERT INTO images
-        (original, resized, thumbnail, type, width, height, filesize, filename, title, description, created)
-        VALUES
-        ('$imageData', '$resizedData', '$thumbnailData', $type, $width, $height, $fileSize, '$filename', '', '', NOW());"
-    );
+    $sql = "INSERT INTO images
+            (original, thumbnail, type, width, height, filesize, filename, title, description, created)
+            VALUES
+            ('$imageData', '$thumbnailData', $type, $width, $height, $fileSize, '$filename', '', '', NOW());";
+    $result = phphoto_db_query($db, $sql);
 
     return ($result) ? mysql_insert_id($db) : INVALID_ID;
 }
 
-// Returns the image as a byte[]
-function generate_image($image, $maxWidth = null) {
-    if (!empty($maxWidth)) {
-        // Get info about the image
-        $imageInfo = getimagesize($image);
-        $width =  $imageInfo[0];
-        $height =  $imageInfo[1];
-        $type =  $imageInfo[2];
-        $aspect = $width / $height;
-        if ($width > $height) { // Landscape
-            $newWidth = $maxWidth;
-            $newHeight = $newWidth / $aspect;
-        }
-        else { // Portrait
-            $newHeight = $maxWidth;
-            $newWidth = $newHeight * $aspect;
-        }
+function regenerate_thumbnails($db) {
+    $sql = "SELECT id, original FROM images";
+    $regenerated_thumbnails = 0;
+    foreach (phphoto_db_query($db, $sql) as $image) {
+        $temp_resource = imagecreatefromstring($image['original']);
+        if (!imagejpeg($temp_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
+                die("Could not create new jpeg image");
 
-        // Create image temp file
-
-
-        // Read image
-        switch ($type) {
-            case 1: // GIF
-                if (!$im = ImageCreateFromGif($image))
-                    die("Could not create image from gif");
-                break;
-            case 2: // JPEG
-                if (!$im = ImageCreateFromJpeg($image))
-                    die("Could not create image from jpeg");
-                break;
-            case 3: // PNG
-                if (!$im = ImageCreateFromPng($image))
-                    die("Could not create image from png");
-                break;
-            default:
-                die("Unrecognized image type");
-        }
-
-        // Create resized image
-        if (!$dst_img = ImageCreateTrueColor($newWidth, $newHeight))
-            die("Failed to create destination image");
-
-        // Resize and fit the image on the thumbnail
-        if (!ImageCopyResampled( $dst_img, $im, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height))
-            die("Could not copy resampled image");
-
-        // Write thumbnail to file
-        switch ($type) {
-            case 1: // GIF
-                if (!imagegif($dst_img, IMAGE_TEMP_FILE, 100))
-                    die("Could not create new gif image");
-                break;
-            case 2: // JPEG
-                if (!imagejpeg($dst_img, IMAGE_TEMP_FILE, 100))
-                    die("Could not create new jpeg image");
-                break;
-            case 3: // PNG
-                if (!imagepng($dst_img, IMAGE_TEMP_FILE))
-                    die("Could not create new png image");
-                break;
-            default:
-                die("Unrecognized image type");
-        }
-
-        // Delete image
-        imagedestroy($dst_img);
-
-        return addslashes(file_get_contents(IMAGE_TEMP_FILE));
+        $thumbnail = generate_image_data(IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
+        $sql = "UPDATE images SET thumbnail = '$thumbnail' WHERE id = $image[id]";
+        $regenerated_thumbnails += phphoto_db_query($db, $sql);
     }
-    else {
+    return $regenerated_thumbnails;
+}
+
+// Generates image data as a byte[]
+function generate_image_data($image, $max_width = null, $max_height = null, $panel_color = "#000000") {
+    if ($max_width == null && $max_height == null) {
+        // keep original image
         return addslashes(file_get_contents($image));
     }
 
-}
+    // parse image data
+    $image_info = getimagesize($image);
+    $image_width =  $image_info[0];
+    $image_height =  $image_info[1];
+    $image_aspect = $image_width / $image_height;
+    $image_type =  $image_info[2];
 
-// Returns a thumbnail of the image as a byte[]
-function generate_thumbnail($image, $maxWidth = 150, $panelColor = '#000000FF') {
-    $maxHeight = round($maxWidth * 0.75); // Ratio 4:3
-    // Get info about the image
-    $imageInfo = getimagesize($image);
-    $width =  $imageInfo[0];
-    $height =  $imageInfo[1];
-    $type =  $imageInfo[2];
-    $aspect = $width / $height;
-    // Calculate width, height and placement
-    $marginTop = 0;
-    $marginLeft = 0;
-    if ($width > $height) { // Landscape
-        $newWidth = $maxWidth;
-        $newHeight = ceil($newWidth / $aspect); // ceil is to cover full thumbnail size
-        $marginTop = round(($maxHeight - $newHeight) / 2);
+    // calculate sizes
+    $canvas_width = ($max_width == null) ? $image_width : (($image_width < $max_width) ? $image_width : $max_width);
+    $canvas_height = ($max_height == null) ? $image_height : (($image_height < $max_height) ? $image_height : $max_height);
+    $canvas_aspect = $canvas_width / $canvas_height;
+
+    // calculate image offset
+    $image_scaled_width = $canvas_width;
+    $image_scaled_height = $canvas_height;
+    $image_delta_x = 0;
+    $image_delta_y = 0;
+    if ($image_width > $image_height) { // landscape
+        $image_scaled_height = ceil($image_scaled_width / $image_aspect);
+        $image_delta_y = round(($canvas_height - $image_scaled_height) / 2);
     }
-    else { // Portrait
-        $newHeight = $maxHeight;
-        $newWidth = ceil($newHeight * $aspect); // ceil is to cover full thumbnail size
-        $marginLeft = round(($maxWidth - $newWidth) / 2);
+    else { // portrait
+        $image_scaled_width = ceil($image_scaled_height * $image_aspect);
+        $image_delta_x = round(($canvas_width - $image_scaled_width) / 2);
     }
+    
+    /*die("image_width: $image_width   image_height: $image_height   image_aspect: $image_aspect<br>" .
+        "canvas_width: $canvas_width   canvas_height: $canvas_height   canvas_aspect: $canvas_aspect<br>" .
+        "image_scaled_width: $image_scaled_width   image_scaled_height: $image_scaled_height<br>" .
+        "image_delta_x: $image_delta_x   image_delta_y: $image_delta_y");*/
 
     // Read image
-    switch ($type) {
+    switch ($image_type) {
         case 1: // GIF
-            if (!$im = ImageCreateFromGif($image))
+            if (!$image_resource = ImageCreateFromGif($image))
                 die("Could not create image from gif");
             break;
         case 2: // JPEG
-            if (!$im = ImageCreateFromJpeg($image))
+            if (!$image_resource = ImageCreateFromJpeg($image))
                 die("Could not create image from jpeg");
             break;
         case 3: // PNG
-            if (!$im = ImageCreateFromPng($image))
+            if (!$image_resource = ImageCreateFromPng($image))
                 die("Could not create image from png");
             break;
         default:
             die("Unrecognized image type");
     }
 
-    // Create thumbnail
-    if (!$dst_img = ImageCreateTrueColor($maxWidth, $maxHeight))
+    // create image canvas
+    if (!$canvas_resource = ImageCreateTrueColor($canvas_width, $canvas_height))
         die("Failed to create destination image");
 
-    // Set background color
-    $panelColor = str_replace("#", "", $panelColor);
-    $r = hexdec(substr($panelColor, 0, 2));
-    $g = hexdec(substr($panelColor, 2, 2));
-    $b = hexdec(substr($panelColor, 4, 2));
-    $a = hexdec(substr($panelColor, 6, 2));
-    $bg = imagecolorallocatealpha($dst_img, $r, $g, $b, $a);
-    imagefill($dst_img, 0, 0, $bg);
+    // set canvas background color
+    $panel_color = str_replace("#", "", $panel_color);
+    if (strlen($panel_color) != 6)
+        die("Panel color is not properly formatted: #$panel_color");
+    $canvas_r = hexdec(substr($panel_color, 0, 2));
+    $canvas_g = hexdec(substr($panel_color, 2, 2));
+    $canvas_b = hexdec(substr($panel_color, 4, 2));
+    $canvas_bg = imagecolorallocate($canvas_resource, $canvas_r, $canvas_g, $canvas_b);
+    imagefill($canvas_resource, 0, 0, $canvas_bg);
 
-    // Resize and fit the image on the thumbnail
-    if (!ImageCopyResampled($dst_img, $im, $marginLeft, $marginTop, 0, 0, $newWidth, $newHeight, $width, $height))
+    // resize and fit the image on the canvas
+    if (!ImageCopyResampled($canvas_resource, $image_resource, $image_delta_x, $image_delta_y,
+            0, 0, $image_scaled_width, $image_scaled_height, $image_width, $image_height))
         die("Could not copy resampled image");
 
-    // Write thumbnail to file
-    switch ($type) {
+    // write canvas to file
+    switch ($image_type) {
         case 1: // GIF
-            if (!imagegif($dst_img, IMAGE_TEMP_FILE, 80))
+            if (!imagegif($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
                 die("Could not create new gif image");
             break;
         case 2: // JPEG
-            if (!imagejpeg($dst_img, IMAGE_TEMP_FILE, 80))
+            if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
                 die("Could not create new jpeg image");
             break;
         case 3: // PNG
-            if (!imagepng($dst_img, IMAGE_TEMP_FILE))
+            if (!imagepng($canvas_resource, IMAGE_TEMP_FILE))
                 die("Could not create new png image");
             break;
         default:
             die("Unrecognized image type");
     }
 
-    // Delete image
-    imagedestroy($dst_img);
+    imagedestroy($image_resource);
+    imagedestroy($canvas_resource);
 
-    // Escape and return the thumbnail file
     return addslashes(file_get_contents(IMAGE_TEMP_FILE));
 }
 

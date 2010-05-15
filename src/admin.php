@@ -16,7 +16,15 @@ function phphoto_upload_image() {
         else {
             $db = phphoto_db_connect();
             $image_id = store_image($db, $uploaded_image);
-            echo "\n    <div class='info'>Image uploaded successfully</div>";
+            if ($image_id == INVALID_ID) {
+                echo "\n    <div class='error'>Could not insert the image in the database</div>";
+            }
+            elseif ($image_id == -2) {
+                echo "\n    <div class='warning'>Filename already exists in database</div>";
+            }
+            else {
+                echo "\n    <div class='info'>Image uploaded successfully</div>";
+            }
             //~ phphoto_db_disconnect($db);
 
             //~ echo "\n<meta http-equiv='Refresh' content='0; url='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
@@ -28,11 +36,12 @@ function phphoto_upload_image() {
 
     echo "\n<div class='settings'>";
     echo "\n    <h1>Upload image</h1>";
+    echo "\n    <p>";
+    echo "\n    allowed formats: $filetypes";
+    echo "\n    <br>";
+    echo "\n    maximum size: ".format_byte(IMAGE_MAX_FILESIZE);
+    echo "\n    </p>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."' enctype='multipart/form-data'>";
-    echo "\n        allowed formats: $filetypes";
-    echo "\n        <br>";
-    echo "\n        maximum size: ".format_byte(IMAGE_MAX_FILESIZE);
-    echo "\n        <br>";
     echo "\n        <input type='file' name='image'>";
     echo "\n        <input type='submit' value='Upload'>";
     echo "\n    </form>";
@@ -52,6 +61,21 @@ function phphoto_create_gallery($db) {
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>";
     echo "\n        <input type='input' name='title' maxlength='255'>";
     echo "\n        <input type='submit' value='Create'>";
+    echo "\n    </form>";
+    echo "\n</div>";
+}
+
+function phphoto_regenerate_thumbnails($db) {
+    if(isset($_POST['regenerate_thumbs'])) {
+        $regenerated_thumbnails = regenerate_thumbnails($db);
+        echo "\n    <div class='info'>$regenerated_thumbnails thumbnails have been regenerated</div>";
+    }
+
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Regenerate thumbnails</h1>";
+    echo "\n    <p>Note: this may take a while depending on the number of images in the database.</p>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
+    echo "\n        <input type='submit' name='regenerate_thumbs' value='Start'>";
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -248,6 +272,7 @@ function phphoto_echo_admin_image($db, $image_id) {
  */
 function phphoto_echo_admin_images($db) {
     phphoto_upload_image();
+    phphoto_regenerate_thumbnails($db);
 
     $sql = "SELECT id, width, height, filesize, filename, title, description FROM images";
 
