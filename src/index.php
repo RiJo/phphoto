@@ -1,7 +1,8 @@
 <?php
+    session_start();
+
     require_once('phphoto.php');
 
-    session_start();
     $password = 'abc';
     
     /*$exif = exif_read_data('./IMAGE_399_s.jpg');
