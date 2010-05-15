@@ -92,8 +92,9 @@ div.gallery p {
 }
 
 div.thumbnail {
-    border: 1px #3c3824 solid;
-    background-color: #756E45;
+    /* border: 1px #3c3824 solid; */
+    background-image: url(thumb.gif);
+    background-color: transparent;
     margin: 3px;
     float: left;
     width: 200px;
