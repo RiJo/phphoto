@@ -58,8 +58,8 @@ ul {
 li {
     margin-right: 10px;
     padding: 3px;
-    border: 1px #dddddd solid;
-    background-color: #eeeeee;
+    border: 1px #000000 solid;
+    background-color: #999999;
     display: inline;
     font-weight: bold;
 }
@@ -81,6 +81,15 @@ div.gallery {
     overflow: auto;
 }
 
+div.footer {
+    border: 1px #3c3824 solid;
+    border-top: none;
+    background-color: #756E45;
+    text-align: right;
+    padding: 5px;
+    overflow: auto;
+}
+
 div.gallery h1 {
     color: #bdb182;
     font-weight: bold;
@@ -93,6 +102,7 @@ div.gallery p {
 
 div.thumbnail {
     /* border: 1px #3c3824 solid; */
+    /* background-color: #756E45; */
     background-image: url(thumb.gif);
     background-color: transparent;
     margin: 3px;

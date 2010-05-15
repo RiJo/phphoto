@@ -1,7 +1,20 @@
 <?php
 
 function phphoto_echo_gallery($db, $gallery_id) {
-    $gallery_sql = "SELECT title, description FROM galleries WHERE id = $gallery_id";
+    phphoto_db_query($db, "UPDATE galleries SET views = views + 1 WHERE id = $gallery_id");
+
+    $gallery_sql = "
+        SELECT
+            title,
+            description,
+            views,
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
+            (SELECT MAX(changed) FROM image_to_gallery WHERE gallery_id = id) AS changed
+        FROM
+            galleries
+        WHERE
+            id = $gallery_id
+    ";
     $images_sql = "
         SELECT
             images.id,
@@ -19,15 +32,17 @@ function phphoto_echo_gallery($db, $gallery_id) {
             name
     ";
 
-    phphoto_db_query($db, "UPDATE galleries SET views = views + 1 WHERE id = $gallery_id");
-
     $gallery = phphoto_db_query($db, $gallery_sql);
     $images = phphoto_db_query($db, $images_sql);
 
-    $title = $gallery[0]['title'];
-    $description = $gallery[0]['description'];
+    if (count($gallery) != 1) {
+        echo "\n<div class='error'>Unkown gallery</div>";
+        return;
+    }
+    
+    $gallery = $gallery[0];
 
-    echo "\n<div class='gallery'><h1>$title</h1><p>$description</p>";
+    echo "\n<div class='gallery'><h1>$gallery[title]</h1><p>$gallery[description]</p>";
     foreach ($images as $image) {
         $image_id_full = $image['id'];
         $image_id_thumbnail = $image['id'] . "t";
@@ -43,7 +58,9 @@ function phphoto_echo_gallery($db, $gallery_id) {
         echo "\n    </div>";
     }
     echo "\n</div>";
-
+    echo "\n<div class='footer'>";
+    echo "\n    ..:: $gallery[views] views :: $gallery[images] images :: updated " . format_date_time($gallery['changed']) . " ::";
+    echo "\n</div>";
 
 //~ $query = sprintf("SELECT firstname, lastname, address, age FROM friends WHERE firstname='%s' AND lastname='%s'",
     //~ mysql_real_escape_string($firstname),
@@ -51,11 +68,42 @@ function phphoto_echo_gallery($db, $gallery_id) {
 }
 
 function phphoto_echo_galleries($db) {
-    $sql = 'SELECT id, title, description, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed FROM galleries WHERE (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) > 0';
+    $gallery_sql = "
+        SELECT
+            id,
+            title,
+            description,
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
+            (SELECT MAX(changed) FROM image_to_gallery WHERE gallery_id = id) AS changed
+        FROM
+            galleries g
+        WHERE
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
+    ";
+    /*$gallery_sql = "
+        SELECT
+            id,
+            title,
+            description,
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
+            (SELECT MAX(temp.changed) FROM (
+                    (SELECT changed FROM galleries WHERE id = 11)
+                    UNION
+                    (SELECT changed FROM image_to_gallery WHERE gallery_id = 11)
+                    UNION
+                    (SELECT changed FROM images c WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = 11))
+                ) AS temp
+            ) AS changed
+        FROM
+            galleries g
+        WHERE
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
+    ";*/
+
 
     $header = array('Title', 'Description', 'Images', 'Updated');
     $data = array();
-    foreach (phphoto_db_query($db, $sql) as $row) {
+    foreach (phphoto_db_query($db, $gallery_sql) as $row) {
         array_push($data, array(
             "<a href='index.php?".GET_KEY_GALLERY_ID."=".$row['id']."'>".$row['title']."</a>",
             $row['description'],
