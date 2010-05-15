@@ -126,8 +126,8 @@ function store_image($db, $uploaded_image){
 }
 
 function regenerate_thumbnails($db) {
-    $sql = "SELECT id, original FROM images";
     $regenerated_thumbnails = 0;
+    $sql = "SELECT id, original FROM images";
     foreach (phphoto_db_query($db, $sql) as $image) {
         $temp_resource = imagecreatefromstring($image['original']);
         if (!imagejpeg($temp_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))

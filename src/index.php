@@ -22,7 +22,7 @@
     </head>
     <body>
         <a href='index.php'>First page</a>
-        <div style="margin:10px; width: 850px;">
+        <div style="margin:10px; width: 870px;">
             
 
 <?php

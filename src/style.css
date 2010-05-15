@@ -33,6 +33,7 @@ table {
 
 table tr td {
     padding: 3px;
+    border-bottom: 1px #cccccc solid;
 }
 
 table tr.header td {
@@ -74,25 +75,25 @@ div.settings {
 }
 
 div.gallery {
-    border: 1px #dddddd solid;
-    background-color: #eeeeee;
+    border: 1px #3c3824 solid;
+    background-color: #4F4A2F;
     padding: 10px;
     overflow: auto;
 }
 
 div.gallery h1 {
-    color: #000000;
+    color: #bdb182;
     font-weight: bold;
 }
 
 div.gallery p {
     margin-bottom: 10px;
-    color: #333333;
+    color: #a49a71;
 }
 
 div.thumbnail {
-    border: 1px #777777 solid;
-    background-color: #cccccc;
+    border: 1px #3c3824 solid;
+    background-color: #756E45;
     margin: 3px;
     float: left;
     width: 200px;
@@ -107,7 +108,7 @@ div.thumbnail img {
 }
 
 div.thumbnail p {
-    color: #000000;
+    color: #222222;
 }
 
 div.info {
