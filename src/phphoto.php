@@ -5,7 +5,7 @@ require_once('./database.php');
 require_once('./admin.php');
 require_once('./gallery.php');
 
-$allowed_filetypes = array('jpg','jpeg',);
+$allowed_filetypes = array('jpg','jpeg','png');
 
 function phphoto_main() {
     $db = phphoto_db_connect();
