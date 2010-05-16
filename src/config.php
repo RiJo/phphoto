@@ -30,6 +30,9 @@ define("GET_VALUE_CREATE",              "mk");
 define("GET_VALUE_DELETE",              "rm");
 define("GET_VALUE_UPDATE",              "up");
 
+define("SESSION_KEY_VIEWS",             "phphoto_view");
+define("SESSION_VALUE_VIEWS",           "check");
+
 define("INVALID_ID",                    -1);
 define("CURRENT_PAGE",                  basename($_SERVER['PHP_SELF']));
 

@@ -1,7 +1,11 @@
 <?php
 
 function phphoto_echo_gallery($db, $gallery_id) {
-    phphoto_db_query($db, "UPDATE galleries SET views = views + 1 WHERE id = $gallery_id");
+    // update views counter
+    if (!isset($_SESSION[SESSION_KEY_VIEWS]) || !isset($_SESSION[SESSION_KEY_VIEWS][$gallery_id])) {
+        phphoto_db_query($db, "UPDATE galleries SET views = views + 1 WHERE id = $gallery_id");
+        $_SESSION[SESSION_KEY_VIEWS][$gallery_id] = SESSION_VALUE_VIEWS;
+    }
 
     $gallery_sql = "
         SELECT
