@@ -83,8 +83,9 @@ function phphoto_regenerate_image_thumbnails($db) {
 
 function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
     if(isset($_POST['regenerate_thumbs'])) {
-        //$regenerated_thumbnails = regenerate_thumbnails($db);
-        //echo "\n    <div class='info'>$regenerated_thumbnails thumbnails have been regenerated</div>";
+        if (regenerate_gallery_thumbnail($db, $gallery_id)) {
+            echo "\n    <div class='info'>Gallery thumbnail have been regenerated</div>";
+        }
     }
 
     echo "\n<div class='settings'>";

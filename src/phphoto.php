@@ -125,6 +125,54 @@ function store_image($db, $uploaded_image){
     return ($result) ? mysql_insert_id($db) : INVALID_ID;
 }
 
+function regenerate_gallery_thumbnail($db, $gallery_id) {
+    $sql = "SELECT original, width, height FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
+    $images = phphoto_db_query($db, $sql);
+    $thumbnail = generate_gallery_data($images);
+    $sql = "UPDATE galleries SET thumbnail = '$thumbnail' WHERE id = $gallery_id";
+    return (phphoto_db_query($db, $sql) == 1);
+}
+
+// Generates gallery thumbnail data as a byte[]
+function generate_gallery_data($images) {
+    // create image canvas
+    if (!$canvas_resource = ImageCreateTrueColor(GALLERY_THUMBNAIL_WIDTH, GALLERY_THUMBNAIL_HEIGHT))
+        die("Failed to create destination image");
+    
+    // set canvas background color
+    $panel_color = str_replace("#", "", GALLERY_THUMBNAIL_PANEL_COLOR);
+    if (strlen($panel_color) != 6)
+        die("Panel color is not properly formatted: #$panel_color");
+    $canvas_r = hexdec(substr($panel_color, 0, 2));
+    $canvas_g = hexdec(substr($panel_color, 2, 2));
+    $canvas_b = hexdec(substr($panel_color, 4, 2));
+    $canvas_bg = imagecolorallocate($canvas_resource, $canvas_r, $canvas_g, $canvas_b);
+    imagefill($canvas_resource, 0, 0, $canvas_bg);
+
+    // draw image thumbnails on canvas
+    $size = floor(sqrt(count($images)));
+    $image_width = GALLERY_THUMBNAIL_WIDTH / $size;
+    $image_height = GALLERY_THUMBNAIL_HEIGHT / $size;
+    for ($y = 0; $y < $size; $y++) {
+        for ($x = 0; $x < $size; $x++) {
+            $index = $x + ($y * $size);
+            $image_resource = imagecreatefromstring($images[$index]['original']);
+            if (!ImageCopyResampled($canvas_resource, $image_resource, $x * $image_width, $y * $image_height,
+                    0, 0, $image_width, $image_height, $images[$index]['width'], $images[$index]['height']))
+                die("Could not copy resampled image");
+            imagedestroy($image_resource);
+        }
+    }
+
+    // write canvas to file
+    if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
+        die("Could not create new jpeg image");
+
+    imagedestroy($canvas_resource);
+
+    return addslashes(file_get_contents(IMAGE_TEMP_FILE));
+}
+
 function regenerate_image_thumbnails($db) {
     $regenerated_thumbnails = 0;
     $sql = "SELECT id, original FROM images";
@@ -139,6 +187,7 @@ function regenerate_image_thumbnails($db) {
     }
     return $regenerated_thumbnails;
 }
+
 
 // Generates image data as a byte[]
 function generate_image_data($image, $max_width = null, $max_height = null, $panel_color = "#000000") {
