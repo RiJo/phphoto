@@ -151,9 +151,9 @@ function generate_gallery_data($images) {
 
     // draw image thumbnails on canvas
     if (count($images) < GALLERY_THUMBNAIL_MINIMUM_IMAGES)
-        $size = sqrt(GALLERY_THUMBNAIL_MINIMUM_IMAGES);
-    elseif (count($images > GALLERY_THUMBNAIL_MAXIMUM_IMAGES)
-        $size = sqrt(GALLERY_THUMBNAIL_MAXIMUM_IMAGES);
+        $size = ceil(sqrt(GALLERY_THUMBNAIL_MINIMUM_IMAGES));
+    elseif (count($images) > GALLERY_THUMBNAIL_MAXIMUM_IMAGES)
+        $size = ceil(sqrt(GALLERY_THUMBNAIL_MAXIMUM_IMAGES));
     else
         $size = floor(sqrt(count($images)));
 
