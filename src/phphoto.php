@@ -126,7 +126,19 @@ function store_image($db, $uploaded_image){
 }
 
 function regenerate_gallery_thumbnail($db, $gallery_id) {
-    $sql = "SELECT original, width, height FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
+    $sql = "
+            SELECT
+                original,
+                width,
+                height
+            FROM
+                images
+            WHERE
+                id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)
+            ORDER BY
+                RAND()
+            LIMIT ".GALLERY_THUMBNAIL_MAXIMUM_IMAGES."
+    ";
     $images = phphoto_db_query($db, $sql);
     $thumbnail = generate_gallery_data($images);
     $sql = "UPDATE galleries SET thumbnail = '$thumbnail' WHERE id = $gallery_id";
