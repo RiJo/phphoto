@@ -100,10 +100,28 @@ div.gallery p {
     color: #a49a71;
 }
 
-div.thumbnail {
+div.gallery_thumbnail {
     /* border: 1px #3c3824 solid; */
     /* background-color: #756E45; */
-    background-image: url(thumb.gif);
+    background-image: url(gallery.gif);
+    background-color: transparent;
+    margin: 3px;
+    float: left;
+    width: 250px;
+    height: 200px;
+    overflow: hidden;
+    text-align: center;
+}
+
+div.gallery_thumbnail img {
+    margin: 10px auto 0 auto;
+    border: 1px #000000 solid;
+}
+
+div.image_thumbnail {
+    /* border: 1px #3c3824 solid; */
+    /* background-color: #756E45; */
+    background-image: url(image.gif);
     background-color: transparent;
     margin: 3px;
     float: left;
@@ -113,12 +131,12 @@ div.thumbnail {
     text-align: center;
 }
 
-div.thumbnail img {
+div.image_thumbnail img {
     margin: 10px auto 0 auto;
     border: 1px #000000 solid;
 }
 
-div.thumbnail p {
+div.image_thumbnail p {
     color: #222222;
 }
 

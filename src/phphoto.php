@@ -125,7 +125,7 @@ function store_image($db, $uploaded_image){
     return ($result) ? mysql_insert_id($db) : INVALID_ID;
 }
 
-function regenerate_thumbnails($db) {
+function regenerate_image_thumbnails($db) {
     $regenerated_thumbnails = 0;
     $sql = "SELECT id, original FROM images";
     foreach (phphoto_db_query($db, $sql) as $image) {

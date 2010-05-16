@@ -50,14 +50,36 @@ function generate_null_image() {
     $canvas_bg = imagecolorallocate($canvas_resource, $canvas_r, $canvas_g, $canvas_b);
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 
-  /*// an email address in a string
-  $string = "email@example.com";
-  // some variables to set
-  $font  = 4;
-  //black text
-  $text_color = imagecolorallocate ($canvas_resource, 0, 0, 0);
-  // put it all together
-  imagestring ($canvas_resource, $font, 0, 0,  $string, $text_color);*/
+    // set invalid-cross color
+    $cross_color = str_replace("#", "", GALLERY_THUMBNAIL_INVALID_COLOR);
+    if (strlen($cross_color) != 6)
+        die("Panel color is not properly formatted: #$panel_color");
+    $cross_color = imagecolorallocate(
+            $canvas_resource,
+            hexdec(substr($cross_color, 0, 2)),
+            hexdec(substr($cross_color, 2, 2)),
+            hexdec(substr($cross_color, 4, 2))
+    );
+
+    imagefill($canvas_resource, 0, 0, $canvas_bg);
+
+    imagesetthickness($canvas_resource, 2);
+    imageline (
+            $canvas_resource,
+            GALLERY_THUMBNAIL_WIDTH * 0.45,
+            GALLERY_THUMBNAIL_HEIGHT * 0.45,
+            GALLERY_THUMBNAIL_WIDTH - GALLERY_THUMBNAIL_WIDTH * 0.45,
+            GALLERY_THUMBNAIL_HEIGHT - GALLERY_THUMBNAIL_HEIGHT * 0.45,
+            $cross_color
+    );
+    imageline (
+            $canvas_resource,
+            GALLERY_THUMBNAIL_WIDTH - GALLERY_THUMBNAIL_WIDTH * 0.45,
+            GALLERY_THUMBNAIL_HEIGHT * 0.45,
+            GALLERY_THUMBNAIL_WIDTH * 0.45,
+            GALLERY_THUMBNAIL_HEIGHT - GALLERY_THUMBNAIL_HEIGHT * 0.45,
+            $cross_color
+    );
 
     // write canvas to file
     if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))

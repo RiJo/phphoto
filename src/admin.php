@@ -65,9 +65,9 @@ function phphoto_create_gallery($db) {
     echo "\n</div>";
 }
 
-function phphoto_regenerate_thumbnails($db) {
+function phphoto_regenerate_image_thumbnails($db) {
     if(isset($_POST['regenerate_thumbs'])) {
-        $regenerated_thumbnails = regenerate_thumbnails($db);
+        $regenerated_thumbnails = regenerate_image_thumbnails($db);
         echo "\n    <div class='info'>$regenerated_thumbnails thumbnails have been regenerated</div>";
     }
 
@@ -80,14 +80,32 @@ function phphoto_regenerate_thumbnails($db) {
     echo "\n</div>";
 }
 
+
+function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
+    if(isset($_POST['regenerate_thumbs'])) {
+        //$regenerated_thumbnails = regenerate_thumbnails($db);
+        //echo "\n    <div class='info'>$regenerated_thumbnails thumbnails have been regenerated</div>";
+    }
+
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Regenerate thumbnail</h1>";
+    echo "\n    <p>Note: this may take a while depending on the number of images in the gallery.</p>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery_id'>";
+    echo "\n        <input type='submit' name='regenerate_thumbs' value='Start'>";
+    echo "\n    </form>";
+    echo "\n</div>";
+}
+
 /*
  * Form for updating an existing gallery
  */
 function phphoto_echo_admin_gallery($db, $gallery_id) {
     assert(is_numeric($gallery_id));
 
+    phphoto_regenerate_gallery_thumbnail($db, $gallery_id);
+
     echo "\n<div class='settings'>";
-    echo "\n    <h1><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Admin galleries</a> >>> Edit gallery</h1>";
+    echo "\n    <h1>Edit gallery</h1>";
 
     // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
@@ -125,6 +143,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = $gallery_data[0];
 
     $table_data = array();
+    array_push($table_data, array("&nbsp;",         "<img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=".$gallery_id."'>"));
     array_push($table_data, array("Views",          $gallery_data['views']));
     array_push($table_data, array("Images",         $gallery_data['images']));
     array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
@@ -212,7 +231,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     assert(is_numeric($image_id));
 
     echo "\n<div class='settings'>";
-    echo "\n    <h1><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>Admin images</a> >>> Edit image</h1>";
+    echo "\n    <h1>Edit image</h1>";
 
     // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
@@ -272,7 +291,7 @@ function phphoto_echo_admin_image($db, $image_id) {
  */
 function phphoto_echo_admin_images($db) {
     phphoto_upload_image();
-    phphoto_regenerate_thumbnails($db);
+    phphoto_regenerate_image_thumbnails($db);
 
     $sql = "SELECT id, width, height, filesize, filename, title, description FROM images";
 
