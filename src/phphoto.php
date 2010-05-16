@@ -150,12 +150,16 @@ function generate_gallery_data($images) {
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 
     // draw image thumbnails on canvas
-    if (count($images) < 4)
-        $size = 2; // 2x2
+    if (count($images) < GALLERY_THUMBNAIL_MINIMUM_IMAGES)
+        $size = sqrt(GALLERY_THUMBNAIL_MINIMUM_IMAGES);
+    elseif (count($images > GALLERY_THUMBNAIL_MAXIMUM_IMAGES)
+        $size = sqrt(GALLERY_THUMBNAIL_MAXIMUM_IMAGES);
     else
         $size = floor(sqrt(count($images)));
+
     $image_width = GALLERY_THUMBNAIL_WIDTH / $size;
     $image_height = GALLERY_THUMBNAIL_HEIGHT / $size;
+
     for ($y = 0; $y < $size; $y++) {
         for ($x = 0; $x < $size; $x++) {
             $index = $x + ($y * $size);
