@@ -150,17 +150,22 @@ function generate_gallery_data($images) {
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 
     // draw image thumbnails on canvas
-    $size = floor(sqrt(count($images)));
+    if (count($images) < 4)
+        $size = 2; // 2x2
+    else
+        $size = floor(sqrt(count($images)));
     $image_width = GALLERY_THUMBNAIL_WIDTH / $size;
     $image_height = GALLERY_THUMBNAIL_HEIGHT / $size;
     for ($y = 0; $y < $size; $y++) {
         for ($x = 0; $x < $size; $x++) {
             $index = $x + ($y * $size);
-            $image_resource = imagecreatefromstring($images[$index]['original']);
-            if (!ImageCopyResampled($canvas_resource, $image_resource, $x * $image_width, $y * $image_height,
-                    0, 0, $image_width, $image_height, $images[$index]['width'], $images[$index]['height']))
-                die("Could not copy resampled image");
-            imagedestroy($image_resource);
+            if (isset($images[$index])) {
+                $image_resource = imagecreatefromstring($images[$index]['original']);
+                if (!ImageCopyResampled($canvas_resource, $image_resource, $x * $image_width, $y * $image_height,
+                        0, 0, $image_width, $image_height, $images[$index]['width'], $images[$index]['height']))
+                    die("Could not copy resampled image");
+                imagedestroy($image_resource);
+            }
         }
     }
 
