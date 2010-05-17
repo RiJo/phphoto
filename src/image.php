@@ -35,7 +35,7 @@ if(isset($_GET[GET_KEY_IMAGE_ID])) {
     elseif ($thumbnail)
         $result = phphoto_db_query($db, "SELECT thumbnail AS image, type FROM images WHERE id = $id;");
     else
-        $result = phphoto_db_query($db, "SELECT original AS image, type FROM images WHERE id = $id;");
+        $result = phphoto_db_query($db, "SELECT data AS image, type FROM images WHERE id = $id;");
     phphoto_db_connect($db);
 
     if (empty($result)) {
