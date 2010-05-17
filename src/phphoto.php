@@ -170,7 +170,7 @@ function store_image($db, $uploaded_image){
 function regenerate_gallery_thumbnail($db, $gallery_id) {
     $sql = "
             SELECT
-                original,
+                data,
                 width,
                 height
             FROM
@@ -218,7 +218,7 @@ function generate_gallery_data($images) {
         for ($x = 0; $x < $size; $x++) {
             $index = $x + ($y * $size);
             if (isset($images[$index])) {
-                $image_resource = imagecreatefromstring($images[$index]['original']);
+                $image_resource = imagecreatefromstring($images[$index]['data']);
                 if (!ImageCopyResampled($canvas_resource, $image_resource, $x * $image_width, $y * $image_height,
                         0, 0, $image_width, $image_height, $images[$index]['width'], $images[$index]['height']))
                     die("Could not copy resampled image");
@@ -238,9 +238,9 @@ function generate_gallery_data($images) {
 
 function regenerate_image_thumbnails($db) {
     $regenerated_thumbnails = 0;
-    $sql = "SELECT id, original FROM images";
+    $sql = "SELECT id, data FROM images";
     foreach (phphoto_db_query($db, $sql) as $image) {
-        $temp_resource = imagecreatefromstring($image['original']);
+        $temp_resource = imagecreatefromstring($image['data']);
         if (!imagejpeg($temp_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
                 die("Could not create new jpeg image");
 
