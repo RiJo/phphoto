@@ -59,7 +59,6 @@ function phphoto_echo_gallery($db, $gallery_id) {
         echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image_id_full'>";
         echo "\n        <img src='image.php?".GET_KEY_IMAGE_ID."=$image_id_thumbnail' title='$image_description'>";
         echo "\n        </a>";
-        echo "\n        <br>";
         echo "\n        <p>$image_name</p>";
         echo "\n    </div>";
     }
@@ -125,7 +124,6 @@ function phphoto_echo_galleries($db) {
         echo "\n    <div class='gallery_thumbnail'>";
         echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
         echo "\n        <img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]'>";
-        echo "\n        <br>";
         echo "\n        <p>$gallery[title]</p>";
         echo "\n        </a>";
         echo "\n    </div>";

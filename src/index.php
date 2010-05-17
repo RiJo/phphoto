@@ -4,12 +4,6 @@
     require_once('phphoto.php');
 
     $password = 'abc';
-    
-    /*$exif = exif_read_data('/home/rijo/images/galleri/nice/GMI_655.jpg');
-    //~ $exif = exif_read_data('/home/rijo/images/galleri/nice/blue_lagoon.jpg');
-    $filter = array_flip(array('DateTime', 'ISOSpeedRatings', 'Model', 'ExposureTime'));
-    $exif2 = array_intersect_key($exif, $filter);
-    echo '<pre>'.print_r($exif, true).'</pre>';*/
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
