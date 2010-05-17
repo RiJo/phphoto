@@ -32,7 +32,7 @@ if(isset($_GET[GET_KEY_GALLERY_ID])) {
     exit;
 }
 else {
-    not_valid_id('', 'no image requested');
+    not_valid_id('', 'no gallery requested');
 }
 
 function generate_null_image() {
@@ -83,7 +83,7 @@ function generate_null_image() {
 
     // write canvas to file
     if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
-        die("Could not create new jpeg image");
+        die("could not create new jpeg image");
 
     imagedestroy($canvas_resource);
 

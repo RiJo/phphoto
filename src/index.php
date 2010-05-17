@@ -5,7 +5,8 @@
 
     $password = 'abc';
     
-    /*$exif = exif_read_data('./IMAGE_399_s.jpg');
+    /*$exif = exif_read_data('/home/rijo/images/galleri/nice/GMI_655.jpg');
+    //~ $exif = exif_read_data('/home/rijo/images/galleri/nice/blue_lagoon.jpg');
     $filter = array_flip(array('DateTime', 'ISOSpeedRatings', 'Model', 'ExposureTime'));
     $exif2 = array_intersect_key($exif, $filter);
     echo '<pre>'.print_r($exif, true).'</pre>';*/

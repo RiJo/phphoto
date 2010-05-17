@@ -96,30 +96,72 @@ function aspect_ratio($width, $height) {
 // Adds the image to the database and returns the image ID
 function store_image($db, $uploaded_image){
     // Validate extension and filesiz
-    $filename = $uploaded_image['name'];
+    $image_filename = $uploaded_image['name'];
     $image = $uploaded_image['tmp_name'];
 
     // Get image data
-    $fileSize = filesize($image);
-    $imageInfo = getimagesize($image);
-    $width =  $imageInfo[0];
-    $height =  $imageInfo[1];
-    $type =  $imageInfo[2];
-
-    $imageData = generate_image_data($image);
-    $thumbnailData = generate_image_data($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
+    $image_filesize = filesize($image);
+    $image_info = getimagesize($image);
+    $image_width =  $image_info[0];
+    $image_height =  $image_info[1];
+    $image_type =  $image_info[2];
+    // Read exif data
+    $exif = exif_read_data($image);
+    $image_taken = (isset($exif['FileDatTime'])) ? date("Y-m-d H:i:s", trim($exif['FileDateTime'])) : "NULL";
+    $image_model = (isset($exif['Model'])) ? "'".trim($exif['Model'])."'" : "NULL";
+    $image_exposure = (isset($exif['ExposureTime'])) ? "'".trim($exif['ExposureTime'])."'" : "NULL";
+    $image_iso = (isset($exif['ISOSpeedRatings'])) ? "'".trim($exif['ISOSpeedRatings'])."'" : "NULL";
+    $image_aperture = (isset($exif['COMPUTED']['ApertureFNumber'])) ? "'".trim($exif['COMPUTED']['ApertureFNumber'])."'" : "NULL";
+    // Generate image data
+    $image_data = generate_image_data($image);
+    $image_thumbnail = generate_image_data($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
 
     // Check if exists
-    $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM images WHERE filename = '$filename';");
+    $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM images WHERE filename = '$image_filename';");
     if ($result[0]['exist'] > 0) {
         return -2;
     }
 
     // Insert into database
-    $sql = "INSERT INTO images
-            (original, thumbnail, type, width, height, filesize, filename, title, description, created)
-            VALUES
-            ('$imageData', '$thumbnailData', $type, $width, $height, $fileSize, '$filename', '', '', NOW());";
+    $sql = "
+            INSERT INTO images (
+                data,
+                thumbnail,
+                taken,
+                type,
+                width,
+                height,
+                model,
+                exposure,
+                iso,
+                aperture,
+                filesize,
+                filename,
+                title,
+                description,
+                created
+            )
+            VALUES (
+                '$image_data',
+                '$image_thumbnail',
+                $image_taken,
+                $image_type,
+                $image_width,
+                $image_height,
+                $image_model,
+                $image_exposure,
+                $image_iso,
+                $image_aperture,
+                $image_filesize,
+                '$image_filename',
+                '',
+                '',
+                NOW()
+            )
+    ";
+    
+    //~ die("<pre>".$sql."<br>".print_r($exif, true)."</pre>");
+    
     $result = phphoto_db_query($db, $sql);
 
     return ($result) ? mysql_insert_id($db) : INVALID_ID;
