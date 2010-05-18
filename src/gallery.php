@@ -46,7 +46,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
         echo "\n<div class='error'>Unkown gallery</div>";
         return;
     }
-    
+
     $gallery = $gallery[0];
 
     echo "\n<div class='gallery'>";

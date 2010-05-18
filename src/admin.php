@@ -298,20 +298,22 @@ function phphoto_echo_admin_images($db) {
     phphoto_upload_image();
     phphoto_regenerate_image_thumbnails($db);
 
-    $sql = "SELECT id, width, height, filesize, filename, title, description FROM images";
+    $sql = "SELECT id, width, height, model, exposure, iso, aperture, filesize, filename, title, description FROM images";
 
-    $header = array('Thumbnail', 'Resolution', 'Aspect', 'Filesize', 'Filename', 'Title', 'Description');
+    $header = array('Thumbnail', 'Resolution', 'Camera', 'Settings', 'Filesize', 'Filename', 'Title', 'Description');
+    $max_text_length = 12;
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
-            $row['width'].'x'.$row['height'],
-            aspect_ratio($row['width'], $row['height']),
+            $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
+            $row['model'],
+            $row['exposure'].'<br>'.$row['iso'].'<br>'.$row['aperture'],
             format_byte($row['filesize']),
-            $row['filename'],
-            $row['title'],
-            $row['description']
+            (strlen($row['filename']) < $max_text_length) ? $row['filename'] : substr($row['filename'], 0, $max_text_length).'...',
+            (strlen($row['title']) < $max_text_length) ? $row['title'] : substr($row['title'], 0, $max_text_length).'...',
+            (strlen($row['description']) < $max_text_length) ? $row['description'] : substr($row['description'], 0, $max_text_length).'...'
         ));
     }
 
