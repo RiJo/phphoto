@@ -23,7 +23,10 @@ function phphoto_echo_gallery($db, $gallery_id) {
         SELECT
             images.id,
             IF (LENGTH(title) > 0, title, filename) AS name,
-            description
+            description,
+            exposure,
+            iso,
+            aperture
         FROM
             images
                 INNER JOIN
@@ -50,16 +53,12 @@ function phphoto_echo_gallery($db, $gallery_id) {
     echo "\n    <h1>$gallery[title]</h1>";
     echo "\n    <p>$gallery[description]</p>";
     foreach ($images as $image) {
-        $image_id_full = $image['id'];
-        $image_id_thumbnail = $image['id'] . "t";
-        $image_name = $image['name'];
-        $image_description = $image['description'];
-
         echo "\n    <div class='image_thumbnail'>";
-        echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image_id_full'>";
-        echo "\n        <img src='image.php?".GET_KEY_IMAGE_ID."=$image_id_thumbnail' title='$image_description'>";
+        echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";
+        echo "\n        <img src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]'>";
         echo "\n        </a>";
-        echo "\n        <p>$image_name</p>";
+        echo "\n        <h3>$image[exposure]&nbsp;&nbsp;$image[iso]&nbsp;&nbsp;$image[aperture]</h3>";
+        echo "\n        <p>$image[name]</p>";
         echo "\n    </div>";
     }
     echo "\n</div>";
@@ -92,18 +91,18 @@ function phphoto_echo_galleries($db) {
             description,
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
             (SELECT MAX(temp.changed) FROM (
-                    (SELECT changed FROM galleries WHERE id = 11)
+                    (SELECT changed FROM galleries foo WHERE id = g.id)
                     UNION
-                    (SELECT changed FROM image_to_gallery WHERE gallery_id = 11)
+                    (SELECT changed FROM image_to_gallery WHERE gallery_id = g.id)
                     UNION
-                    (SELECT changed FROM images c WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = 11))
+                    (SELECT changed FROM images c WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = g.id))
                 ) AS temp
             ) AS changed
         FROM
             galleries g
         WHERE
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
-    ";*/
+    ";
 
 
     /*$header = array('Title', 'Description', 'Images', 'Updated');
@@ -123,7 +122,7 @@ function phphoto_echo_galleries($db) {
     foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
         echo "\n    <div class='gallery_thumbnail'>";
         echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
-        echo "\n        <img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]'>";
+        echo "\n        <img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
         echo "\n        <p>$gallery[title]</p>";
         echo "\n        </a>";
         echo "\n    </div>";

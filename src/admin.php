@@ -247,7 +247,7 @@ function phphoto_echo_admin_image($db, $image_id) {
         }
     }
 
-    $sql = "SELECT id, width, height, type, filesize, filename, title, description, changed, created FROM images WHERE id = $image_id";
+    $sql = "SELECT id, width, height, type, model, exposure, iso, aperture, filesize, filename, title, description, changed, created FROM images WHERE id = $image_id";
     $image_data = phphoto_db_query($db, $sql);
     $sql = "SELECT id, title FROM galleries WHERE id IN (SELECT gallery_id FROM image_to_gallery WHERE image_id = $image_id)";
     $gallery_data = phphoto_db_query($db, $sql);
@@ -271,6 +271,10 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array("Resolution",     $image_data['width'].'x'.$image_data['height'].' ('.
                                                     aspect_ratio($image_data['width'], $image_data['height']).')'));
     array_push($table_data, array("Filename",       $image_data['filename']));
+    array_push($table_data, array("Camera",         $image_data['model']));
+    array_push($table_data, array("Exposure",       $image_data['exposure']));
+    array_push($table_data, array("ISO",            $image_data['iso']));
+    array_push($table_data, array("Aperture",       $image_data['aperture']));
     array_push($table_data, array("Used in",        implode(', ', $gallery_names)));
     array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array("Description",    "<textarea name='description'>$image_data[description]</textarea>"));
