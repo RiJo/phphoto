@@ -107,7 +107,9 @@ function store_image($db, $uploaded_image){
     $image_type =  $image_info[2];
     // Read exif data
     $exif = exif_read_data($image);
-    $image_taken = (isset($exif['FileDateTime'])) ? "'".date("Y-m-d H:i:s", trim($exif['FileDateTime']))."'" : "NULL";
+    //~ die('<pre>'.print_r($exif, true).'</pre>');
+    /* FileDateTime is NOT WHEN THE IMAGE WAS TAKEN!!!! */
+    $image_taken = (isset($exif['DateTimeOriginal'])) ? "'".trim($exif['DateTimeOriginal'])."'" : "NULL";
     $image_model = (isset($exif['Model'])) ? "'".trim($exif['Model'])."'" : "NULL";
     $image_exposure = (isset($exif['ExposureTime'])) ? "'".trim($exif['ExposureTime'])."'" : "NULL";
     $image_iso = (isset($exif['ISOSpeedRatings'])) ? "'".trim($exif['ISOSpeedRatings'])."'" : "NULL";
