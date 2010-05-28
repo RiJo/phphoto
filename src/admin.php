@@ -25,10 +25,6 @@ function phphoto_upload_image() {
             else {
                 echo "\n    <div class='info'>Image uploaded successfully</div>";
             }
-            //~ phphoto_db_disconnect($db);
-
-            //~ echo "\n<meta http-equiv='Refresh' content='0; url='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
-            //~ exit;
         }
     }
 
@@ -192,7 +188,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                     GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
                     GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".
                     GET_KEY_GALLERY_ID."=".$gallery_id."&".
-                    GET_KEY_IMAGE_ID."=$row[id]'>Remove</a>"
+                    GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/tango/actions/process-stop.png'></a>"
         ));
     }
     phphoto_to_html_table($header, $images);
@@ -208,14 +204,15 @@ function phphoto_echo_admin_galleries($db) {
 
     $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images FROM galleries";
 
-    $header = array('Title', 'Description', 'Views', 'Images');
+    $header = array('Title', 'Description', 'Views', 'Images', '&nbsp;');
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$row[id]'>$row[title]</a>",
             $row['description'],
             $row['views'],
-            $row['images']
+            $row['images'],
+            "<a href='".CURRENT_PAGE."'><img src='./icons/tango/actions/process-stop.png'></a>"
         ));
     }
 
@@ -247,7 +244,7 @@ function phphoto_echo_admin_image($db, $image_id) {
         }
     }
 
-    $sql = "SELECT id, width, height, type, model, exposure, iso, aperture, filesize, filename, title, description, changed, created FROM images WHERE id = $image_id";
+    $sql = "SELECT id, type, width, height, filesize, filename, exif, title, description, changed, created FROM images WHERE id = $image_id";
     $image_data = phphoto_db_query($db, $sql);
     $sql = "SELECT id, title FROM galleries WHERE id IN (SELECT gallery_id FROM image_to_gallery WHERE image_id = $image_id)";
     $gallery_data = phphoto_db_query($db, $sql);
@@ -262,6 +259,8 @@ function phphoto_echo_admin_image($db, $image_id) {
         return;
     }
     $image_data = $image_data[0];
+    if ($image_data['exif'])
+        eval('$exif = ' . $image_data['exif'] . ';');
 
     $table_data = array();
     array_push($table_data, array("&nbsp;",         "<img src='image.php?".GET_KEY_IMAGE_ID."=".$image_id."t'>"));
@@ -271,10 +270,10 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array("Resolution",     $image_data['width'].'x'.$image_data['height'].' ('.
                                                     aspect_ratio($image_data['width'], $image_data['height']).')'));
     array_push($table_data, array("Filename",       $image_data['filename']));
-    array_push($table_data, array("Camera",         $image_data['model']));
-    array_push($table_data, array("Exposure",       $image_data['exposure']));
-    array_push($table_data, array("ISO",            $image_data['iso']));
-    array_push($table_data, array("Aperture",       $image_data['aperture']));
+    array_push($table_data, array("Camera",         ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array("Exposure",       ((isset($exif['ExposureTime'])) ? $exif['ExposureTime'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array("ISO",            ((isset($exif['ISOSpeedRatings'])) ? $exif['ISOSpeedRatings'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array("Aperture",       ((isset($exif['ApertureValue'])) ? $exif['ApertureValue'] : VARIABLE_NOT_SET)));
     array_push($table_data, array("Used in",        implode(', ', $gallery_names)));
     array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array("Description",    "<textarea name='description'>$image_data[description]</textarea>"));
@@ -298,22 +297,27 @@ function phphoto_echo_admin_images($db) {
     phphoto_upload_image();
     phphoto_regenerate_image_thumbnails($db);
 
-    $sql = "SELECT id, width, height, model, exposure, iso, aperture, filesize, filename, title, description FROM images";
+    $sql = "SELECT id, width, height, filesize, filename, exif, title, description FROM images";
 
-    $header = array('Thumbnail', 'Resolution', 'Camera', 'Settings', 'Filesize', 'Filename', 'Title', 'Description');
+    $header = array('Thumbnail', 'Resolution', 'Camera', 'Settings', 'Filesize', 'Filename', 'Title', 'Description', '&nbsp;');
     $max_text_length = 12;
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
+        if ($row['exif'])
+            eval('$exif = ' . $row['exif'] . ';');
+
         array_push($data, array(
             "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
             $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
-            $row['model'],
-            $row['exposure'].'<br>'.$row['iso'].'<br>'.$row['aperture'],
+            ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET),
+            ((isset($exif['ExposureTime'])  || isset($exif['ISOSpeedRatings']) ||isset($exif['ApertureValue'])) ? 
+                    '<br>'.$exif['ISOSpeedRatings'].'<br>'.$exif['ApertureValue'] : VARIABLE_NOT_SET),
             format_byte($row['filesize']),
             (strlen($row['filename']) < $max_text_length) ? $row['filename'] : substr($row['filename'], 0, $max_text_length).'...',
             (strlen($row['title']) < $max_text_length) ? $row['title'] : substr($row['title'], 0, $max_text_length).'...',
-            (strlen($row['description']) < $max_text_length) ? $row['description'] : substr($row['description'], 0, $max_text_length).'...'
+            (strlen($row['description']) < $max_text_length) ? $row['description'] : substr($row['description'], 0, $max_text_length).'...',
+            "<a href='".CURRENT_PAGE."'><img src='./icons/tango/actions/process-stop.png'></a>"
         ));
     }
 

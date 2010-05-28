@@ -93,6 +93,17 @@ function aspect_ratio($width, $height) {
     return $width/$lcd.":".$height/$lcd;
 }
 
+function parse_exif_data($exif) {
+    $keys = explode(',', IMAGE_EXIF_KEYS);
+    $parsed_exif = array();
+    foreach ($keys as $key) {
+        if (isset($exif[trim($key)])) {
+            $parsed_exif[trim($key)] = trim($exif[trim($key)]);
+        }
+    }
+    return $parsed_exif;
+}
+
 // Adds the image to the database and returns the image ID
 function store_image($db, $uploaded_image){
     // Validate extension and filesiz
@@ -106,14 +117,18 @@ function store_image($db, $uploaded_image){
     $image_height =  $image_info[1];
     $image_type =  $image_info[2];
     // Read exif data
-    $exif = exif_read_data($image);
-    //~ die('<pre>'.print_r($exif, true).'</pre>');
-    /* FileDateTime is NOT WHEN THE IMAGE WAS TAKEN!!!! */
-    $image_taken = (isset($exif['DateTimeOriginal'])) ? "'".trim($exif['DateTimeOriginal'])."'" : "NULL";
-    $image_model = (isset($exif['Model'])) ? "'".trim($exif['Model'])."'" : "NULL";
-    $image_exposure = (isset($exif['ExposureTime'])) ? "'".trim($exif['ExposureTime'])."'" : "NULL";
-    $image_iso = (isset($exif['ISOSpeedRatings'])) ? "'".trim($exif['ISOSpeedRatings'])."'" : "NULL";
-    $image_aperture = (isset($exif['COMPUTED']['ApertureFNumber'])) ? "'".trim($exif['COMPUTED']['ApertureFNumber'])."'" : "NULL";
+    $exif_temp = exif_read_data($image);
+    $exif = parse_exif_data($exif_temp);
+    $image_exif = addslashes(var_export($exif, true));
+    //~ die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
+
+    //~ $image_taken = (isset($exif['DateTimeOriginal'])) ? "'".trim($exif['DateTimeOriginal'])."'" : "NULL";
+    //~ $image_model = (isset($exif['Model'])) ? "'".trim($exif['Model'])."'" : "NULL";
+    //~ $image_exposure = (isset($exif['ExposureTime'])) ? "'".trim($exif['ExposureTime'])."'" : "NULL";
+    //~ $image_iso = (isset($exif['ISOSpeedRatings'])) ? "'".trim($exif['ISOSpeedRatings'])."'" : "NULL";
+    //~ $image_aperture = (isset($exif['FNumber'])) ? "'".trim($exif['FNumber'])."'" : "NULL";
+    //~ $image_focal_length = (isset($exif['FocalLength'])) ? "'".trim($exif['FocalLength'])."'" : "NULL";
+    //~ $image_flash = (isset($exif['Flash'])) ? "'".trim($exif['Flash'])."'" : "NULL";
     // Generate image data
     $image_data = generate_image_data($image);
     $image_thumbnail = generate_image_data($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
@@ -129,16 +144,12 @@ function store_image($db, $uploaded_image){
             INSERT INTO images (
                 data,
                 thumbnail,
-                taken,
                 type,
                 width,
                 height,
-                model,
-                exposure,
-                iso,
-                aperture,
                 filesize,
                 filename,
+                exif,
                 title,
                 description,
                 created
@@ -146,16 +157,12 @@ function store_image($db, $uploaded_image){
             VALUES (
                 '$image_data',
                 '$image_thumbnail',
-                $image_taken,
                 $image_type,
                 $image_width,
                 $image_height,
-                $image_model,
-                $image_exposure,
-                $image_iso,
-                $image_aperture,
                 $image_filesize,
                 '$image_filename',
+                '$image_exif',
                 '',
                 '',
                 NOW()

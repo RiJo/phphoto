@@ -17,6 +17,12 @@ a:hover {
     color: #000000;
 }
 
+/* IMAGE */
+
+img {
+    border: 0;
+}
+
 /* FORM */
 
 form {
