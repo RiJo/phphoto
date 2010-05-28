@@ -21,12 +21,10 @@ function phphoto_echo_gallery($db, $gallery_id) {
     ";
     $images_sql = "
         SELECT
-            images.id,
+            id,
+            exif,
             IF (LENGTH(title) > 0, title, filename) AS name,
-            description,
-            exposure,
-            iso,
-            aperture
+            description
         FROM
             images
                 INNER JOIN
@@ -53,11 +51,26 @@ function phphoto_echo_gallery($db, $gallery_id) {
     echo "\n    <h1>$gallery[title]</h1>";
     echo "\n    <p>$gallery[description]</p>";
     foreach ($images as $image) {
+        if ($image['exif'])
+            eval('$exif = ' . $image['exif'] . ';');
+        else
+            $exif = array();
         echo "\n    <div class='image_thumbnail'>";
         echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";
         echo "\n        <img src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]'>";
         echo "\n        </a>";
-        echo "\n        <h3>$image[exposure]&nbsp;&nbsp;$image[iso]&nbsp;&nbsp;$image[aperture]</h3>";
+        echo "\n        <h3>";
+        if (isset($exif['ExposureTime']))
+            echo "\n        $exif[ExposureTime]&nbsp;&nbsp;";
+        if (isset($exif['ISOSpeedRatings']))
+            echo "\n        $exif[ISOSpeedRatings]&nbsp;&nbsp;";
+        if (isset($exif['FNumber']))
+            echo "\n        $exif[FNumber]";
+        if (isset($exif['ExposureTime']))
+            echo "\n        $exif[ExposureTime]";
+        if (isset($exif['FocalLength']))
+            echo "\n        $exif[FocalLength]";
+        echo "\n        &nbsp;</h3>";
         echo "\n        <p>$image[name]</p>";
         echo "\n    </div>";
     }
