@@ -122,13 +122,6 @@ function store_image($db, $uploaded_image){
     $image_exif = addslashes(var_export($exif, true));
     //~ die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
 
-    //~ $image_taken = (isset($exif['DateTimeOriginal'])) ? "'".trim($exif['DateTimeOriginal'])."'" : "NULL";
-    //~ $image_model = (isset($exif['Model'])) ? "'".trim($exif['Model'])."'" : "NULL";
-    //~ $image_exposure = (isset($exif['ExposureTime'])) ? "'".trim($exif['ExposureTime'])."'" : "NULL";
-    //~ $image_iso = (isset($exif['ISOSpeedRatings'])) ? "'".trim($exif['ISOSpeedRatings'])."'" : "NULL";
-    //~ $image_aperture = (isset($exif['FNumber'])) ? "'".trim($exif['FNumber'])."'" : "NULL";
-    //~ $image_focal_length = (isset($exif['FocalLength'])) ? "'".trim($exif['FocalLength'])."'" : "NULL";
-    //~ $image_flash = (isset($exif['Flash'])) ? "'".trim($exif['Flash'])."'" : "NULL";
     // Generate image data
     $image_data = generate_image_data($image);
     $image_thumbnail = generate_image_data($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);

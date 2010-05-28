@@ -273,7 +273,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array("Camera",         ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET)));
     array_push($table_data, array("Exposure",       ((isset($exif['ExposureTime'])) ? $exif['ExposureTime'] : VARIABLE_NOT_SET)));
     array_push($table_data, array("ISO",            ((isset($exif['ISOSpeedRatings'])) ? $exif['ISOSpeedRatings'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array("Aperture",       ((isset($exif['ApertureValue'])) ? $exif['ApertureValue'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array("Aperture",       ((isset($exif['FNumber'])) ? $exif['FNumber'] : VARIABLE_NOT_SET)));
     array_push($table_data, array("Used in",        implode(', ', $gallery_names)));
     array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array("Description",    "<textarea name='description'>$image_data[description]</textarea>"));
@@ -311,8 +311,8 @@ function phphoto_echo_admin_images($db) {
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
             $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
             ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET),
-            ((isset($exif['ExposureTime'])  || isset($exif['ISOSpeedRatings']) ||isset($exif['ApertureValue'])) ? 
-                    '<br>'.$exif['ISOSpeedRatings'].'<br>'.$exif['ApertureValue'] : VARIABLE_NOT_SET),
+            ((isset($exif['ExposureTime'])  || isset($exif['ISOSpeedRatings']) ||isset($exif['FNumber'])) ? 
+                    '<br>'.$exif['ISOSpeedRatings'].'<br>'.$exif['FNumber'] : VARIABLE_NOT_SET),
             format_byte($row['filesize']),
             (strlen($row['filename']) < $max_text_length) ? $row['filename'] : substr($row['filename'], 0, $max_text_length).'...',
             (strlen($row['title']) < $max_text_length) ? $row['title'] : substr($row['title'], 0, $max_text_length).'...',
