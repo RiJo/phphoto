@@ -83,6 +83,28 @@ function format_date_time($string) {
     return date(DATE_FORMAT, strtotime($string));
 }
 
+// Returns a well formatted string of the given exif array
+function format_exif_data($exif) {
+    if (!is_array($exif))
+        return "Invalid exif array";
+
+    $summary = array();
+    if (isset($exif['ExposureTime']))
+        array_push($summary, $exif['ExposureTime']);
+    if (isset($exif['ISOSpeedRatings']))
+        array_push($summary, $exif['ISOSpeedRatings']);
+    if (isset($exif['FNumber'])) {
+        eval('$aperture = ' . $exif['FNumber'] . ';');
+        array_push($summary, 'f'.$aperture);
+    }
+    if (isset($exif['ExposureTime']))
+        array_push($summary, $exif['ExposureTime']);
+    if (isset($exif['FocalLength']))
+        array_push($summary, $exif['FocalLength']);
+
+    return (count($summary) > 0) ? implode('&nbsp;&nbsp;', $summary) : VARIABLE_NOT_SET;
+}
+
 // Returns formatted aspect ratio for the width and height
 function aspect_ratio($width, $height) {
     $lcd = 1;
