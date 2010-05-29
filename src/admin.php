@@ -202,7 +202,21 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 function phphoto_echo_admin_galleries($db) {
     phphoto_create_gallery($db);
 
-    $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images FROM galleries";
+    $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
+    $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
+
+    $sql = "
+        SELECT
+            id,
+            title,
+            description,
+            views,
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images
+        FROM
+            galleries
+        LIMIT
+            ".($page_number * $items_per_page).", $items_per_page
+    ";
 
     $header = array('Title', 'Description', 'Views', 'Images', '&nbsp;');
     $data = array();
@@ -297,7 +311,27 @@ function phphoto_echo_admin_images($db) {
     phphoto_upload_image();
     phphoto_regenerate_image_thumbnails($db);
 
-    $sql = "SELECT id, width, height, filesize, filename, exif, title, description FROM images";
+    $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
+    $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
+    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM images";
+    $pages = phphoto_db_query($db, $sql);
+    $pages = $pages[0]['pages'];
+
+    $sql = "
+        SELECT
+            id,
+            width,
+            height,
+            filesize,
+            filename,
+            exif,
+            title,
+            description
+        FROM
+            images
+        LIMIT
+            ".($page_number * $items_per_page).", $items_per_page
+    ";
 
     $header = array('Thumbnail', 'Resolution', 'Camera', 'Settings', 'Filesize', 'Filename', 'Title', 'Description', '&nbsp;');
     $max_text_length = 12;
@@ -324,6 +358,12 @@ function phphoto_echo_admin_images($db) {
     echo "\n<div class='settings'>";
     echo "\n    <h1>Admin images</h1>";
     phphoto_to_html_table($header, $data);
+    
+    if ($page_number > 0)
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'>Previous</a>";
+    echo "|&nbsp;".($page_number + 1)."&nbsp;/&nbsp;$pages&nbsp;|";
+    if ($page_number < ($pages - 1))
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'>Next</a>";
     echo "\n</div>";
 }
 

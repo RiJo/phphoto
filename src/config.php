@@ -24,6 +24,8 @@ define("GET_KEY_GALLERY_ID",                "gid");
 define("GET_KEY_IMAGE_ID",                  "iid");
 define("GET_KEY_ADMIN_QUERY",               "adm");
 define("GET_KEY_OPERATION",                 "op");
+define("GET_KEY_PAGE_NUMBER",               "p");
+define("GET_KEY_ITEMS_PER_PAGE",            "pp");
 define("GET_VALUE_ADMIN_GALLERY",           "g");
 define("GET_VALUE_ADMIN_IMAGE",             "i");
 define("GET_VALUE_CREATE",                  "mk");
@@ -36,6 +38,7 @@ define("SESSION_VALUE_VIEWS",               "check");
 define("INVALID_ID",                        -1);
 define("CURRENT_PAGE",                      basename($_SERVER['PHP_SELF']));
 define("VARIABLE_NOT_SET",                  "-");
+define("DEFAULT_ITEMS_PER_PAGE",            5); // only on admin pages so far
 
 define("DATE_FORMAT",                       "Y-m-d (H:i)");
 
