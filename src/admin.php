@@ -360,10 +360,10 @@ function phphoto_echo_admin_images($db) {
     phphoto_to_html_table($header, $data);
     
     if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'>Previous</a>";
-    echo "|&nbsp;".($page_number + 1)."&nbsp;/&nbsp;$pages&nbsp;|";
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'><img src='./icons/tango/actions/go-previous.png'></a>";
+    echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
     if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'>Next</a>";
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'><img src='./icons/tango/actions/go-next.png'></a>";
     echo "\n</div>";
 }
 
