@@ -28,7 +28,13 @@
 
 
 --------------------------------------------------------------------------------
-    version 0.1.0, xxxx-xx-xx
+    version 1.0.0, xxxx-xx-xx
 --------------------------------------------------------------------------------
-    *
+    * MySQL table dump with image-to-gallery relationship
+    * Dynamic keys and values for form data (GET)
+    * Stylesheet for easy coloring and layout
+    * Handling of exif data
+    * Single image upload functionality
+    * Thumbnails of images and galleries
+    * Gallery and image views counter
 --------------------------------------------------------------------------------
