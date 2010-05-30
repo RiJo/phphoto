@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 
     phphoto
-    current version:     0.1.0-beta
+    current version:     1.0.0
     by:                  Rikard Johansson
 
     A photo gallery front-end with a mySQL database as back-end.
