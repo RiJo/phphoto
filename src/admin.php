@@ -275,6 +275,8 @@ function phphoto_echo_admin_image($db, $image_id) {
     $image_data = $image_data[0];
     if ($image_data['exif'])
         eval('$exif = ' . $image_data['exif'] . ';');
+    else
+        $exif = array();
 
     $table_data = array();
     array_push($table_data, array("&nbsp;",         "<img src='image.php?".GET_KEY_IMAGE_ID."=".$image_id."t'>"));
@@ -284,10 +286,9 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array("Resolution",     $image_data['width'].'x'.$image_data['height'].' ('.
                                                     aspect_ratio($image_data['width'], $image_data['height']).')'));
     array_push($table_data, array("Filename",       $image_data['filename']));
+    array_push($table_data, array("EXIF version",   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
     array_push($table_data, array("Camera",         ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array("Exposure",       ((isset($exif['ExposureTime'])) ? $exif['ExposureTime'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array("ISO",            ((isset($exif['ISOSpeedRatings'])) ? $exif['ISOSpeedRatings'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array("Aperture",       ((isset($exif['FNumber'])) ? $exif['FNumber'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array("Settings",       format_camera_settings($exif)));
     array_push($table_data, array("Used in",        implode(', ', $gallery_names)));
     array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array("Description",    "<textarea name='description'>$image_data[description]</textarea>"));
@@ -339,6 +340,8 @@ function phphoto_echo_admin_images($db) {
     foreach (phphoto_db_query($db, $sql) as $row) {
         if ($row['exif'])
             eval('$exif = ' . $row['exif'] . ';');
+        else
+            $exif = array();
 
         array_push($data, array(
             "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'>

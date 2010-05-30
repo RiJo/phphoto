@@ -84,25 +84,46 @@ function format_date_time($string) {
 }
 
 // Returns a well formatted string of the given exif array
-function format_exif_data($exif) {
+function format_camera_settings($exif) {
     if (!is_array($exif))
         return "Invalid exif array";
 
+/*
+array (
+  'Make' => 'Canon',
+  'Model' => 'Canon EOS 450D',
+  'FirmwareVersion' => 'Firmware Version 1.0.4',
+  'ImageType' => 'Canon EOS 450D',
+  'DateTimeOriginal' => '2008:08:24 13:25:39',
+  'ExposureTime' => '1/350',
+  'ShutterSpeedValue' => '557056/65536',
+  'ExposureBiasValue' => '0/1',
+  'ISOSpeedRatings' => '200',
+  'FNumber' => '13/1',
+  'FocalLength' => '20/1',
+  'WhiteBalance' => '0',
+  'Flash' => '16',
+  'ExifVersion' => '0221',
+)
+*/
+
     $summary = array();
-    if (isset($exif['ExposureTime']))
-        array_push($summary, $exif['ExposureTime']);
-    if (isset($exif['ISOSpeedRatings']))
-        array_push($summary, $exif['ISOSpeedRatings']);
+    if (isset($exif['ExposureTime'])) {
+        array_push($summary, sprintf('%ss', $exif['ExposureTime']));
+    }
     if (isset($exif['FNumber'])) {
         eval('$aperture = ' . $exif['FNumber'] . ';');
-        array_push($summary, 'f'.$aperture);
+        array_push($summary, sprintf('f/%.1f', $aperture));
     }
-    if (isset($exif['ExposureTime']))
-        array_push($summary, $exif['ExposureTime']);
-    if (isset($exif['FocalLength']))
-        array_push($summary, $exif['FocalLength']);
+    if (isset($exif['FocalLength'])) {
+        eval('$focal_length = ' . $exif['FocalLength'] . ';');
+        array_push($summary, sprintf('%.0fmm', $focal_length));
+    }
+    if (isset($exif['ISOSpeedRatings'])) {
+        array_push($summary, sprintf('%s', $exif['ISOSpeedRatings']));
+    }
 
-    return (count($summary) > 0) ? implode('&nbsp;&nbsp;', $summary) : VARIABLE_NOT_SET;
+    return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;&nbsp;', $summary) : VARIABLE_NOT_SET;
 }
 
 // Returns formatted aspect ratio for the width and height

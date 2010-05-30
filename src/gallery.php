@@ -53,7 +53,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
     foreach ($images as $image) {
         if ($image['exif']) {
             eval('$exif = ' . $image['exif'] . ';');
-            $exif = format_exif_data($exif);
+            $exif = format_camera_settings($exif);
         }
         else {
             $exif = VARIABLE_NOT_SET;
