@@ -139,6 +139,30 @@ EXIF flash values (http://cpansearch.perl.org/src/EXIFTOOL/Image-ExifTool-8.10/h
 0x59	= Auto, Fired, Red-eye reduction
 0x5d	= Auto, Fired, Red-eye reduction, Return not detected
 0x5f	= Auto, Fired, Red-eye reduction, Return detected
+---
+http://www.colorpilot.com/exif_tags.html
+0 	No Flash
+1 	Fired
+5 	Fired, Return not detected
+7 	Fired, Return detected
+9 	On
+13 	On, Return not detected
+15 	On, Return detected
+16 	Off
+24 	Auto, Did not fire
+25 	Auto, Fired
+29 	Auto, Fired, Return not detected
+31 	Auto, Fired, Return detected
+32 	No flash function
+65 	Fired, Red-eye reduction
+69 	Fired, Red-eye reduction, Return not detected
+71 	Fired, Red-eye reduction, Return detected
+73 	On, Red-eye reduction
+77 	On, Red-eye reduction, Return not detected
+79 	On, Red-eye reduction, Return detected
+89 	Auto, Fired, Red-eye reduction
+93 	Auto, Fired, Red-eye reduction, Return not detected
+95 	Auto, Fired, Red-eye reduction, Return detected
 */
 
     $summary = array();
@@ -157,7 +181,12 @@ EXIF flash values (http://cpansearch.perl.org/src/EXIFTOOL/Image-ExifTool-8.10/h
         array_push($summary, sprintf('%s', $exif['ISOSpeedRatings']));
     }
     if (isset($exif['Flash'])) {
-        array_push($summary, sprintf('Z%s', $exif['Flash']));
+        if (((int)$exif['Flash'] % 2) == 1) {
+            array_push($summary, sprintf('%s', 'Flash'));
+        }
+        else {
+            array_push($summary, sprintf('Z%s', 'No flash'));
+        }
     }
 
     return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;&nbsp;', $summary) : VARIABLE_NOT_SET;
