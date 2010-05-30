@@ -188,7 +188,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                     GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
                     GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".
                     GET_KEY_GALLERY_ID."=".$gallery_id."&".
-                    GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/tango/actions/process-stop.png'></a>"
+                    GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>"
         ));
     }
     phphoto_to_html_table($header, $images);
@@ -204,6 +204,9 @@ function phphoto_echo_admin_galleries($db) {
 
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
+    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM galleries";
+    $pages = phphoto_db_query($db, $sql);
+    $pages = $pages[0]['pages'];
 
     $sql = "
         SELECT
@@ -226,13 +229,24 @@ function phphoto_echo_admin_galleries($db) {
             $row['description'],
             $row['views'],
             $row['images'],
-            "<a href='".CURRENT_PAGE."'><img src='./icons/tango/actions/process-stop.png'></a>"
+            ((!$row['images']) ? "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
     }
 
     echo "\n<div class='settings'>";
     echo "\n    <h1>Admin galleries</h1>";
     phphoto_to_html_table($header, $data);
+
+    if ($page_number > 0)
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
+    else
+        echo "<img src='./icons/go-previous-inactive.png'>";
+    echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
+    if ($page_number < ($pages - 1))
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'><img src='./icons/go-next.png'></a>";
+    else
+        echo "<img src='./icons/go-next-inactive.png'>";
+
     echo "\n</div>";
 }
 
@@ -327,7 +341,8 @@ function phphoto_echo_admin_images($db) {
             filename,
             exif,
             title,
-            description
+            description,
+            (SELECT COUNT(*) FROM image_to_gallery WHERE image_id = id) AS in_use
         FROM
             images
         LIMIT
@@ -354,7 +369,7 @@ function phphoto_echo_admin_images($db) {
             (strlen($row['filename']) < $max_text_length) ? $row['filename'] : substr($row['filename'], 0, $max_text_length).'...',
             (strlen($row['title']) < $max_text_length) ? $row['title'] : substr($row['title'], 0, $max_text_length).'...',
             (strlen($row['description']) < $max_text_length) ? $row['description'] : substr($row['description'], 0, $max_text_length).'...',
-            "<a href='".CURRENT_PAGE."'><img src='./icons/tango/actions/process-stop.png'></a>"
+            ((!$row['in_use']) ? "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
     }
 
@@ -363,10 +378,15 @@ function phphoto_echo_admin_images($db) {
     phphoto_to_html_table($header, $data);
     
     if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'><img src='./icons/tango/actions/go-previous.png'></a>";
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
+    else
+        echo "<img src='./icons/go-previous-inactive.png'>";
     echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
     if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'><img src='./icons/tango/actions/go-next.png'></a>";
+        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'><img src='./icons/go-next.png'></a>";
+    else
+        echo "<img src='./icons/go-next-inactive.png'>";
+
     echo "\n</div>";
 }
 
