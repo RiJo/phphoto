@@ -1,9 +1,9 @@
 <?php
-    session_start();
 
     require_once('phphoto.php');
 
     $password = 'abc';
+
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
