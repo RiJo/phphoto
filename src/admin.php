@@ -227,6 +227,7 @@ function phphoto_echo_admin_galleries($db) {
             title,
             description,
             views,
+            views / (SELECT SUM(views) FROM galleries) AS popularity,
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images
         FROM
             galleries
@@ -239,8 +240,8 @@ function phphoto_echo_admin_galleries($db) {
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$row[id]'>$row[title]</a>",
-            $row['description'],
-            $row['views'],
+            wordwrap($row['description'], 50, '<br>', true),
+            $row['views']." (".round($row['popularity']*100)."%)",
             $row['images'],
             ((!$row['images']) ? "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
@@ -362,10 +363,9 @@ function phphoto_echo_admin_images($db) {
             width,
             height,
             filesize,
-            filename,
-            exif,
-            title,
-            description,
+            IF (LENGTH(title) > 0, title, filename) AS name,
+            views,
+            views / (SELECT SUM(views) FROM images) AS popularity,
             (SELECT COUNT(*) FROM image_to_gallery WHERE image_id = id) AS in_use
         FROM
             images
@@ -373,26 +373,17 @@ function phphoto_echo_admin_images($db) {
             ".($page_number * $items_per_page).", $items_per_page
     ";
 
-    $header = array('Thumbnail', 'Resolution', 'Camera', 'Settings', 'Filesize', 'Filename', 'Title', 'Description', '&nbsp;');
+    $header = array('Thumbnail', 'Name', 'Resolution', 'Filesize', 'Views', '&nbsp;');
     $max_text_length = 12;
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
-        if ($row['exif'])
-            eval('$exif = ' . $row['exif'] . ';');
-        else
-            $exif = array();
-
         array_push($data, array(
             "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
+            wordwrap($row['name'], 20, '<br>', true),
             $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
-            ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET),
-            ((isset($exif['ExposureTime'])  || isset($exif['ISOSpeedRatings']) ||isset($exif['FNumber'])) ? 
-                    '<br>'.$exif['ISOSpeedRatings'].'<br>'.$exif['FNumber'] : VARIABLE_NOT_SET),
             format_byte($row['filesize']),
-            (strlen($row['filename']) < $max_text_length) ? $row['filename'] : substr($row['filename'], 0, $max_text_length).'...',
-            (strlen($row['title']) < $max_text_length) ? $row['title'] : substr($row['title'], 0, $max_text_length).'...',
-            (strlen($row['description']) < $max_text_length) ? $row['description'] : substr($row['description'], 0, $max_text_length).'...',
+            $row['views']." (".round($row['popularity']*100)."%)",
             ((!$row['in_use']) ? "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
     }
