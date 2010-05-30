@@ -31,14 +31,18 @@ function phphoto_admin($db, $admin) {
     switch ($admin) {
         case GET_VALUE_ADMIN_GALLERY:
             $gallery_id = (isset($_GET[GET_KEY_GALLERY_ID])) ? $_GET[GET_KEY_GALLERY_ID] : INVALID_ID;
-            if (is_numeric($gallery_id) && $gallery_id != INVALID_ID)
+            /* UGLY AS HELL, FIX THIS */
+            $overall_operation = (isset($_GET[GET_KEY_OPERATION]) && $_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && !isset($_GET[GET_KEY_IMAGE_ID]));
+            if (is_numeric($gallery_id) && $gallery_id != INVALID_ID && !$overall_operation)
                 phphoto_echo_admin_gallery($db, $gallery_id);
             else
                 phphoto_echo_admin_galleries($db);
             break;
         case GET_VALUE_ADMIN_IMAGE:
             $image_id = (isset($_GET[GET_KEY_IMAGE_ID])) ? $_GET[GET_KEY_IMAGE_ID] : INVALID_ID;
-            if (is_numeric($image_id) && $image_id != INVALID_ID)
+            /* UGLY AS HELL, FIX THIS */
+            $overall_operation = (isset($_GET[GET_KEY_OPERATION]) && $_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE);
+            if (is_numeric($image_id) && $image_id != INVALID_ID && !$overall_operation)
                 phphoto_echo_admin_image($db, $image_id);
             else
                 phphoto_echo_admin_images($db);

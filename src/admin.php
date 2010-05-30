@@ -99,26 +99,24 @@ function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
 function phphoto_echo_admin_gallery($db, $gallery_id) {
     assert(is_numeric($gallery_id));
 
-    phphoto_regenerate_gallery_thumbnail($db, $gallery_id);
-
-    echo "\n<div class='settings'>";
-    echo "\n    <h1>Edit gallery</h1>";
-
     // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE && isset($_POST[GET_KEY_IMAGE_ID])) {
+            // add image
             $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, ".$_POST[GET_KEY_IMAGE_ID].", NOW())";
             if (phphoto_db_query($db, $sql) == 1) {
                 echo "\n    <div class='info'>Image has has been added</div>";
             }
         }
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
+            // remove image
             $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = ".$_GET[GET_KEY_IMAGE_ID];
             if (phphoto_db_query($db, $sql) == 1) {
                 echo "\n    <div class='info'>Image has has been removed</div>";
             }
         }
         if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
+            // update gallery
             $title = $_POST['title'];
             $description = $_POST['description'];
 
@@ -128,6 +126,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             }
         }
     }
+
+    phphoto_regenerate_gallery_thumbnail($db, $gallery_id);
 
     $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
     $gallery_data = phphoto_db_query($db, $sql);
@@ -149,6 +149,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     array_push($table_data, array("Created",        format_date_time($gallery_data['created'])));
     array_push($table_data, array("&nbsp;",         "<input type='submit' value='Save'>"));
 
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Edit gallery</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".
             GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
             GET_KEY_OPERATION."=".GET_VALUE_UPDATE."&".
@@ -200,6 +202,17 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
  * Table showing all galleries available for editing
  */
 function phphoto_echo_admin_galleries($db) {
+    // OPERATIONS
+    if (isset($_GET[GET_KEY_OPERATION])) {
+        if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_GALLERY_ID])) {
+            // delete gallery
+            $sql = "DELETE FROM galleries WHERE id = ".$_GET[GET_KEY_GALLERY_ID];
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo "\n    <div class='info'>Gallery has has been removed</div>";
+            }
+        }
+    }
+
     phphoto_create_gallery($db);
 
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
@@ -256,12 +269,10 @@ function phphoto_echo_admin_galleries($db) {
 function phphoto_echo_admin_image($db, $image_id) {
     assert(is_numeric($image_id));
 
-    echo "\n<div class='settings'>";
-    echo "\n    <h1>Edit image</h1>";
-
     // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
+            // update image
             $title = $_POST['title'];
             $description = $_POST['description'];
 
@@ -310,6 +321,8 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array("Created",        format_date_time($image_data['created'])));
     array_push($table_data, array("&nbsp;",         "<input type='submit' value='Save'>"));
 
+    echo "\n<div class='settings'>";
+    echo "\n    <h1>Edit image</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".
             GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".
             GET_KEY_OPERATION."=".GET_VALUE_UPDATE."&".
@@ -323,6 +336,17 @@ function phphoto_echo_admin_image($db, $image_id) {
  * Table showing all images available for editing
  */
 function phphoto_echo_admin_images($db) {
+    // OPERATIONS
+    if (isset($_GET[GET_KEY_OPERATION])) {
+        if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
+            // delete image
+            $sql = "DELETE FROM images WHERE id = ".$_GET[GET_KEY_IMAGE_ID];
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo "\n    <div class='info'>Image has has been removed</div>";
+            }
+        }
+    }
+
     phphoto_upload_image();
     phphoto_regenerate_image_thumbnails($db);
 
