@@ -190,7 +190,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                     GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
                     GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.
                     GET_KEY_GALLERY_ID.'='.$gallery_id.'&'.
-                    GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>"
+                    GET_KEY_IMAGE_ID."=$row[id]'><img src='".GALLERY_THEME_PATH."process-stop.png'></a>"
         ));
     }
     phphoto_to_html_table($header, $images);
@@ -243,7 +243,7 @@ function phphoto_echo_admin_galleries($db) {
             wordwrap($row['description'], 50, '<br>', true),
             $row['views']." (".round($row['popularity']*100)."%)",
             $row['images'],
-            ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
+            ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_GALLERY_ID."=$row[id]'><img src='".GALLERY_THEME_PATH."process-stop.png'></a>" : "<img src='".GALLERY_THEME_PATH."process-stop-inactive.png'>")
         ));
     }
 
@@ -252,14 +252,14 @@ function phphoto_echo_admin_galleries($db) {
     phphoto_to_html_table($header, $data);
 
     if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='".GALLERY_THEME_PATH."go-previous.png'></a>";
     else
-        echo "<img src='./icons/go-previous-inactive.png'>";
+        echo "<img src='".GALLERY_THEME_PATH."go-previous-inactive.png'>";
     echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
     if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='".GALLERY_THEME_PATH."go-next.png'></a>";
     else
-        echo "<img src='./icons/go-next-inactive.png'>";
+        echo "<img src='".GALLERY_THEME_PATH."go-next-inactive.png'>";
 
     echo "\n</div>";
 }
@@ -384,7 +384,7 @@ function phphoto_echo_admin_images($db) {
             $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
             format_byte($row['filesize']),
             $row['views']." (".round($row['popularity']*100)."%)",
-            ((!$row['in_use']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
+            ((!$row['in_use']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='".GALLERY_THEME_PATH."process-stop.png'></a>" : "<img src='".GALLERY_THEME_PATH."process-stop-inactive.png'>")
         ));
     }
 
@@ -393,14 +393,14 @@ function phphoto_echo_admin_images($db) {
     phphoto_to_html_table($header, $data);
     
     if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='".GALLERY_THEME_PATH."go-previous.png'></a>";
     else
-        echo "<img src='./icons/go-previous-inactive.png'>";
+        echo "<img src='".GALLERY_THEME_PATH."go-previous-inactive.png'>";
     echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
     if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='".GALLERY_THEME_PATH."go-next.png'></a>";
     else
-        echo "<img src='./icons/go-next-inactive.png'>";
+        echo "<img src='".GALLERY_THEME_PATH."go-next-inactive.png'>";
 
     echo "\n</div>";
 }

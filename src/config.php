@@ -11,7 +11,9 @@ define('GALLERY_DATE',                      '2010-05-30');
 
 define('GALLERY_CHARSET',                   'iso-8859-1');
 define('GALLERY_LANGUAGE',                  'sv');
-define('GALLERY_STYLESHEET',                './style.css');
+define('GALLERY_THEME',                     'default');
+define('GALLERY_THEME_PATH',                './themes/'.GALLERY_THEME.'/');
+
 
 define('DATABASE_HOST',                     'localhost');
 define('DATABASE_PORT',                     3306);
@@ -38,7 +40,7 @@ define('SESSION_VALUE_VIEWS',               'check');
 define('INVALID_ID',                        -1);
 define('CURRENT_PAGE',                      basename($_SERVER['PHP_SELF']));
 define('VARIABLE_NOT_SET',                  '-');
-define('DEFAULT_ITEMS_PER_PAGE',            20); // only on admin pages so far
+define('DEFAULT_ITEMS_PER_PAGE',            10); // only on admin pages so far
 
 define('DATE_FORMAT',                       'Y-m-d (H:i)');
 

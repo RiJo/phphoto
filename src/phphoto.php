@@ -158,7 +158,7 @@ EXIF flash values (http://www.colorpilot.com/exif_tags.html)
     }
     if (isset($exif['Flash'])) {
         if (((int)$exif['Flash'] % 2) == 1) {
-            array_push($summary, sprintf('%s', "<img src='./icons/flash.png'>"));
+            array_push($summary, sprintf('%s', "<img src='".GALLERY_THEME_PATH."flash.png'>"));
         }
     }
 
