@@ -4,7 +4,7 @@ function phphoto_upload_image() {
     global $allowed_filetypes;
     if(isset($_FILES['image'])) {
         $uploaded_image = $_FILES['image'];
-        $extension = end(explode(".", $uploaded_image['name']));
+        $extension = end(explode('.', $uploaded_image['name']));
         $filesize = filesize($uploaded_image['tmp_name']);
 
         if (!in_array(strtolower($extension), $allowed_filetypes)) {
@@ -140,20 +140,20 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = $gallery_data[0];
 
     $table_data = array();
-    array_push($table_data, array("&nbsp;",         "<img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=".$gallery_id."'>"));
-    array_push($table_data, array("Views",          $gallery_data['views']));
-    array_push($table_data, array("Images",         $gallery_data['images']));
-    array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
-    array_push($table_data, array("Description",    "<textarea name='description'>$gallery_data[description]</textarea>"));
-    array_push($table_data, array("Changed",        format_date_time($gallery_data['changed'])));
-    array_push($table_data, array("Created",        format_date_time($gallery_data['created'])));
-    array_push($table_data, array("&nbsp;",         "<input type='submit' value='Save'>"));
+    array_push($table_data, array('&nbsp;',         "<img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=".$gallery_id."'>"));
+    array_push($table_data, array('Views',          $gallery_data['views']));
+    array_push($table_data, array('Images',         $gallery_data['images']));
+    array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
+    array_push($table_data, array('Description',    "<textarea name='description'>$gallery_data[description]</textarea>"));
+    array_push($table_data, array('Changed',        format_date_time($gallery_data['changed'])));
+    array_push($table_data, array('Created',        format_date_time($gallery_data['created'])));
+    array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
 
     echo "\n<div class='settings'>";
     echo "\n    <h1>Edit gallery</h1>";
-    echo "\n    <form method='post' action='".CURRENT_PAGE."?".
-            GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
-            GET_KEY_OPERATION."=".GET_VALUE_UPDATE."&".
+    echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
+            GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
+            GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
             GET_KEY_GALLERY_ID."=$gallery_id'>";
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
@@ -162,9 +162,9 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
     $images = phphoto_db_query($db, $sql);
     if (count($images) > 0) {
-        echo "\n    <form method='post' action='".CURRENT_PAGE."?".
-                GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
-                GET_KEY_OPERATION."=".GET_VALUE_CREATE."&".
+        echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
+                GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
+                GET_KEY_OPERATION.'='.GET_VALUE_CREATE.'&'.
                 GET_KEY_GALLERY_ID."=$gallery_id'>";
         echo "\n        <select name='".GET_KEY_IMAGE_ID."'>";
         foreach ($images as $row) {
@@ -182,14 +182,14 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $images = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($images, array(
-            "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
             $row['filename'],
             $row['title'],
             $row['description'],
-            "<a href='".CURRENT_PAGE."?".
-                    GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".
-                    GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".
-                    GET_KEY_GALLERY_ID."=".$gallery_id."&".
+            "<a href='".CURRENT_PAGE.'?'.
+                    GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
+                    GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.
+                    GET_KEY_GALLERY_ID.'='.$gallery_id.'&'.
                     GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>"
         ));
     }
@@ -239,11 +239,11 @@ function phphoto_echo_admin_galleries($db) {
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
-            "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$row[id]'>$row[title]</a>",
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$row[id]'>$row[title]</a>",
             wordwrap($row['description'], 50, '<br>', true),
             $row['views']." (".round($row['popularity']*100)."%)",
             $row['images'],
-            ((!$row['images']) ? "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
+            ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
     }
 
@@ -252,12 +252,12 @@ function phphoto_echo_admin_galleries($db) {
     phphoto_to_html_table($header, $data);
 
     if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
     else
         echo "<img src='./icons/go-previous-inactive.png'>";
     echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
     if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'><img src='./icons/go-next.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png'></a>";
     else
         echo "<img src='./icons/go-next-inactive.png'>";
 
@@ -291,7 +291,7 @@ function phphoto_echo_admin_image($db, $image_id) {
 
     $gallery_names = array();
     foreach ($gallery_data as $gallery)
-        array_push($gallery_names, "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery[id]'>$gallery[title]</a>");
+        array_push($gallery_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$gallery[id]'>$gallery[title]</a>");
 
     if (count($image_data) != 1) {
         echo "\n    <div class='error'>Unknown image</div>";
@@ -305,28 +305,28 @@ function phphoto_echo_admin_image($db, $image_id) {
         $exif = array();
 
     $table_data = array();
-    array_push($table_data, array("&nbsp;",         "<img src='image.php?".GET_KEY_IMAGE_ID."=".$image_id."t'>"));
-    array_push($table_data, array("Filename",       $image_data['filename']));
-    array_push($table_data, array("Format",         image_type_to_mime_type($image_data['type'])));
-    array_push($table_data, array("Filesize",       format_byte($image_data['filesize'])));
-    array_push($table_data, array("Resolution",     $image_data['width'].'x'.$image_data['height'].' ('.
+    array_push($table_data, array('&nbsp;',         "<img src='image.php?".GET_KEY_IMAGE_ID.'='.$image_id."t'>"));
+    array_push($table_data, array('Filename',       $image_data['filename']));
+    array_push($table_data, array('Format',         image_type_to_mime_type($image_data['type'])));
+    array_push($table_data, array('Filesize',       format_byte($image_data['filesize'])));
+    array_push($table_data, array('Resolution',     $image_data['width'].'x'.$image_data['height'].' ('.
                                                     aspect_ratio($image_data['width'], $image_data['height']).')'));
-    array_push($table_data, array("Filename",       $image_data['filename']));
-    array_push($table_data, array("EXIF version",   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array("Camera",         ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array("Settings",       format_camera_settings($exif)));
-    array_push($table_data, array("Used in",        implode(', ', $gallery_names)));
-    array_push($table_data, array("Title",          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
-    array_push($table_data, array("Description",    "<textarea name='description'>$image_data[description]</textarea>"));
-    array_push($table_data, array("Changed",        format_date_time($image_data['changed'])));
-    array_push($table_data, array("Created",        format_date_time($image_data['created'])));
-    array_push($table_data, array("&nbsp;",         "<input type='submit' value='Save'>"));
+    array_push($table_data, array('Filename',       $image_data['filename']));
+    array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array('Camera',         ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array('Settings',       format_camera_settings($exif)));
+    array_push($table_data, array('Used in',        implode(', ', $gallery_names)));
+    array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
+    array_push($table_data, array('Description',    "<textarea name='description'>$image_data[description]</textarea>"));
+    array_push($table_data, array('Changed',        format_date_time($image_data['changed'])));
+    array_push($table_data, array('Created',        format_date_time($image_data['created'])));
+    array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
 
     echo "\n<div class='settings'>";
     echo "\n    <h1>Edit image</h1>";
-    echo "\n    <form method='post' action='".CURRENT_PAGE."?".
-            GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".
-            GET_KEY_OPERATION."=".GET_VALUE_UPDATE."&".
+    echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
+            GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.
+            GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
             GET_KEY_IMAGE_ID."=$image_id'>";
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
@@ -378,13 +378,13 @@ function phphoto_echo_admin_images($db) {
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
-            "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_IMAGE_ID."=$row[id]'>
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
             wordwrap($row['name'], 20, '<br>', true),
             $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
             format_byte($row['filesize']),
             $row['views']." (".round($row['popularity']*100)."%)",
-            ((!$row['in_use']) ? "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_OPERATION."=".GET_VALUE_DELETE."&".GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
+            ((!$row['in_use']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
     }
 
@@ -393,12 +393,12 @@ function phphoto_echo_admin_images($db) {
     phphoto_to_html_table($header, $data);
     
     if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
     else
         echo "<img src='./icons/go-previous-inactive.png'>";
     echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
     if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."&".GET_KEY_PAGE_NUMBER."=".($page_number + 1)."'><img src='./icons/go-next.png'></a>";
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png'></a>";
     else
         echo "<img src='./icons/go-next-inactive.png'>";
 

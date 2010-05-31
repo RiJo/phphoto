@@ -54,8 +54,8 @@ function phphoto_admin($db, $admin) {
 
 function phphoto_admin_links($additional_items = array()) {
     echo "\n<ul>";
-    echo "\n    <li><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
-    echo "\n    <li><a href='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
+    echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
+    echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
     foreach ($additional_items as $name=>$url)
         echo "\n    <li><a href='$url'>$name</a></li>";
     echo "\n</ul>";
@@ -67,18 +67,18 @@ function phphoto_admin_links($additional_items = array()) {
 
 function format_byte($bytes) {
     $bounds = array(
-        array("GB", 1024 * 1024 * 1024),
-        array("MB", 1024 * 1024),
-        array("kB", 1024),
-        array("bytes", 1)
+        array('GB', 1024 * 1024 * 1024),
+        array('MB', 1024 * 1024),
+        array('kB', 1024),
+        array('bytes', 1)
     );
     
     for ($i = 0; $i < count($bounds); $i++) {
         if ($bytes >= $bounds[$i][1]) {
             if ($i == count($bounds)-1)
-                return sprintf("%d %s", $bytes/$bounds[$i][1], $bounds[$i][0]);
+                return sprintf('%d %s', $bytes/$bounds[$i][1], $bounds[$i][0]);
             else
-                return sprintf("%d %s (%d %s)", $bytes/$bounds[$i+1][1], $bounds[$i+1][0], $bytes/$bounds[$i][1], $bounds[$i][0]);
+                return sprintf('%d %s (%d %s)', $bytes/$bounds[$i+1][1], $bounds[$i+1][0], $bytes/$bounds[$i][1], $bounds[$i][0]);
         }
     }
     return $bytes; // should not come here
@@ -92,7 +92,7 @@ function format_date_time($string) {
 // Returns a well formatted string of the given exif array
 function format_camera_settings($exif) {
     if (!is_array($exif))
-        return "Invalid exif array";
+        return 'Invalid exif array';
 
 /*
 Typical example of $exif:
@@ -172,7 +172,7 @@ function aspect_ratio($width, $height) {
         if ($width % $i == 0 && $height % $i == 0)
             $lcd = $i;
     }
-    return $width/$lcd.":".$height/$lcd;
+    return $width/$lcd.':'.$height/$lcd;
 }
 
 function parse_exif_data($exif) {
@@ -244,7 +244,7 @@ function store_image($db, $uploaded_image){
             )
     ";
     
-    //~ die("<pre>".$sql."<br>".print_r($exif, true)."</pre>");
+    //~ die('<pre>'.$sql.'<br>'.print_r($exif, true).'</pre>');
     
     $result = phphoto_db_query($db, $sql);
 
@@ -275,10 +275,10 @@ function regenerate_gallery_thumbnail($db, $gallery_id) {
 function generate_gallery_data($images) {
     // create image canvas
     if (!$canvas_resource = ImageCreateTrueColor(GALLERY_THUMBNAIL_WIDTH, GALLERY_THUMBNAIL_HEIGHT))
-        die("Failed to create destination image");
+        die('Failed to create destination image');
     
     // set canvas background color
-    $panel_color = str_replace("#", "", GALLERY_THUMBNAIL_PANEL_COLOR);
+    $panel_color = str_replace('#', '', GALLERY_THUMBNAIL_PANEL_COLOR);
     if (strlen($panel_color) != 6)
         die("Panel color is not properly formatted: #$panel_color");
     $canvas_r = hexdec(substr($panel_color, 0, 2));
@@ -305,7 +305,7 @@ function generate_gallery_data($images) {
                 $image_resource = imagecreatefromstring($images[$index]['data']);
                 if (!ImageCopyResampled($canvas_resource, $image_resource, $x * $image_width, $y * $image_height,
                         0, 0, $image_width, $image_height, $images[$index]['width'], $images[$index]['height']))
-                    die("Could not copy resampled image");
+                    die('Could not copy resampled image');
                 imagedestroy($image_resource);
             }
         }
@@ -313,7 +313,7 @@ function generate_gallery_data($images) {
 
     // write canvas to file
     if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
-        die("Could not create new jpeg image");
+        die('Could not create new jpeg image');
 
     imagedestroy($canvas_resource);
 
@@ -326,7 +326,7 @@ function regenerate_image_thumbnails($db) {
     foreach (phphoto_db_query($db, $sql) as $image) {
         $temp_resource = imagecreatefromstring($image['data']);
         if (!imagejpeg($temp_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
-                die("Could not create new jpeg image");
+                die('Could not create new jpeg image');
 
         $thumbnail = generate_image_data(IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
         $sql = "UPDATE images SET thumbnail = '$thumbnail' WHERE id = $image[id]";
@@ -337,7 +337,7 @@ function regenerate_image_thumbnails($db) {
 
 
 // Generates image data as a byte[]
-function generate_image_data($image, $max_width = null, $max_height = null, $panel_color = "#000000") {
+function generate_image_data($image, $max_width = null, $max_height = null, $panel_color = '#000000') {
     if ($max_width == null && $max_height == null) {
         // keep original image
         return addslashes(file_get_contents($image));
@@ -378,26 +378,26 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
     switch ($image_type) {
         case 1: // GIF
             if (!$image_resource = ImageCreateFromGif($image))
-                die("Could not create image from gif");
+                die('Could not create image from gif');
             break;
         case 2: // JPEG
             if (!$image_resource = ImageCreateFromJpeg($image))
-                die("Could not create image from jpeg");
+                die('Could not create image from jpeg');
             break;
         case 3: // PNG
             if (!$image_resource = ImageCreateFromPng($image))
-                die("Could not create image from png");
+                die('Could not create image from png');
             break;
         default:
-            die("Unrecognized image type");
+            die('Unrecognized image type');
     }
 
     // create image canvas
     if (!$canvas_resource = ImageCreateTrueColor($canvas_width, $canvas_height))
-        die("Failed to create destination image");
+        die('Failed to create destination image');
 
     // set canvas background color
-    $panel_color = str_replace("#", "", $panel_color);
+    $panel_color = str_replace('#', '', $panel_color);
     if (strlen($panel_color) != 6)
         die("Panel color is not properly formatted: #$panel_color");
     $canvas_r = hexdec(substr($panel_color, 0, 2));
@@ -409,24 +409,24 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
     // resize and fit the image on the canvas
     if (!ImageCopyResampled($canvas_resource, $image_resource, $image_delta_x, $image_delta_y,
             0, 0, $image_scaled_width, $image_scaled_height, $image_width, $image_height))
-        die("Could not copy resampled image");
+        die('Could not copy resampled image');
 
     // write canvas to file
     switch ($image_type) {
         case 1: // GIF
             if (!imagegif($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
-                die("Could not create new gif image");
+                die('Could not create new gif image');
             break;
         case 2: // JPEG
             if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
-                die("Could not create new jpeg image");
+                die('Could not create new jpeg image');
             break;
         case 3: // PNG
             if (!imagepng($canvas_resource, IMAGE_TEMP_FILE))
-                die("Could not create new png image");
+                die('Could not create new png image');
             break;
         default:
-            die("Unrecognized image type");
+            die('Unrecognized image type');
     }
 
     imagedestroy($image_resource);
