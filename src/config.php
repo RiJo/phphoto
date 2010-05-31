@@ -6,8 +6,8 @@
  */
 
 define('GALLERY_NAME',                      'phphoto');
-define('GALLERY_VERSION',                   '1.0.0-beta');
-define('GALLERY_DATE',                      'xxxx-xx-xx');
+define('GALLERY_VERSION',                   '1.0.0');
+define('GALLERY_DATE',                      '2010-05-30');
 
 define('GALLERY_CHARSET',                   'iso-8859-1');
 define('GALLERY_LANGUAGE',                  'sv');
