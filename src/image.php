@@ -51,7 +51,7 @@ if(isset($_GET[GET_KEY_IMAGE_ID])) {
     $image = $result[0]['image'];
     $type = $result[0]['type'];
 
-    header("Content-type: " . image_type_to_mime_type($type));
+    header('Content-type: ' . image_type_to_mime_type($type));
     echo ($image);
     exit;
 }

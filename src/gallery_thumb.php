@@ -3,9 +3,6 @@
 require_once('./config.php');
 require_once('./database.php');
 
-define("RESIZED_SUFFIX", "r");
-define("THUMBNAIL_SUFFIX", "t");
-
 if(isset($_GET[GET_KEY_GALLERY_ID])) {
     $id = $_GET[GET_KEY_GALLERY_ID];
 
@@ -27,7 +24,7 @@ if(isset($_GET[GET_KEY_GALLERY_ID])) {
         $image = $result[0]['image'];
     $type = $result[0]['type'];
 
-    header("Content-type: " . image_type_to_mime_type($type));
+    header('Content-type: ' . image_type_to_mime_type($type));
     echo ($image);
     exit;
 }
@@ -38,10 +35,10 @@ else {
 function generate_null_image() {
     // create image canvas
     if (!$canvas_resource = ImageCreateTrueColor(GALLERY_THUMBNAIL_WIDTH, GALLERY_THUMBNAIL_HEIGHT))
-        die("Failed to create destination image");
+        die('Failed to create destination image');
     
     // set canvas background color
-    $panel_color = str_replace("#", "", GALLERY_THUMBNAIL_PANEL_COLOR);
+    $panel_color = str_replace('#', '', GALLERY_THUMBNAIL_PANEL_COLOR);
     if (strlen($panel_color) != 6)
         die("Panel color is not properly formatted: #$panel_color");
     $canvas_r = hexdec(substr($panel_color, 0, 2));
@@ -51,7 +48,7 @@ function generate_null_image() {
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 
     // set invalid-cross color
-    $cross_color = str_replace("#", "", GALLERY_THUMBNAIL_INVALID_COLOR);
+    $cross_color = str_replace('#', '', GALLERY_THUMBNAIL_INVALID_COLOR);
     if (strlen($cross_color) != 6)
         die("Panel color is not properly formatted: #$panel_color");
     $cross_color = imagecolorallocate(
@@ -83,7 +80,7 @@ function generate_null_image() {
 
     // write canvas to file
     if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
-        die("could not create new jpeg image");
+        die('could not create new jpeg image');
 
     imagedestroy($canvas_resource);
 
