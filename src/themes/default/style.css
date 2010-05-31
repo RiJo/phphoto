@@ -117,7 +117,7 @@ div.gallery p {
 div.gallery_thumbnail {
     /* border: 1px #3c3824 solid; */
     /* background-color: #756E45; */
-    background-image: url(gallery.gif);
+    background-image: url(gallery_background.gif);
     background-color: transparent;
     margin: 3px;
     float: left;
@@ -135,7 +135,7 @@ div.gallery_thumbnail img {
 div.image_thumbnail {
     /* border: 1px #3c3824 solid; */
     /* background-color: #756E45; */
-    background-image: url(image.gif);
+    background-image: url(image_background.gif);
     background-color: transparent;
     margin: 3px;
     float: left;
