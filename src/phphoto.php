@@ -176,11 +176,14 @@ function aspect_ratio($width, $height) {
 }
 
 function parse_exif_data($exif) {
-    $keys = explode(',', IMAGE_EXIF_KEYS);
     $parsed_exif = array();
-    foreach ($keys as $key) {
-        if (isset($exif[trim($key)])) {
-            $parsed_exif[trim($key)] = trim($exif[trim($key)]);
+    foreach (explode(',', IMAGE_EXIF_KEYS) as $key) {
+        $key = trim($key);
+        if (isset($exif[$key])) {
+            $parsed_exif[$key] = trim($exif[$key]);
+        }
+        elseif (isset($exif['COMPUTED'][$key])) {
+            $parsed_exif[$key] = trim($exif['COMPUTED'][$key]);
         }
     }
     return $parsed_exif;
@@ -202,7 +205,7 @@ function store_image($db, $uploaded_image){
     $exif_temp = exif_read_data($image);
     $exif = parse_exif_data($exif_temp);
     $image_exif = addslashes(var_export($exif, true));
-    //~ die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
+    die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
 
     // Generate image data
     $image_data = generate_image_data($image);

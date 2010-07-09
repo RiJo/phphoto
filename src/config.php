@@ -45,7 +45,7 @@ define('DATE_FORMAT',                       'Y-m-d (H:i)');
 
 define('IMAGE_TEMP_FILE',                   '/tmp/phphoto.tmp');
 define('IMAGE_MAX_FILESIZE',                1024*1024*10); // should be same as MySQL's 'max allowed packet'
-define('IMAGE_EXIF_KEYS',                   'Make,Model,FirmwareVersion,ImageType,DateTimeOriginal,ExposureTime,ShutterSpeedValue, 
+define('IMAGE_EXIF_KEYS',                   'Make,Model,FirmwareVersion,ImageType,DateTimeOriginal,CCDWidth,ExposureTime,ShutterSpeedValue, 
                                             ExposureBiasValue,ISOSpeedRatings,FNumber,FocalLength,WhiteBalance,Flash,ExifVersion');
 
 define('IMAGE_THUMBNAIL_WIDTH',             150);
