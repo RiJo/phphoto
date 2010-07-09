@@ -26,6 +26,7 @@ function phphoto_upload_image() {
                 echo "\n    <div class='info'>Image uploaded successfully</div>";
             }
         }
+        unlink($uploaded_image['tmp_name']); // delete temp file
     }
 
     $filetypes = implode(', ', $allowed_filetypes);

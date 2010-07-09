@@ -151,7 +151,12 @@ EXIF flash values (http://www.colorpilot.com/exif_tags.html)
     }
     if (isset($exif['FocalLength'])) {
         eval('$focal_length = ' . $exif['FocalLength'] . ';');
-        array_push($summary, sprintf('%.0fmm', $focal_length));
+        if (isset($exif['CCDWidth'])) {
+            // calculate real focal length
+            $fieldOfViewCrop = $exif['CCDWidth'] / 2.5;
+            $focal_length *= $fieldOfViewCrop;
+        }
+        array_push($summary, sprintf('%.0fmm%s', $focal_length, (isset($exif['CCDWidth'])) ? '*':''));
     }
     if (isset($exif['ISOSpeedRatings'])) {
         array_push($summary, sprintf('%s', $exif['ISOSpeedRatings']));
@@ -205,7 +210,7 @@ function store_image($db, $uploaded_image){
     $exif_temp = exif_read_data($image);
     $exif = parse_exif_data($exif_temp);
     $image_exif = addslashes(var_export($exif, true));
-    die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
+    //~ die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
 
     // Generate image data
     $image_data = generate_image_data($image);
