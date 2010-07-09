@@ -47,7 +47,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
 
     $gallery = $gallery[0];
 
-    echo "\n<div class='gallery'>";
+    echo "\n<div class='container'>";
     echo "\n    <h1>$gallery[title]</h1>";
     echo "\n    <p>$gallery[description]</p>";
     foreach ($images as $image) {
@@ -55,12 +55,12 @@ function phphoto_echo_gallery($db, $gallery_id) {
             eval('$exif = ' . $image['exif'] . ';');
             $exif = format_camera_settings($exif);
         }
-        else {
-            $exif = VARIABLE_NOT_SET;
+        if (!$image['exif'] || !$exif) {
+            $exif = NO_EXIF_DATA;
         }
-        echo "\n    <div class='image_thumbnail'>";
+        echo "\n    <div class='image'>";
         echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";
-        echo "\n        <img src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]'>";
+        echo "\n            <img class='thumbnail' src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]'>";
         echo "\n        </a>";
         echo "\n        <h3>$exif</h3>";
         echo "\n        <p>$image[name]</p>";
@@ -122,12 +122,12 @@ function phphoto_echo_galleries($db) {
     }
     phphoto_to_html_table($header, $data);*/
 
-    echo "\n<div class='gallery'>";
+    echo "\n<div class='container'>";
     echo "\n    <h1>Galleries</h1>";
     foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
-        echo "\n    <div class='gallery_thumbnail'>";
+        echo "\n    <div class='gallery'>";
         echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
-        echo "\n        <img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
+        echo "\n        <img class='thumbnail' src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
         echo "\n        <p>$gallery[title]</p>";
         echo "\n        </a>";
         echo "\n    </div>";

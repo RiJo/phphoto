@@ -81,11 +81,28 @@ div.settings {
     overflow: auto;
 }
 
-div.gallery {
+div.container {
     border: 1px #3c3824 solid;
     background-color: #4F4A2F;
     padding: 10px;
     overflow: auto;
+}
+
+div.container h1 {
+    color: #bdb182;
+    font-weight: bold;
+}
+
+div.container h3 {
+    color: #000000;
+    font-size: 7pt;
+    font-weight: none;
+    font-style: italic;
+}
+
+div.container p {
+    margin-bottom: 10px;
+    color: #a49a71;
 }
 
 div.footer {
@@ -97,24 +114,7 @@ div.footer {
     overflow: auto;
 }
 
-div.gallery h1 {
-    color: #bdb182;
-    font-weight: bold;
-}
-
-div.gallery h3 {
-    color: #000000;
-    font-size: 7pt;
-    font-weight: none;
-    font-style: italic;
-}
-
-div.gallery p {
-    margin-bottom: 10px;
-    color: #a49a71;
-}
-
-div.gallery_thumbnail {
+div.gallery {
     /* border: 1px #3c3824 solid; */
     /* background-color: #756E45; */
     background-image: url(gallery.gif);
@@ -127,12 +127,12 @@ div.gallery_thumbnail {
     text-align: center;
 }
 
-div.gallery_thumbnail img {
+div.gallery img.thumbnail {
     margin: 10px auto 0 auto;
     border: 1px #000000 solid;
 }
 
-div.image_thumbnail {
+div.image {
     /* border: 1px #3c3824 solid; */
     /* background-color: #756E45; */
     background-image: url(image.gif);
@@ -145,12 +145,12 @@ div.image_thumbnail {
     text-align: center;
 }
 
-div.image_thumbnail img {
+div.image img.thumbnail {
     margin: 10px auto 0 auto;
     border: 1px #000000 solid;
 }
 
-div.image_thumbnail p {
+div.image p {
     color: #222222;
 }
 

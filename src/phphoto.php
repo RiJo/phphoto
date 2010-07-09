@@ -162,7 +162,7 @@ EXIF flash values (http://www.colorpilot.com/exif_tags.html)
         }
     }
 
-    return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;&nbsp;', $summary) : VARIABLE_NOT_SET;
+    return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;&nbsp;', $summary) : null;
 }
 
 // Returns formatted aspect ratio for the width and height

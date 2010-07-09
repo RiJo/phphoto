@@ -38,6 +38,7 @@ define('SESSION_VALUE_VIEWS',               'check');
 define('INVALID_ID',                        -1);
 define('CURRENT_PAGE',                      basename($_SERVER['PHP_SELF']));
 define('VARIABLE_NOT_SET',                  '-');
+define('NO_EXIF_DATA',                      '(no exif data)');
 define('DEFAULT_ITEMS_PER_PAGE',            20); // only on admin pages so far
 
 define('DATE_FORMAT',                       'Y-m-d (H:i)');
