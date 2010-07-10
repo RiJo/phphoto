@@ -9,22 +9,22 @@ function phphoto_upload_image() {
         $replace_existing = (isset($_POST['replace']) && $_POST['replace'] == 'true');
 
         if (!in_array(strtolower($extension), $allowed_filetypes)) {
-            echo "\n<div class='error'>not a valid filetype: $extension</div>";
+            echo "\n<div class='message' id='error'>not a valid filetype: $extension</div>";
         }
         elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
-            echo "\n<div class='error'>the file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE)."!</div>";
+            echo "\n<div class='message' id='error'>the file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE)."!</div>";
         }
         else {
             $db = phphoto_db_connect();
             $image_id = store_image($db, $uploaded_image, $replace_existing);
             if ($image_id == INVALID_ID) {
-                echo "\n    <div class='error'>Could not insert the image in the database</div>";
+                echo "\n    <div class='message' id='error'>Could not insert the image in the database</div>";
             }
             elseif ($image_id == -2) {
-                echo "\n    <div class='warning'>Filename already exists in database</div>";
+                echo "\n    <div class='message' id='warning'>Filename already exists in database</div>";
             }
             else {
-                echo "\n    <div class='info'>Image uploaded successfully</div>";
+                echo "\n    <div class='message' id='info'>Image uploaded successfully</div>";
             }
         }
         unlink($uploaded_image['tmp_name']); // delete temp file
@@ -32,7 +32,7 @@ function phphoto_upload_image() {
 
     $filetypes = implode(', ', $allowed_filetypes);
 
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Upload image</h1>";
     echo "\n    <p>";
     echo "\n    allowed formats: $filetypes";
@@ -42,8 +42,8 @@ function phphoto_upload_image() {
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."' enctype='multipart/form-data'>";
     echo "\n        <input type='file' name='image'>";
     echo "\n        <br>";
-    echo "\n        <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>Replace existing</label>";
     echo "\n        <input type='submit' value='Upload'>";
+    echo "\n        <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>Replace existing</label>";
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -53,10 +53,10 @@ function phphoto_create_gallery($db) {
         $title = $_POST['title'];
         $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
         if (phphoto_db_query($db, $sql) == 1) {
-            echo "\n    <div class='info'>Gallery has has been added</div>";
+            echo "\n    <div class='message' id='info'>Gallery has has been added</div>";
         }
     }
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Create gallery</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>";
     echo "\n        <input type='input' name='title' maxlength='255'>";
@@ -68,10 +68,10 @@ function phphoto_create_gallery($db) {
 function phphoto_regenerate_image_thumbnails($db) {
     if(isset($_POST['regenerate_thumbs'])) {
         $regenerated_thumbnails = regenerate_image_thumbnails($db);
-        echo "\n    <div class='info'>$regenerated_thumbnails thumbnails have been regenerated</div>";
+        echo "\n    <div class='message' id='info'>$regenerated_thumbnails thumbnails have been regenerated</div>";
     }
 
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Regenerate thumbnails</h1>";
     echo "\n    <p>Note: this may take a while depending on the number of images in the database.</p>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
@@ -84,11 +84,11 @@ function phphoto_regenerate_image_thumbnails($db) {
 function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
     if(isset($_POST['regenerate_thumbs'])) {
         if (regenerate_gallery_thumbnail($db, $gallery_id)) {
-            echo "\n    <div class='info'>Gallery thumbnail have been regenerated</div>";
+            echo "\n    <div class='message' id='info'>Gallery thumbnail have been regenerated</div>";
         }
     }
 
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Regenerate thumbnail</h1>";
     echo "\n    <p>Note: this may take a while depending on the number of images in the gallery.</p>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery_id'>";
@@ -109,14 +109,14 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             // add image
             $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, ".$_POST[GET_KEY_IMAGE_ID].", NOW())";
             if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='info'>Image has has been added</div>";
+                echo "\n    <div class='message' id='info'>Image has has been added</div>";
             }
         }
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
             // remove image
             $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = ".$_GET[GET_KEY_IMAGE_ID];
             if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='info'>Image has has been removed</div>";
+                echo "\n    <div class='message' id='info'>Image has has been removed</div>";
             }
         }
         if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
@@ -126,7 +126,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 
             $sql = "UPDATE galleries SET title = '$title', description = '$description' WHERE id = $gallery_id";
             if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='info'>Gallery has been updated</div>";
+                echo "\n    <div class='message' id='info'>Gallery has been updated</div>";
             }
         }
     }
@@ -137,7 +137,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = phphoto_db_query($db, $sql);
 
     if (count($gallery_data) != 1) {
-        echo "\n    <div class='error'>Unknown gallery</div>";
+        echo "\n    <div class='message' id='error'>Unknown gallery</div>";
         echo "\n</div>";
         return;
     }
@@ -153,7 +153,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     array_push($table_data, array('Created',        format_date_time($gallery_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
 
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Edit gallery</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
@@ -212,7 +212,7 @@ function phphoto_echo_admin_galleries($db) {
             // delete gallery
             $sql = "DELETE FROM galleries WHERE id = ".$_GET[GET_KEY_GALLERY_ID];
             if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='info'>Gallery has has been removed</div>";
+                echo "\n    <div class='message' id='info'>Gallery has has been removed</div>";
             }
         }
     }
@@ -251,10 +251,11 @@ function phphoto_echo_admin_galleries($db) {
         ));
     }
 
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Admin galleries</h1>";
     phphoto_to_html_table($header, $data);
 
+    echo "\n    <div class='admin' id='footer'>";
     if ($page_number > 0)
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
     else
@@ -264,6 +265,7 @@ function phphoto_echo_admin_galleries($db) {
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png'></a>";
     else
         echo "<img src='./icons/go-next-inactive.png'>";
+    echo "\n    </div>";
 
     echo "\n</div>";
 }
@@ -283,7 +285,7 @@ function phphoto_echo_admin_image($db, $image_id) {
 
             $sql = "UPDATE images SET title = '$title', description = '$description' WHERE id = $image_id";
             if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='info'>Image has been updated</div>";
+                echo "\n    <div class='message' id='info'>Image has been updated</div>";
             }
         }
     }
@@ -298,7 +300,7 @@ function phphoto_echo_admin_image($db, $image_id) {
         array_push($gallery_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$gallery[id]'>$gallery[title]</a>");
 
     if (count($image_data) != 1) {
-        echo "\n    <div class='error'>Unknown image</div>";
+        echo "\n    <div class='message' id='error'>Unknown image</div>";
         echo "\n</div>";
         return;
     }
@@ -326,7 +328,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array('Created',        format_date_time($image_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
 
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Edit image</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.
@@ -347,7 +349,7 @@ function phphoto_echo_admin_images($db) {
             // delete image
             $sql = "DELETE FROM images WHERE id = ".$_GET[GET_KEY_IMAGE_ID];
             if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='info'>Image has has been removed</div>";
+                echo "\n    <div class='message' id='info'>Image has has been removed</div>";
             }
         }
     }
@@ -392,10 +394,11 @@ function phphoto_echo_admin_images($db) {
         ));
     }
 
-    echo "\n<div class='settings'>";
+    echo "\n<div class='admin'>";
     echo "\n    <h1>Admin images</h1>";
     phphoto_to_html_table($header, $data);
     
+    echo "\n    <div class='admin' id='footer'>";
     if ($page_number > 0)
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
     else
@@ -405,6 +408,7 @@ function phphoto_echo_admin_images($db) {
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png'></a>";
     else
         echo "<img src='./icons/go-next-inactive.png'>";
+    echo "\n    </div>";
 
     echo "\n</div>";
 }
