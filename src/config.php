@@ -11,7 +11,7 @@ define('GALLERY_DATE',                      '2010-05-30');
 
 define('GALLERY_CHARSET',                   'iso-8859-1');
 define('GALLERY_LANGUAGE',                  'sv');
-define('GALLERY_STYLESHEET',                './style.css');
+define('GALLERY_THEME',                     'default');
 
 define('DATABASE_HOST',                     'localhost');
 define('DATABASE_PORT',                     3306);

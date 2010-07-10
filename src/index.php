@@ -14,7 +14,7 @@
         <title><?php echo GALLERY_NAME.' v.'.GALLERY_VERSION; ?></title>
         <meta http-equiv='Content-Type' content='text/html; charset=<?php echo GALLERY_CHARSET; ?>'>
         <meta http-equiv='Content-Language' content='<?php echo GALLERY_LANGUAGE; ?>'>
-        <link rel='stylesheet' href='<?php echo GALLERY_STYLESHEET; ?>' type='text/css'>
+        <link rel='stylesheet' href='./themes/<?php echo GALLERY_THEME; ?>/gallery.css' type='text/css'>
     </head>
     <body>
         <a href='index.php'>First page</a>
