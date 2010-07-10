@@ -323,7 +323,7 @@ function phphoto_echo_admin_galleries($db) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Admin galleries</h1>";
+    echo "\n    <h1>Galleries</h1>";
     phphoto_to_html_table($header, $data);
 
     echo "\n    <div class='admin' id='footer'>";
@@ -506,7 +506,7 @@ function phphoto_echo_admin_tags($db) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Admin galleries</h1>";
+    echo "\n    <h1>Tags</h1>";
     phphoto_to_html_table($header, $data);
 
     echo "\n    <div class='admin' id='footer'>";
@@ -668,7 +668,7 @@ function phphoto_echo_admin_images($db) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Admin images</h1>";
+    echo "\n    <h1>Images</h1>";
     phphoto_to_html_table($header, $data);
     
     echo "\n    <div class='admin' id='footer'>";
