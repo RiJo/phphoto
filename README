@@ -39,4 +39,5 @@
 --------------------------------------------------------------------------------
     * Ability to sort tables in admin pages
     * Bugfix: unauthorized users could run admin SQL queries
+    * Improved look of popup messages
 --------------------------------------------------------------------------------

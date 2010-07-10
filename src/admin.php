@@ -24,7 +24,10 @@ function phphoto_upload_image() {
                 phphoto_popup_message("Filename '$uploaded_image[name]' already exists in database", 'warning');
             }
             else {
-                phphoto_popup_message("Image '$uploaded_image[name]' uploaded successfully", 'info');
+                if ($replace_existing)
+                    phphoto_popup_message("Image '$uploaded_image[name]' uploaded successfully (replace existing)", 'info');
+                else
+                    phphoto_popup_message("Image '$uploaded_image[name]' uploaded successfully", 'info');
             }
         }
         unlink($uploaded_image['tmp_name']); // delete temp file
@@ -51,9 +54,18 @@ function phphoto_upload_image() {
 function phphoto_create_gallery($db) {
     if (isset($_POST['title'])) {
         $title = $_POST['title'];
-        $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
-        if (phphoto_db_query($db, $sql) == 1) {
-            phphoto_popup_message("Gallery '$title' has has been added", 'info');
+
+        $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM galleries WHERE title = '$title';");
+        $gallery_exists = ($result[0]['exist'] == 1);
+        if ($gallery_exists) {
+            phphoto_popup_message("Gallery '$title' already exists", 'warning');
+        }
+        else {
+            $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
+            if (phphoto_db_query($db, $sql) == 1)
+                phphoto_popup_message("Gallery '$title' has has been added", 'info');
+            else
+                phphoto_popup_message("Could not create gallery '$title'", 'info');
         }
     }
     echo "\n<div class='admin'>";
@@ -68,9 +80,18 @@ function phphoto_create_gallery($db) {
 function phphoto_create_tag($db) {
     if (isset($_POST['name'])) {
         $name = $_POST['name'];
-        $sql = "INSERT INTO tags (name, created) VALUES ('$name', NOW())";
-        if (phphoto_db_query($db, $sql) == 1) {
-            phphoto_popup_message("Tag '$name' has has been added", 'info');
+
+        $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM tags WHERE name = '$name';");
+        $tag_exists = ($result[0]['exist'] == 1);
+        if ($tag_exists) {
+            phphoto_popup_message("Tag '$name' already exists", 'warning');
+        }
+        else {
+            $sql = "INSERT INTO tags (name, created) VALUES ('$name', NOW())";
+            if (phphoto_db_query($db, $sql) == 1)
+                phphoto_popup_message("Tag '$name' has has been added", 'info');
+            else
+                phphoto_popup_message("Could not create tag '$name'", 'info');
         }
     }
     echo "\n<div class='admin'>";
