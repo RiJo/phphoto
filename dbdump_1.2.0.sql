@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 10, 2010 at 01:26 PM
+-- Generation Time: Jul 10, 2010 at 01:29 PM
 -- Server version: 5.0.27
 -- PHP Version: 5.2.9
 
@@ -21,7 +21,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE IF NOT EXISTS `cameras` (
   `model` varchar(255) collate latin1_general_ci NOT NULL,
-  `crop_factor` float default NULL,
+  `crop_factor` float NOT NULL default '1',
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`model`)
