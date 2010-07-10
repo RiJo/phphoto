@@ -215,6 +215,14 @@ function store_image($db, $uploaded_image, $replace_existing = false){
     // Read exif data
     $exif_temp = exif_read_data($image);
     $exif = parse_exif_data($exif_temp);
+
+    // add crop factor (field of view) to exif data
+    if (isset($exif['Model'])) {
+        $result = phphoto_db_query($db, "SELECT crop_factor FROM cameras WHERE model = '$exif[Model]';");
+        if (count($result) == 1)
+            $exif['CropFactor'] = $result[0]['crop_factor'];
+    }
+
     $image_exif = addslashes(var_export($exif, true));
     //~ die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
 
