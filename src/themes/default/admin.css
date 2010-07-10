@@ -18,6 +18,12 @@ div.admin#footer {
     overflow: auto;
 }
 
+div.admin h1 {
+    margin-bottom: 10px;
+    color: #000000;
+    font-weight: bold;
+}
+
 div.message {
     margin-bottom: 10px;
 }

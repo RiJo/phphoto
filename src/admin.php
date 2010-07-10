@@ -161,8 +161,11 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             GET_KEY_GALLERY_ID."=$gallery_id'>";
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
+    echo "\n</div>";
 
     // images not in this gallery
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Images in gallery</h1>";
     $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
     $images = phphoto_db_query($db, $sql);
     if (count($images) > 0) {
