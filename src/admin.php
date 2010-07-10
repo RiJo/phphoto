@@ -155,7 +155,7 @@ function phphoto_echo_admin_cameras($db) {
     $table_data = array();
 
     $header = array(
-        'Camera model',
+        'Model',
         'Crop factor',
         'Images'
     );

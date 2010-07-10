@@ -106,17 +106,17 @@ function format_camera_model($exif) {
         return 'Invalid exif array';
 
     $summary = array();
-    /*if (isset($exif['Make'])) {
-        array_push($summary, sprintf('%s', $exif['Make']));
-    }*/
+    if (isset($exif['Make'])) {
+        array_push($summary, sprintf('%s,', $exif['Make']));
+    }
     if (isset($exif['Model'])) {
         array_push($summary, sprintf('%s', $exif['Model']));
     }
-    if (isset($exif['FirmwareVersion'])) {
-        array_push($summary, sprintf(': %s', $exif['FirmwareVersion']));
-    }
-    if (isset($exif['CCDWidth'])) {
-        array_push($summary, sprintf('(CCD %s)', $exif['CCDWidth']));
+    //~ if (isset($exif['FirmwareVersion'])) {
+        //~ array_push($summary, sprintf(': %s', $exif['FirmwareVersion']));
+    //~ }
+    if (isset($exif['CropFactor'])) {
+        array_push($summary, sprintf(' (%.1f crop factor)', $exif['CropFactor']));
     }
 
     return (count($summary) > 0) ? implode('&nbsp;', $summary) : null;
@@ -525,7 +525,7 @@ function phphoto_sql_exif_values($key) {
             ) AS ExifValue
         FROM
             images
-        GROUP BY 1;
+        GROUP BY 1
     ";
 }
 
@@ -536,7 +536,7 @@ function phphoto_sql_exif_images($key, $value) {
         FROM
             images
         WHERE
-            LOCATE('\'$key\' => \'$value\'', exif) > 0;
+            LOCATE('\'$key\' => \'$value\'', exif) > 0
     ";
 }
 
