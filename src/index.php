@@ -30,8 +30,8 @@ elseif (isset($_GET['q']) && $_GET['q'] == 'logout') {
 $authorized = (isset($_SESSION['authorized']) && $_SESSION['authorized']);
 if ($authorized) {
     $additional_items = array(
-        'Logout' => basename($_SERVER['PHP_SELF'])."?q=logout",
-        'First page' => basename($_SERVER['PHP_SELF'])
+        'First page' => basename($_SERVER['PHP_SELF']),
+        'Logout' => basename($_SERVER['PHP_SELF'])."?q=logout"
     );
     phphoto_admin_links($additional_items);
 }

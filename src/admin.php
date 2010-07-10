@@ -135,12 +135,49 @@ function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
     echo "\n</div>";
 }
 
+/*
+ * The default page of the admin pages
+ */
 function phphoto_echo_admin_default($db) {
     echo "\n<div class='admin'>";
     echo "\n    <h1>".GALLERY_NAME."</h1>";
     echo "\n    version: ".GALLERY_VERSION."<br>";
     echo "\n    updated: ".GALLERY_DATE."<br>";
     echo "\n    developers: ".GALLERY_DEVELOPERS."<br>";
+    echo "\n</div>";
+}
+
+/*
+ * Page which lists all the cameras used in the images
+ */
+function phphoto_echo_admin_cameras($db) {
+    $sql = phphoto_sql_exif_values('Model');
+    $table_data = array();
+
+    $header = array(
+        'Camera model',
+        'Crop factor',
+        'Images'
+    );
+
+    foreach (phphoto_db_query($db, $sql) as $row) {
+        $model = $row['ExifValue'];
+        if (strlen($model) > 0) {
+            $sql = "SELECT crop_factor FROM cameras WHERE model = '$model'";
+            $result = phphoto_db_query($db, $sql);
+            $crop_factor = (count($result) == 1) ? $result[0]['crop_factor'] : '-';
+
+            $sql = phphoto_sql_exif_images('Model', $model);
+            $images = count(phphoto_db_query($db, $sql));
+
+            array_push($table_data, array($model, $crop_factor, $images));
+        }
+    }
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Cameras</h1>";
+    phphoto_to_html_table($header, $table_data);
+    echo "\n    </form>";
     echo "\n</div>";
 }
 

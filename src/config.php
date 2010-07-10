@@ -33,6 +33,7 @@ define('GET_VALUE_ADMIN_DEFAULT',           'd');
 define('GET_VALUE_ADMIN_GALLERY',           'g');
 define('GET_VALUE_ADMIN_TAG',               't');
 define('GET_VALUE_ADMIN_IMAGE',             'i');
+define('GET_VALUE_ADMIN_CAMERA',            'c');
 define('GET_VALUE_CREATE',                  'mk');
 define('GET_VALUE_DELETE',                  'rm');
 define('GET_VALUE_UPDATE',                  'up');

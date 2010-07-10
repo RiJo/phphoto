@@ -50,8 +50,12 @@ function phphoto_admin($db, $admin) {
             else
                 phphoto_echo_admin_images($db);
             break;
+        case GET_VALUE_ADMIN_CAMERA:
+            phphoto_echo_admin_cameras($db);
+            break;
         default:
-            phphoto_echo_admin_default($db);;
+            phphoto_echo_admin_default($db);
+            break;
     }
 }
 
@@ -61,6 +65,7 @@ function phphoto_admin_links($additional_items = array()) {
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG."'>Tags</a></li>";
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
+    echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_CAMERA."'>Cameras</a></li>";
     foreach ($additional_items as $name=>$url)
         echo "\n    <li><a href='$url'>$name</a></li>";
     echo "\n</ul>";
@@ -502,6 +507,37 @@ function phphoto_popup_message($message, $type) {
             echo "\n<div class='message'>Unknown message ($type): $message</div>";
             break;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//   SQL GENERATORS
+////////////////////////////////////////////////////////////////////////////////
+
+function phphoto_sql_exif_values($key) {
+    /// BUG: This should not return empty rows
+    /// when fixed: clean up phphoto_echo_admin_cameras()
+    return "
+        SELECT
+            SUBSTRING(
+                exif, 
+                LOCATE('$key', exif)+".strlen($key)."+6, 
+                LOCATE('\'', SUBSTRING(exif, LOCATE('$key', exif)+".strlen($key)."+6))-1
+            ) AS ExifValue
+        FROM
+            images
+        GROUP BY 1;
+    ";
+}
+
+function phphoto_sql_exif_images($key, $value) {
+    return "
+        SELECT
+            id
+        FROM
+            images
+        WHERE
+            LOCATE('\'$key\' => \'$value\'', exif) > 0;
+    ";
 }
 
 ?>
