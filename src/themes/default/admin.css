@@ -28,22 +28,28 @@ div.message {
     margin-bottom: 10px;
 }
 
+div.message {
+    border: 1px #999999 solid;
+}
+
+div.message img {
+    padding: 2px;
+    margin-right: 5px;
+}
+
 div.message#info {
-    color: #009900;
-    background-color: #cccccc;
-    border: 1px #009900 solid;
+    color: #005500;
+    background-color: #aaccaa;
 }
 
 div.message#warning {
-    color: #aeb00a;
-    background-color: #cccccc;
-    border: 1px #aeb00a solid;
+    color: #666000;
+    background-color: #fff888;
 }
 
 div.message#error {
-    color: #ff0000;
-    background-color: #cccccc;
-    border: 1px #ff0000 solid;
+    color: #cc0000;
+    background-color: #ffcccc;
 }
 
 /* LIST */
