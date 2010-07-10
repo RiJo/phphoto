@@ -144,7 +144,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = $gallery_data[0];
 
     $table_data = array();
-    array_push($table_data, array('&nbsp;',         "<img src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=".$gallery_id."'>"));
+    array_push($table_data, array('&nbsp;',         "<img src='image.php?".GET_KEY_GALLERY_ID."=".$gallery_id."'>"));
     array_push($table_data, array('Views',          $gallery_data['views']));
     array_push($table_data, array('Images',         $gallery_data['images']));
     array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));

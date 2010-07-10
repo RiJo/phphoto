@@ -46,4 +46,5 @@
     * Option to replace existing image during upload
     * Views statistics on admin pages
     * Real focal length is calculated if CCD width is given in EXIF data
+    * Cleaned up stylesheets
 --------------------------------------------------------------------------------

@@ -127,7 +127,7 @@ function phphoto_echo_galleries($db) {
     foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
         echo "\n    <div class='gallery'>";
         echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
-        echo "\n        <img class='thumbnail' src='gallery_thumb.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
+        echo "\n        <img class='thumbnail' src='image.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
         echo "\n        <p>$gallery[title]</p>";
         echo "\n        </a>";
         echo "\n    </div>";

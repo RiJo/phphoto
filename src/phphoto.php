@@ -67,18 +67,19 @@ function phphoto_admin_links($additional_items = array()) {
 
 function format_byte($bytes) {
     $bounds = array(
-        array('GB', 1024 * 1024 * 1024),
-        array('MB', 1024 * 1024),
-        array('kB', 1024),
-        array('bytes', 1)
+        array('TB', pow(1024, 4)),
+        array('GB', pow(1024, 3)),
+        array('MB', pow(1024, 2)),
+        array('kB', pow(1024, 1)),
+        array('bytes', pow(1024, 0))
     );
-    
+
     for ($i = 0; $i < count($bounds); $i++) {
-        if ($bytes >= $bounds[$i][1]) {
+        if ($bytes >= $bounds[$i+1][1]) {
             if ($i == count($bounds)-1)
                 return sprintf('%d %s', $bytes/$bounds[$i][1], $bounds[$i][0]);
             else
-                return sprintf('%d %s (%d %s)', $bytes/$bounds[$i+1][1], $bounds[$i+1][0], $bytes/$bounds[$i][1], $bounds[$i][0]);
+                return sprintf('%d %s (%.1f %s)', $bytes/$bounds[$i+1][1], $bounds[$i+1][0], $bytes/$bounds[$i][1], $bounds[$i][0]);
         }
     }
     return $bytes; // should not come here
