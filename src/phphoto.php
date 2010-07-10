@@ -479,4 +479,21 @@ function phphoto_to_html_table($header, $tuples) {
     echo "\n</table>";
 }
 
+function phphoto_popup_message($message, $type) {
+    switch ($type) {
+        case 'error':
+            echo "\n<div class='message' id='error'><img src='./icons/dialog-error.png'>$message</div>";
+            break;
+        case 'warning':
+            echo "\n<div class='message' id='warning'><img src='./icons/dialog-warning.png'>$message</div>";
+            break;
+        case 'info':
+            echo "\n<div class='message' id='info'><img src='./icons/dialog-information.png'>$message</div>";
+            break;
+        default:
+            echo "\n<div class='message'>Unknown message ($type): $message</div>";
+            break;
+    }
+}
+
 ?>

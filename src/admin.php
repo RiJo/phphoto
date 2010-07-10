@@ -9,22 +9,22 @@ function phphoto_upload_image() {
         $replace_existing = (isset($_POST['replace']) && $_POST['replace'] == 'true');
 
         if (!in_array(strtolower($extension), $allowed_filetypes)) {
-            echo "\n<div class='message' id='error'>not a valid filetype: $extension</div>";
+            phphoto_popup_message("Not a valid filetype: $extension", 'error');
         }
         elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
-            echo "\n<div class='message' id='error'>the file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE)."!</div>";
+            phphoto_popup_message("The file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE), 'error');
         }
         else {
             $db = phphoto_db_connect();
             $image_id = store_image($db, $uploaded_image, $replace_existing);
             if ($image_id == INVALID_ID) {
-                echo "\n    <div class='message' id='error'>Could not insert the image in the database</div>";
+                phphoto_popup_message('Could not insert the image in the database', 'error');
             }
             elseif ($image_id == -2) {
-                echo "\n    <div class='message' id='warning'>Filename already exists in database</div>";
+                phphoto_popup_message('Filename already exists in database', 'warning');
             }
             else {
-                echo "\n    <div class='message' id='info'>Image uploaded successfully</div>";
+                phphoto_popup_message('Image uploaded successfully', 'info');
             }
         }
         unlink($uploaded_image['tmp_name']); // delete temp file
@@ -53,7 +53,7 @@ function phphoto_create_gallery($db) {
         $title = $_POST['title'];
         $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
         if (phphoto_db_query($db, $sql) == 1) {
-            echo "\n    <div class='message' id='info'>Gallery has has been added</div>";
+            phphoto_popup_message('Gallery has has been added', 'info');
         }
     }
     echo "\n<div class='admin'>";
@@ -70,7 +70,7 @@ function phphoto_create_tag($db) {
         $name = $_POST['name'];
         $sql = "INSERT INTO tags (name, created) VALUES ('$name', NOW())";
         if (phphoto_db_query($db, $sql) == 1) {
-            echo "\n    <div class='message' id='info'>Tag has has been added</div>";
+            phphoto_popup_message('Tag has has been added', 'info');
         }
     }
     echo "\n<div class='admin'>";
@@ -85,7 +85,7 @@ function phphoto_create_tag($db) {
 function phphoto_regenerate_image_thumbnails($db) {
     if(isset($_POST['regenerate_thumbs'])) {
         $regenerated_thumbnails = regenerate_image_thumbnails($db);
-        echo "\n    <div class='message' id='info'>$regenerated_thumbnails thumbnails have been regenerated</div>";
+        phphoto_popup_message("$regenerated_thumbnails thumbnails have been regenerated", 'info');
     }
 
     echo "\n<div class='admin'>";
@@ -101,7 +101,7 @@ function phphoto_regenerate_image_thumbnails($db) {
 function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
     if(isset($_POST['regenerate_thumbs'])) {
         if (regenerate_gallery_thumbnail($db, $gallery_id)) {
-            echo "\n    <div class='message' id='info'>Gallery thumbnail have been regenerated</div>";
+            phphoto_popup_message('Gallery thumbnail have been regenerated', 'info');
         }
     }
 
@@ -129,14 +129,14 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                 // add image to gallery
                 $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, $image_id, NOW())";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo "\n    <div class='message' id='info'>Image has has been added</div>";
+                    phphoto_popup_message('Image has has been added', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // remove image from gallery
                 $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = $image_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo "\n    <div class='message' id='info'>Image has has been removed</div>";
+                    phphoto_popup_message('Image has has been removed', 'info');
                 }
             }
         }
@@ -148,7 +148,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 
                 $sql = "UPDATE galleries SET title = '$title', description = '$description' WHERE id = $gallery_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo "\n    <div class='message' id='info'>Gallery has been updated</div>";
+                    phphoto_popup_message('Gallery has been updated', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
@@ -159,7 +159,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                     exit();
                 }
                 else {
-                    echo "\n    <div class='message' id='error'>Could not remove gallery</div>";
+                    phphoto_popup_message('Could not remove gallery', 'error');
                 }
             }
         }
@@ -171,7 +171,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = phphoto_db_query($db, $sql);
 
     if (count($gallery_data) != 1) {
-        echo "\n    <div class='message' id='error'>Unknown gallery</div>";
+        phphoto_popup_message('Unknown gallery', 'error');
         echo "\n</div>";
         return;
     }
@@ -326,14 +326,14 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                 // add image to tag
                 $sql = "INSERT INTO image_to_tag (tag_id, image_id, created) VALUES ($tag_id, $image_id, NOW())";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo "\n    <div class='message' id='info'>Image has has been added</div>";
+                    phphoto_popup_message('Image has has been added', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // remove image from tag
                 $sql = "DELETE FROM image_to_tag WHERE tag_id = $tag_id AND image_id = $image_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo "\n    <div class='message' id='info'>Image has has been removed</div>";
+                    phphoto_popup_message('Image has has been removed', 'info');
                 }
             }
         }
@@ -344,7 +344,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
 
                 $sql = "UPDATE tags SET name = '$name' WHERE id = $tag_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo "\n    <div class='message' id='info'>Tag has been updated</div>";
+                    phphoto_popup_message('Tag has been updated', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
@@ -355,7 +355,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                     exit();
                 }
                 else {
-                    echo "\n    <div class='message' id='error'>Could not remove tag</div>";
+                    phphoto_popup_message('Could not remove tag', 'error');
                 }
             }
         }
@@ -365,7 +365,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($tag_data) != 1) {
-        echo "\n    <div class='message' id='error'>Unknown tag</div>";
+        phphoto_popup_message('Unknown tag', 'error');
         echo "\n</div>";
         return;
     }
@@ -509,7 +509,7 @@ function phphoto_echo_admin_image($db, $image_id) {
 
             $sql = "UPDATE images SET title = '$title', description = '$description' WHERE id = $image_id";
             if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='message' id='info'>Image has been updated</div>";
+                phphoto_popup_message('Image has been updated', 'info');
             }
         }
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
@@ -520,7 +520,7 @@ function phphoto_echo_admin_image($db, $image_id) {
                 exit();
             }
             else {
-                echo "\n    <div class='message' id='error'>Could not remove image</div>";
+                phphoto_popup_message('Could not remove image', 'error');
             }
         }
     }
@@ -533,7 +533,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($image_data) != 1) {
-        echo "\n    <div class='message' id='error'>Unknown image</div>";
+        phphoto_popup_message('Unknown image', 'error');
         echo "\n</div>";
         return;
     }
