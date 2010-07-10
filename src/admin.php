@@ -249,6 +249,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 function phphoto_echo_admin_galleries($db) {
     phphoto_create_gallery($db);
 
+    $order_by = (isset($_GET[GET_KEY_SORT_COLUMN])) ? $_GET[GET_KEY_SORT_COLUMN] : 2;
+
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
     $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM galleries";
@@ -264,11 +266,20 @@ function phphoto_echo_admin_galleries($db) {
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images
         FROM
             galleries
+        ORDER BY
+            $order_by
         LIMIT
             ".($page_number * $items_per_page).", $items_per_page
     ";
 
-    $header = array('Thumbnail', 'Title', 'Views', 'Images', '&nbsp;');
+    $header = array(
+        'Thumbnail',
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=2'>Title</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=3'>Views</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=5'>Images</a>",
+        '&nbsp;'
+    );
+
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
@@ -428,6 +439,8 @@ function phphoto_echo_admin_tag($db, $tag_id) {
 function phphoto_echo_admin_tags($db) {
     phphoto_create_tag($db);
 
+    $order_by = (isset($_GET[GET_KEY_SORT_COLUMN])) ? $_GET[GET_KEY_SORT_COLUMN] : 2;
+
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
     $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM tags";
@@ -441,11 +454,18 @@ function phphoto_echo_admin_tags($db) {
             (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images
         FROM
             tags
+        ORDER BY
+            $order_by
         LIMIT
             ".($page_number * $items_per_page).", $items_per_page
     ";
 
-    $header = array('Name', 'Images', '&nbsp;');
+    $header = array(
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=2'>Name</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=3'>Images</a>",
+        '&nbsp;'
+    );
+
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
