@@ -158,11 +158,10 @@ EXIF flash values (http://www.colorpilot.com/exif_tags.html)
     if (isset($exif['FocalLength'])) {
         eval('$focal_length = ' . $exif['FocalLength'] . ';');
         if (isset($exif['CropFactor'])) {
-            // calculate real focal length
-            $fieldOfViewCrop = $exif['CropFactor'];
-            $focal_length *= $fieldOfViewCrop;
+            // calculate real focal length (with the field of view factor)
+            $focal_length *= $exif['CropFactor'];
         }
-        array_push($summary, sprintf('%.0fmm%s', $focal_length, (isset($exif['CCDWidth'])) ? '*':''));
+        array_push($summary, sprintf('%.0fmm%s', $focal_length, (isset($exif['CropFactor'])) ? '*' : ''));
     }
     if (isset($exif['ISOSpeedRatings'])) {
         array_push($summary, sprintf('%s', $exif['ISOSpeedRatings']));
