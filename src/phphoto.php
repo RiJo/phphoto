@@ -217,7 +217,7 @@ function parse_exif_data($exif) {
 }
 
 // Adds the image to the database and returns the image ID
-function store_image($db, $uploaded_image){
+function store_image($db, $uploaded_image, $replace_existing = false){
     // Validate extension and filesiz
     $image_filename = $uploaded_image['name'];
     $image = $uploaded_image['tmp_name'];
@@ -240,12 +240,29 @@ function store_image($db, $uploaded_image){
 
     // Check if exists
     $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM images WHERE filename = '$image_filename';");
-    if ($result[0]['exist'] > 0) {
+    $image_exists = ($result[0]['exist'] == 1);
+    if (!$replace_existing && $image_exists) {
         return -2;
     }
 
-    // Insert into database
-    $sql = "
+    if ($image_exists) {
+        // Update existing
+        $sql = "
+            UPDATE images SET
+                data = '$image_data',
+                thumbnail = '$image_thumbnail',
+                type = $image_type,
+                width = $image_width,
+                height = $image_height,
+                filesize = $image_filesize,
+                exif = '$image_exif'
+            WHERE
+                filename = '$image_filename'
+        ";
+    }
+    else {
+        // Insert new
+        $sql = "
             INSERT INTO images (
                 data,
                 thumbnail,
@@ -272,10 +289,9 @@ function store_image($db, $uploaded_image){
                 '',
                 NOW()
             )
-    ";
-    
-    //~ die('<pre>'.$sql.'<br>'.print_r($exif, true).'</pre>');
-    
+        ";
+    }
+
     $result = phphoto_db_query($db, $sql);
 
     return ($result) ? mysql_insert_id($db) : INVALID_ID;

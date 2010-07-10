@@ -6,6 +6,7 @@ function phphoto_upload_image() {
         $uploaded_image = $_FILES['image'];
         $extension = end(explode('.', $uploaded_image['name']));
         $filesize = filesize($uploaded_image['tmp_name']);
+        $replace_existing = (isset($_POST['replace']) && $_POST['replace'] == 'true');
 
         if (!in_array(strtolower($extension), $allowed_filetypes)) {
             echo "\n<div class='error'>not a valid filetype: $extension</div>";
@@ -15,7 +16,7 @@ function phphoto_upload_image() {
         }
         else {
             $db = phphoto_db_connect();
-            $image_id = store_image($db, $uploaded_image);
+            $image_id = store_image($db, $uploaded_image, $replace_existing);
             if ($image_id == INVALID_ID) {
                 echo "\n    <div class='error'>Could not insert the image in the database</div>";
             }
@@ -40,13 +41,15 @@ function phphoto_upload_image() {
     echo "\n    </p>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."' enctype='multipart/form-data'>";
     echo "\n        <input type='file' name='image'>";
+    echo "\n        <br>";
+    echo "\n        <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>Replace existing</label>";
     echo "\n        <input type='submit' value='Upload'>";
     echo "\n    </form>";
     echo "\n</div>";
 }
 
 function phphoto_create_gallery($db) {
-    if(isset($_POST['title'])) {
+    if (isset($_POST['title'])) {
         $title = $_POST['title'];
         $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
         if (phphoto_db_query($db, $sql) == 1) {
