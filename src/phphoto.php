@@ -90,6 +90,28 @@ function format_date_time($string) {
 }
 
 // Returns a well formatted string of the given exif array
+function format_camera_model($exif) {
+    if (!is_array($exif))
+        return 'Invalid exif array';
+
+    $summary = array();
+    /*if (isset($exif['Make'])) {
+        array_push($summary, sprintf('%s', $exif['Make']));
+    }*/
+    if (isset($exif['Model'])) {
+        array_push($summary, sprintf('%s', $exif['Model']));
+    }
+    if (isset($exif['FirmwareVersion'])) {
+        array_push($summary, sprintf('%s', $exif['FirmwareVersion']));
+    }
+    if (isset($exif['CCDWidth'])) {
+        array_push($summary, sprintf('CCD %s', $exif['CCDWidth']));
+    }
+
+    return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;&nbsp;', $summary) : null;
+}
+
+// Returns a well formatted string of the given exif array
 function format_camera_settings($exif) {
     if (!is_array($exif))
         return 'Invalid exif array';

@@ -314,7 +314,7 @@ function phphoto_echo_admin_image($db, $image_id) {
                                                     aspect_ratio($image_data['width'], $image_data['height']).')'));
     array_push($table_data, array('Filename',       $image_data['filename']));
     array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array('Camera',         ((isset($exif['Model'])) ? $exif['Model'] : VARIABLE_NOT_SET)));
+    array_push($table_data, array('Camera',         format_camera_model($exif)));
     array_push($table_data, array('Settings',       format_camera_settings($exif)));
     array_push($table_data, array('Used in',        implode(', ', $gallery_names)));
     array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
