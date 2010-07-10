@@ -431,16 +431,23 @@ function phphoto_echo_admin_image($db, $image_id) {
     $image_data = phphoto_db_query($db, $sql);
     $sql = "SELECT id, title FROM galleries WHERE id IN (SELECT gallery_id FROM image_to_gallery WHERE image_id = $image_id)";
     $gallery_data = phphoto_db_query($db, $sql);
-
-    $gallery_names = array();
-    foreach ($gallery_data as $gallery)
-        array_push($gallery_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$gallery[id]'>$gallery[title]</a>");
+    $sql = "SELECT id, name FROM tags WHERE id IN (SELECT tag_id FROM image_to_tag WHERE image_id = $image_id)";
+    $tag_data = phphoto_db_query($db, $sql);
 
     if (count($image_data) != 1) {
         echo "\n    <div class='message' id='error'>Unknown image</div>";
         echo "\n</div>";
         return;
     }
+
+    $gallery_names = array();
+    foreach ($gallery_data as $gallery)
+        array_push($gallery_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$gallery[id]'>$gallery[title]</a>");
+
+    $tag_names = array();
+    foreach ($tag_data as $tag)
+        array_push($tag_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$tag[id]'>$tag[name]</a>");
+
     $image_data = $image_data[0];
     if ($image_data['exif'])
         eval('$exif = ' . $image_data['exif'] . ';');
@@ -459,6 +466,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array('Camera',         "<img src='./icons/camera-photo.png'>&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
     array_push($table_data, array('Settings',       "<img src='./icons/image-x-generic.png'>&nbsp;&nbsp;&nbsp;".format_camera_settings($exif)));
     array_push($table_data, array('Gallery use',    implode('<br>', $gallery_names)));
+    array_push($table_data, array('Tag use',    implode('<br>', $tag_names)));
     array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array('Description',    "<textarea name='description'>$image_data[description]</textarea>"));
     array_push($table_data, array('Changed',        format_date_time($image_data['changed'])));

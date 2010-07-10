@@ -43,6 +43,7 @@
 --------------------------------------------------------------------------------
     version 1.1.0, xxxx-xx-xx
 --------------------------------------------------------------------------------
+    * Images can now be tagged for filtering
     * Option to replace existing image during upload
     * Views statistics on admin pages
     * Real focal length is calculated if CCD width is given in EXIF data
