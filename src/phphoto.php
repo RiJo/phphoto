@@ -9,10 +9,10 @@ require_once('./gallery.php');
 
 $allowed_filetypes = array('jpg','jpeg','png');
 
-function phphoto_main() {
+function phphoto_main($authorized = false) {
     $db = phphoto_db_connect();
     $admin = (isset($_GET[GET_KEY_ADMIN_QUERY])) ? $_GET[GET_KEY_ADMIN_QUERY] : '';
-    if (strlen($admin) > 0)
+    if ($authorized && strlen($admin) > 0)
         phphoto_admin($db, $admin);
     else
         phphoto_gallery($db);

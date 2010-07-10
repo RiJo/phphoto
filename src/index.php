@@ -27,7 +27,8 @@ if (isset($_POST['login']) && $_POST['login'] == $password) {
 elseif (isset($_GET['q']) && $_GET['q'] == 'logout') {
     unset($_SESSION['authorized']);
 }
-if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
+$authorized = (isset($_SESSION['authorized']) && $_SESSION['authorized']);
+if ($authorized) {
     $additional_items = array(
         'Logout' => basename($_SERVER['PHP_SELF'])."?q=logout",
         'First page' => basename($_SERVER['PHP_SELF'])
@@ -41,7 +42,7 @@ if (isset($_GET['q']) && $_GET['q'] == 'login') {
     echo "\n    </form>";
 }
 else {
-    phphoto_main();
+    phphoto_main($authorized);
 }
 
 ?>
