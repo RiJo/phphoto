@@ -103,13 +103,13 @@ function format_camera_model($exif) {
         array_push($summary, sprintf('%s', $exif['Model']));
     }
     if (isset($exif['FirmwareVersion'])) {
-        array_push($summary, sprintf('%s', $exif['FirmwareVersion']));
+        array_push($summary, sprintf(': %s', $exif['FirmwareVersion']));
     }
     if (isset($exif['CCDWidth'])) {
-        array_push($summary, sprintf('CCD %s', $exif['CCDWidth']));
+        array_push($summary, sprintf('(CCD %s)', $exif['CCDWidth']));
     }
 
-    return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;&nbsp;', $summary) : null;
+    return (count($summary) > 0) ? implode('&nbsp;', $summary) : null;
 }
 
 // Returns a well formatted string of the given exif array
