@@ -229,7 +229,6 @@ function phphoto_echo_admin_galleries($db) {
         SELECT
             id,
             title,
-            description,
             views,
             views / (SELECT SUM(views) FROM galleries) AS popularity,
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images
@@ -239,12 +238,13 @@ function phphoto_echo_admin_galleries($db) {
             ".($page_number * $items_per_page).", $items_per_page
     ";
 
-    $header = array('Title', 'Description', 'Views', 'Images', '&nbsp;');
+    $header = array('Thumbnail', 'Title', 'Views', 'Images', '&nbsp;');
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
-            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$row[id]'>$row[title]</a>",
-            wordwrap($row['description'], 50, '<br>', true),
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$row[id]'>
+                    <img src='image.php?".GET_KEY_GALLERY_ID."=$row[id]'></a>",
+            $row['title'],
             $row['views']." (".round($row['popularity']*100)."%)",
             $row['images'],
             ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
