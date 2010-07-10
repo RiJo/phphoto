@@ -21,10 +21,10 @@ function phphoto_upload_image() {
                 phphoto_popup_message('Could not insert the image in the database', 'error');
             }
             elseif ($image_id == -2) {
-                phphoto_popup_message('Filename already exists in database', 'warning');
+                phphoto_popup_message("Filename '$uploaded_image[name]' already exists in database", 'warning');
             }
             else {
-                phphoto_popup_message('Image uploaded successfully', 'info');
+                phphoto_popup_message("Image '$uploaded_image[name]' uploaded successfully", 'info');
             }
         }
         unlink($uploaded_image['tmp_name']); // delete temp file
@@ -53,7 +53,7 @@ function phphoto_create_gallery($db) {
         $title = $_POST['title'];
         $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
         if (phphoto_db_query($db, $sql) == 1) {
-            phphoto_popup_message('Gallery has has been added', 'info');
+            phphoto_popup_message("Gallery '$title' has has been added", 'info');
         }
     }
     echo "\n<div class='admin'>";
@@ -70,7 +70,7 @@ function phphoto_create_tag($db) {
         $name = $_POST['name'];
         $sql = "INSERT INTO tags (name, created) VALUES ('$name', NOW())";
         if (phphoto_db_query($db, $sql) == 1) {
-            phphoto_popup_message('Tag has has been added', 'info');
+            phphoto_popup_message("Tag '$name' has has been added", 'info');
         }
     }
     echo "\n<div class='admin'>";
@@ -171,7 +171,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = phphoto_db_query($db, $sql);
 
     if (count($gallery_data) != 1) {
-        phphoto_popup_message('Unknown gallery', 'error');
+        phphoto_popup_message("Unknown gallery: $gallery_id", 'error');
         echo "\n</div>";
         return;
     }
@@ -365,7 +365,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($tag_data) != 1) {
-        phphoto_popup_message('Unknown tag', 'error');
+        phphoto_popup_message("Unknown tag: $tag_id", 'error');
         echo "\n</div>";
         return;
     }
@@ -533,7 +533,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($image_data) != 1) {
-        phphoto_popup_message('Unknown image', 'error');
+        phphoto_popup_message("Unknown image: $image_id", 'error');
         echo "\n</div>";
         return;
     }
