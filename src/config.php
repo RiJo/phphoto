@@ -8,6 +8,7 @@
 define('GALLERY_NAME',                      'phphoto');
 define('GALLERY_VERSION',                   '1.1.0');
 define('GALLERY_DATE',                      '2010-07-10');
+define('GALLERY_DEVELOPERS',                'RiJo');
 
 define('GALLERY_CHARSET',                   'iso-8859-1');
 define('GALLERY_LANGUAGE',                  'sv');
@@ -28,6 +29,7 @@ define('GET_KEY_OPERATION',                 'op');
 define('GET_KEY_SORT_COLUMN',               's');
 define('GET_KEY_PAGE_NUMBER',               'p');
 define('GET_KEY_ITEMS_PER_PAGE',            'pp');
+define('GET_VALUE_ADMIN_DEFAULT',           'd');
 define('GET_VALUE_ADMIN_GALLERY',           'g');
 define('GET_VALUE_ADMIN_TAG',               't');
 define('GET_VALUE_ADMIN_IMAGE',             'i');

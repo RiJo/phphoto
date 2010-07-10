@@ -38,6 +38,7 @@
     version 1.2.0, xxxx-xx-xx
 --------------------------------------------------------------------------------
     * Ability to sort tables in admin pages
-    * Bugfix: unauthorized users could run admin SQL queries
     * Improved look of popup messages
+    * Bugfix: unauthorized users could run admin SQL queries
+    * Bugfix: crash when tag/gallery was added with same name as existing one
 --------------------------------------------------------------------------------

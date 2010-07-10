@@ -51,12 +51,13 @@ function phphoto_admin($db, $admin) {
                 phphoto_echo_admin_images($db);
             break;
         default:
-            die("not a valid admin page: $admin");
+            phphoto_echo_admin_default($db);;
     }
 }
 
 function phphoto_admin_links($additional_items = array()) {
     echo "\n<ul>";
+    echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_DEFAULT."'>Admin</a></li>";
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG."'>Tags</a></li>";
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";

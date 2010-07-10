@@ -135,6 +135,15 @@ function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
     echo "\n</div>";
 }
 
+function phphoto_echo_admin_default($db) {
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>".GALLERY_NAME."</h1>";
+    echo "\n    version: ".GALLERY_VERSION."<br>";
+    echo "\n    updated: ".GALLERY_DATE."<br>";
+    echo "\n    developers: ".GALLERY_DEVELOPERS."<br>";
+    echo "\n</div>";
+}
+
 /*
  * Form for updating an existing gallery
  */
