@@ -65,6 +65,23 @@ function phphoto_create_gallery($db) {
     echo "\n</div>";
 }
 
+function phphoto_create_tag($db) {
+    if (isset($_POST['name'])) {
+        $name = $_POST['name'];
+        $sql = "INSERT INTO tags (name, created) VALUES ('$name', NOW())";
+        if (phphoto_db_query($db, $sql) == 1) {
+            echo "\n    <div class='message' id='info'>Tag has has been added</div>";
+        }
+    }
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Create tag</h1>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_TAG."'>";
+    echo "\n        <input type='input' name='name' maxlength='255'>";
+    echo "\n        <input type='submit' value='Create'>";
+    echo "\n    </form>";
+    echo "\n</div>";
+}
+
 function phphoto_regenerate_image_thumbnails($db) {
     if(isset($_POST['regenerate_thumbs'])) {
         $regenerated_thumbnails = regenerate_image_thumbnails($db);
@@ -274,6 +291,123 @@ function phphoto_echo_admin_galleries($db) {
 }
 
 /*
+ * Form for updating an existing tag
+ */
+function phphoto_echo_admin_tag($db, $tag_id) {
+    assert(is_numeric($tag_id));
+
+    // OPERATIONS
+    if (isset($_GET[GET_KEY_OPERATION])) {
+        if($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['name'])) {
+            // update tag
+            $name = $_POST['name'];
+
+            $sql = "UPDATE tags SET name = '$name' WHERE id = $tag_id";
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo "\n    <div class='message' id='info'>Tag has been updated</div>";
+            }
+        }
+    }
+
+    $sql = "SELECT id, name, (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images, changed, created FROM tags WHERE id = $tag_id";
+    $tag_data = phphoto_db_query($db, $sql);
+
+    if (count($tag_data) != 1) {
+        echo "\n    <div class='message' id='error'>Unknown tag</div>";
+        echo "\n</div>";
+        return;
+    }
+    $tag_data = $tag_data[0];
+
+    $sql = "SELECT id, IF (LENGTH(title) > 0, title, filename) AS name FROM images WHERE id IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
+    $image_data = phphoto_db_query($db, $sql);
+
+    $image_names = array();
+    foreach ($image_data as $image)
+        array_push($image_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$image[id]'>$image[name]</a>");
+
+    $table_data = array();
+    array_push($table_data, array('Name',           "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
+    array_push($table_data, array('Image use',      implode('<br>', $image_names)));
+    array_push($table_data, array('Changed',        format_date_time($tag_data['changed'])));
+    array_push($table_data, array('Created',        format_date_time($tag_data['created'])));
+    array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Edit tag</h1>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
+            GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
+            GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
+            GET_KEY_TAG_ID."=$tag_id'>";
+    phphoto_to_html_table(null, $table_data);
+    echo "\n    </form>";
+    echo "\n</div>";
+}
+
+/*
+ * Table showing all tags available for editing
+ */
+function phphoto_echo_admin_tags($db) {
+    // OPERATIONS
+    //~ if (isset($_GET[GET_KEY_OPERATION])) {
+        //~ if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_GALLERY_ID])) {
+            //~ // delete gallery
+            //~ $sql = "DELETE FROM galleries WHERE id = ".$_GET[GET_KEY_GALLERY_ID];
+            //~ if (phphoto_db_query($db, $sql) == 1) {
+                //~ echo "\n    <div class='message' id='info'>Gallery has has been removed</div>";
+            //~ }
+        //~ }
+    //~ }
+
+    phphoto_create_tag($db);
+
+    $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
+    $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
+    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM tags";
+    $pages = phphoto_db_query($db, $sql);
+    $pages = $pages[0]['pages'];
+
+    $sql = "
+        SELECT
+            id,
+            name,
+            (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images
+        FROM
+            tags
+        LIMIT
+            ".($page_number * $items_per_page).", $items_per_page
+    ";
+
+    $header = array('Name', 'Images', /*'&nbsp;'*/);
+    $data = array();
+    foreach (phphoto_db_query($db, $sql) as $row) {
+        array_push($data, array(
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$row[id]'>$row[name]</a>",
+            $row['images'],
+            //((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_TAG_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
+        ));
+    }
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Admin galleries</h1>";
+    phphoto_to_html_table($header, $data);
+
+    echo "\n    <div class='admin' id='footer'>";
+    if ($page_number > 0)
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png'></a>";
+    else
+        echo "<img src='./icons/go-previous-inactive.png'>";
+    echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
+    if ($page_number < ($pages - 1))
+        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png'></a>";
+    else
+        echo "<img src='./icons/go-next-inactive.png'>";
+    echo "\n    </div>";
+
+    echo "\n</div>";
+}
+
+/*
  * Form for updating an existing image
  */
 function phphoto_echo_admin_image($db, $image_id) {
@@ -324,7 +458,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
     array_push($table_data, array('Camera',         "<img src='./icons/camera-photo.png'>&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
     array_push($table_data, array('Settings',       "<img src='./icons/image-x-generic.png'>&nbsp;&nbsp;&nbsp;".format_camera_settings($exif)));
-    array_push($table_data, array('Used in',        implode(', ', $gallery_names)));
+    array_push($table_data, array('Gallery use',    implode('<br>', $gallery_names)));
     array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array('Description',    "<textarea name='description'>$image_data[description]</textarea>"));
     array_push($table_data, array('Changed',        format_date_time($image_data['changed'])));

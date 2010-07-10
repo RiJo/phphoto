@@ -38,6 +38,13 @@ function phphoto_admin($db, $admin) {
             else
                 phphoto_echo_admin_galleries($db);
             break;
+        case GET_VALUE_ADMIN_TAG:
+            $tag_id = (isset($_GET[GET_KEY_TAG_ID])) ? $_GET[GET_KEY_TAG_ID] : INVALID_ID;
+            if (is_numeric($tag_id) && $tag_id != INVALID_ID)
+                phphoto_echo_admin_tag($db, $tag_id);
+            else
+                phphoto_echo_admin_tags($db);
+            break;
         case GET_VALUE_ADMIN_IMAGE:
             $image_id = (isset($_GET[GET_KEY_IMAGE_ID])) ? $_GET[GET_KEY_IMAGE_ID] : INVALID_ID;
             /* UGLY AS HELL, FIX THIS */
@@ -55,6 +62,7 @@ function phphoto_admin($db, $admin) {
 function phphoto_admin_links($additional_items = array()) {
     echo "\n<ul>";
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
+    echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG."'>Tags</a></li>";
     echo "\n    <li><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
     foreach ($additional_items as $name=>$url)
         echo "\n    <li><a href='$url'>$name</a></li>";

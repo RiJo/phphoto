@@ -21,12 +21,14 @@ define('DATABASE_PASSWORD',                 'bar');
 define('DATABASE_TABLE_PREFIX',             ''); /* not implemented */
 
 define('GET_KEY_GALLERY_ID',                'gid');
+define('GET_KEY_TAG_ID',                    'tid');
 define('GET_KEY_IMAGE_ID',                  'iid');
 define('GET_KEY_ADMIN_QUERY',               'adm');
 define('GET_KEY_OPERATION',                 'op');
 define('GET_KEY_PAGE_NUMBER',               'p');
 define('GET_KEY_ITEMS_PER_PAGE',            'pp');
 define('GET_VALUE_ADMIN_GALLERY',           'g');
+define('GET_VALUE_ADMIN_TAG',               't');
 define('GET_VALUE_ADMIN_IMAGE',             'i');
 define('GET_VALUE_CREATE',                  'mk');
 define('GET_VALUE_DELETE',                  'rm');
