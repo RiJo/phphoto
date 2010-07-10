@@ -455,7 +455,7 @@ function phphoto_echo_admin_image($db, $image_id) {
         $exif = array();
 
     $table_data = array();
-    array_push($table_data, array('&nbsp;',         "<a href='image.php?".GET_KEY_IMAGE_ID.'='.$image_id."'><img src='image.php?".GET_KEY_IMAGE_ID.'='.$image_id."t'></a>"));
+    array_push($table_data, array('&nbsp;',         "<a href='image.php?".GET_KEY_IMAGE_ID.'='.$image_id.'&'.GET_KEY_ADMIN_QUERY."=preview'><img src='image.php?".GET_KEY_IMAGE_ID.'='.$image_id."t'></a>"));
     array_push($table_data, array('Filename',       $image_data['filename']));
     array_push($table_data, array('Format',         image_type_to_mime_type($image_data['type'])));
     array_push($table_data, array('Filesize',       format_byte($image_data['filesize'])));

@@ -36,9 +36,11 @@ if (isset($_GET[GET_KEY_IMAGE_ID])) {
         $column = 'data';
 
         // update views counter
-        if (!isset($_SESSION[SESSION_KEY_VIEWS]) || !isset($_SESSION[SESSION_KEY_VIEWS]["i$id"])) {
-            phphoto_db_query($db, "UPDATE images SET views = views + 1 WHERE id = $id");
-            $_SESSION[SESSION_KEY_VIEWS]["i$id"] = SESSION_VALUE_VIEWS;
+        if (!isset($_GET[GET_KEY_ADMIN_QUERY])) { // do not count administrative views
+            if (!isset($_SESSION[SESSION_KEY_VIEWS]) || !isset($_SESSION[SESSION_KEY_VIEWS]["i$id"])) {
+                phphoto_db_query($db, "UPDATE images SET views = views + 1 WHERE id = $id");
+                $_SESSION[SESSION_KEY_VIEWS]["i$id"] = SESSION_VALUE_VIEWS;
+            }
         }
     }
     $result = phphoto_db_query($db, "SELECT $column AS image, type FROM images WHERE id = $id;");
