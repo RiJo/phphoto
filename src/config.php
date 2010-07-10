@@ -25,6 +25,7 @@ define('GET_KEY_TAG_ID',                    'tid');
 define('GET_KEY_IMAGE_ID',                  'iid');
 define('GET_KEY_ADMIN_QUERY',               'adm');
 define('GET_KEY_OPERATION',                 'op');
+define('GET_KEY_SORT_COLUMN',               's');
 define('GET_KEY_PAGE_NUMBER',               'p');
 define('GET_KEY_ITEMS_PER_PAGE',            'pp');
 define('GET_VALUE_ADMIN_GALLERY',           'g');

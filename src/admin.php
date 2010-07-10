@@ -569,6 +569,8 @@ function phphoto_echo_admin_images($db) {
     phphoto_upload_image();
     phphoto_regenerate_image_thumbnails($db);
 
+    $order_by = (isset($_GET[GET_KEY_SORT_COLUMN])) ? $_GET[GET_KEY_SORT_COLUMN] : 2;
+
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
     $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM images";
@@ -578,20 +580,29 @@ function phphoto_echo_admin_images($db) {
     $sql = "
         SELECT
             id,
+            IF (LENGTH(title) > 0, title, filename) AS name,
             width,
             height,
             filesize,
-            IF (LENGTH(title) > 0, title, filename) AS name,
             views,
             views / (SELECT SUM(views) FROM images) AS popularity,
             (SELECT COUNT(*) FROM image_to_gallery WHERE image_id = id) AS in_use
         FROM
             images
+        ORDER BY
+            $order_by
         LIMIT
             ".($page_number * $items_per_page).", $items_per_page
     ";
 
-    $header = array('Thumbnail', 'Name', 'Resolution', 'Filesize', 'Views', '&nbsp;');
+    $header = array(
+        'Thumbnail',
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=2'>Name</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=3'>Resolution</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=5'>Filesize</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=6'>Views</a>",
+        '&nbsp;'
+    );
     $max_text_length = 12;
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
