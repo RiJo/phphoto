@@ -122,28 +122,45 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 
     // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
-        if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE && isset($_POST[GET_KEY_IMAGE_ID])) {
-            // add image
-            $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, ".$_POST[GET_KEY_IMAGE_ID].", NOW())";
-            if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='message' id='info'>Image has has been added</div>";
+        if (isset($_REQUEST[GET_KEY_IMAGE_ID]) && is_numeric($_REQUEST[GET_KEY_IMAGE_ID])) {
+            // operate on image in gallery
+            $image_id = $_REQUEST[GET_KEY_IMAGE_ID];
+            if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE) {
+                // add image to gallery
+                $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, $image_id, NOW())";
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo "\n    <div class='message' id='info'>Image has has been added</div>";
+                }
+            }
+            if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
+                // remove image from gallery
+                $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = $image_id";
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo "\n    <div class='message' id='info'>Image has has been removed</div>";
+                }
             }
         }
-        if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
-            // remove image
-            $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = ".$_GET[GET_KEY_IMAGE_ID];
-            if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='message' id='info'>Image has has been removed</div>";
-            }
-        }
-        if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
-            // update gallery
-            $title = $_POST['title'];
-            $description = $_POST['description'];
+        else {
+            if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['title']) && isset($_POST['description'])) {
+                // update gallery
+                $title = $_POST['title'];
+                $description = $_POST['description'];
 
-            $sql = "UPDATE galleries SET title = '$title', description = '$description' WHERE id = $gallery_id";
-            if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='message' id='info'>Gallery has been updated</div>";
+                $sql = "UPDATE galleries SET title = '$title', description = '$description' WHERE id = $gallery_id";
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo "\n    <div class='message' id='info'>Gallery has been updated</div>";
+                }
+            }
+            if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
+                // delete gallery
+                $sql = "DELETE FROM galleries WHERE id = ".$gallery_id;
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo '<meta http-equiv="refresh" content="0;url='.CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'" />';
+                    exit();
+                }
+                else {
+                    echo "\n    <div class='message' id='error'>Could not remove gallery</div>";
+                }
             }
         }
     }
@@ -182,7 +199,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 
     // images not in this gallery
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Images in gallery</h1>";
+    echo "\n    <h1>Images not in gallery</h1>";
     $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
     $images = phphoto_db_query($db, $sql);
     if (count($images) > 0) {
@@ -198,6 +215,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
         echo "\n        <input type='submit' value='Add'>";
         echo "\n    </form>";
     }
+    echo "\n</div>";
 
     // images in this gallery
     $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
@@ -217,6 +235,9 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                     GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>"
         ));
     }
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Images in gallery</h1>";
     phphoto_to_html_table($header, $images);
 
     echo "\n</div>";
@@ -226,17 +247,6 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
  * Table showing all galleries available for editing
  */
 function phphoto_echo_admin_galleries($db) {
-    // OPERATIONS
-    if (isset($_GET[GET_KEY_OPERATION])) {
-        if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_GALLERY_ID])) {
-            // delete gallery
-            $sql = "DELETE FROM galleries WHERE id = ".$_GET[GET_KEY_GALLERY_ID];
-            if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='message' id='info'>Gallery has has been removed</div>";
-            }
-        }
-    }
-
     phphoto_create_gallery($db);
 
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
@@ -298,13 +308,44 @@ function phphoto_echo_admin_tag($db, $tag_id) {
 
     // OPERATIONS
     if (isset($_GET[GET_KEY_OPERATION])) {
-        if($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['name'])) {
-            // update tag
-            $name = $_POST['name'];
+        if (isset($_REQUEST[GET_KEY_IMAGE_ID]) && is_numeric($_REQUEST[GET_KEY_IMAGE_ID])) {
+            // operate on image in tag
+            $image_id = $_REQUEST[GET_KEY_IMAGE_ID];
+            if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE) {
+                // add image to tag
+                $sql = "INSERT INTO image_to_tag (tag_id, image_id, created) VALUES ($tag_id, $image_id, NOW())";
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo "\n    <div class='message' id='info'>Image has has been added</div>";
+                }
+            }
+            if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
+                // remove image from tag
+                $sql = "DELETE FROM image_to_tag WHERE tag_id = $tag_id AND image_id = $image_id";
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo "\n    <div class='message' id='info'>Image has has been removed</div>";
+                }
+            }
+        }
+        else {
+            if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['name'])) {
+                // update tag
+                $name = $_POST['name'];
 
-            $sql = "UPDATE tags SET name = '$name' WHERE id = $tag_id";
-            if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='message' id='info'>Tag has been updated</div>";
+                $sql = "UPDATE tags SET name = '$name' WHERE id = $tag_id";
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo "\n    <div class='message' id='info'>Tag has been updated</div>";
+                }
+            }
+            if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
+                // delete tag
+                $sql = "DELETE FROM tags WHERE id = ".$tag_id;
+                if (phphoto_db_query($db, $sql) == 1) {
+                    echo '<meta http-equiv="refresh" content="0;url='.CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'" />';
+                    exit();
+                }
+                else {
+                    echo "\n    <div class='message' id='error'>Could not remove tag</div>";
+                }
             }
         }
     }
@@ -319,16 +360,8 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     }
     $tag_data = $tag_data[0];
 
-    $sql = "SELECT id, IF (LENGTH(title) > 0, title, filename) AS name FROM images WHERE id IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
-    $image_data = phphoto_db_query($db, $sql);
-
-    $image_names = array();
-    foreach ($image_data as $image)
-        array_push($image_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$image[id]'>$image[name]</a>");
-
     $table_data = array();
     array_push($table_data, array('Name',           "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
-    array_push($table_data, array('Image use',      implode('<br>', $image_names)));
     array_push($table_data, array('Changed',        format_date_time($tag_data['changed'])));
     array_push($table_data, array('Created',        format_date_time($tag_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
@@ -342,23 +375,57 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     phphoto_to_html_table(null, $table_data);
     echo "\n    </form>";
     echo "\n</div>";
+
+    // images not tagged with this tag
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Images not tagged</h1>";
+    $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
+    $images = phphoto_db_query($db, $sql);
+    if (count($images) > 0) {
+        echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
+                GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
+                GET_KEY_OPERATION.'='.GET_VALUE_CREATE.'&'.
+                GET_KEY_TAG_ID."=$tag_id'>";
+        echo "\n        <select name='".GET_KEY_IMAGE_ID."'>";
+        foreach ($images as $row) {
+            echo "\n            <option value='$row[id]'>".((empty($row['title'])?$row['filename']:$row['title']))."</option>";
+        }
+        echo "\n        </select>";
+        echo "\n        <input type='submit' value='Add'>";
+        echo "\n    </form>";
+    }
+    echo "\n</div>";
+
+    // images tagged
+    $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
+
+    $header = array('Thumbnail', 'Filename', 'Title', 'Description', '&nbsp;');
+    $images = array();
+    foreach (phphoto_db_query($db, $sql) as $row) {
+        array_push($images, array(
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
+            $row['filename'],
+            $row['title'],
+            $row['description'],
+            "<a href='".CURRENT_PAGE.'?'.
+                    GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
+                    GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.
+                    GET_KEY_TAG_ID.'='.$tag_id.'&'.
+                    GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>"
+        ));
+    }
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>Tagged images</h1>";
+    phphoto_to_html_table($header, $images);
+
+    echo "\n</div>";
 }
 
 /*
  * Table showing all tags available for editing
  */
 function phphoto_echo_admin_tags($db) {
-    // OPERATIONS
-    //~ if (isset($_GET[GET_KEY_OPERATION])) {
-        //~ if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_GALLERY_ID])) {
-            //~ // delete gallery
-            //~ $sql = "DELETE FROM galleries WHERE id = ".$_GET[GET_KEY_GALLERY_ID];
-            //~ if (phphoto_db_query($db, $sql) == 1) {
-                //~ echo "\n    <div class='message' id='info'>Gallery has has been removed</div>";
-            //~ }
-        //~ }
-    //~ }
-
     phphoto_create_tag($db);
 
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
@@ -378,13 +445,13 @@ function phphoto_echo_admin_tags($db) {
             ".($page_number * $items_per_page).", $items_per_page
     ";
 
-    $header = array('Name', 'Images', /*'&nbsp;'*/);
+    $header = array('Name', 'Images', '&nbsp;');
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$row[id]'>$row[name]</a>",
             $row['images'],
-            //((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_TAG_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
+            ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_TAG_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
     }
 
@@ -423,6 +490,17 @@ function phphoto_echo_admin_image($db, $image_id) {
             $sql = "UPDATE images SET title = '$title', description = '$description' WHERE id = $image_id";
             if (phphoto_db_query($db, $sql) == 1) {
                 echo "\n    <div class='message' id='info'>Image has been updated</div>";
+            }
+        }
+        if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
+            // delete image
+            $sql = "DELETE FROM images WHERE id = ".$image_id;
+            if (phphoto_db_query($db, $sql) == 1) {
+                echo '<meta http-equiv="refresh" content="0;url='.CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'" />';
+                exit();
+            }
+            else {
+                echo "\n    <div class='message' id='error'>Could not remove image</div>";
             }
         }
     }
@@ -465,8 +543,8 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
     array_push($table_data, array('Camera',         "<img src='./icons/camera-photo.png'>&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
     array_push($table_data, array('Settings',       "<img src='./icons/image-x-generic.png'>&nbsp;&nbsp;&nbsp;".format_camera_settings($exif)));
-    array_push($table_data, array('Gallery use',    implode('<br>', $gallery_names)));
-    array_push($table_data, array('Tag use',    implode('<br>', $tag_names)));
+    array_push($table_data, array('Galleries',      implode('<br>', $gallery_names)));
+    array_push($table_data, array('Tags',           implode('<br>', $tag_names)));
     array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array('Description',    "<textarea name='description'>$image_data[description]</textarea>"));
     array_push($table_data, array('Changed',        format_date_time($image_data['changed'])));
@@ -488,17 +566,6 @@ function phphoto_echo_admin_image($db, $image_id) {
  * Table showing all images available for editing
  */
 function phphoto_echo_admin_images($db) {
-    // OPERATIONS
-    if (isset($_GET[GET_KEY_OPERATION])) {
-        if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
-            // delete image
-            $sql = "DELETE FROM images WHERE id = ".$_GET[GET_KEY_IMAGE_ID];
-            if (phphoto_db_query($db, $sql) == 1) {
-                echo "\n    <div class='message' id='info'>Image has has been removed</div>";
-            }
-        }
-    }
-
     phphoto_upload_image();
     phphoto_regenerate_image_thumbnails($db);
 

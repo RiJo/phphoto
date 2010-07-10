@@ -31,9 +31,7 @@ function phphoto_admin($db, $admin) {
     switch ($admin) {
         case GET_VALUE_ADMIN_GALLERY:
             $gallery_id = (isset($_GET[GET_KEY_GALLERY_ID])) ? $_GET[GET_KEY_GALLERY_ID] : INVALID_ID;
-            /* UGLY AS HELL, FIX THIS */
-            $overall_operation = (isset($_GET[GET_KEY_OPERATION]) && $_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && !isset($_GET[GET_KEY_IMAGE_ID]));
-            if (is_numeric($gallery_id) && $gallery_id != INVALID_ID && !$overall_operation)
+            if (is_numeric($gallery_id) && $gallery_id != INVALID_ID)
                 phphoto_echo_admin_gallery($db, $gallery_id);
             else
                 phphoto_echo_admin_galleries($db);
@@ -47,9 +45,7 @@ function phphoto_admin($db, $admin) {
             break;
         case GET_VALUE_ADMIN_IMAGE:
             $image_id = (isset($_GET[GET_KEY_IMAGE_ID])) ? $_GET[GET_KEY_IMAGE_ID] : INVALID_ID;
-            /* UGLY AS HELL, FIX THIS */
-            $overall_operation = (isset($_GET[GET_KEY_OPERATION]) && $_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE);
-            if (is_numeric($image_id) && $image_id != INVALID_ID && !$overall_operation)
+            if (is_numeric($image_id) && $image_id != INVALID_ID)
                 phphoto_echo_admin_image($db, $image_id);
             else
                 phphoto_echo_admin_images($db);
@@ -124,28 +120,6 @@ function format_camera_model($exif) {
 function format_camera_settings($exif) {
     if (!is_array($exif))
         return 'Invalid exif array';
-
-/*
-Typical example of $exif:
-
-array (
-  'Make' => 'Canon',
-  'Model' => 'Canon EOS 450D',
-  'FirmwareVersion' => 'Firmware Version 1.0.4',
-  'ImageType' => 'Canon EOS 450D',
-  'DateTimeOriginal' => '2008:08:24 13:25:39',
-  'ExposureTime' => '1/350',
-  'ShutterSpeedValue' => '557056/65536',
-  'ExposureBiasValue' => '0/1',
-  'ISOSpeedRatings' => '200',
-  'FNumber' => '13/1',
-  'FocalLength' => '20/1',
-  'WhiteBalance' => '0',
-  'Flash' => '16',
-  'ExifVersion' => '0221',
-)
-*/
-
 /*
 EXIF flash values (http://www.colorpilot.com/exif_tags.html)
 0 	No Flash

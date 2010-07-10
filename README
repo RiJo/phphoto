@@ -1,11 +1,11 @@
 --------------------------------------------------------------------------------
 
     phphoto
-    current version:    1.0.0
+    current version:    1.1.0
     by:                 Rikard Johansson
     bugs:               bugs.hermit.se
 
-    A photo gallery front-end with a mySQL database as back-end.
+    A photo gallery with a mySQL database as back-end.
 
 --------------------------------------------------------------------------------
 
@@ -24,11 +24,18 @@
 
 
 --------------------------------------------------------------------------------
-    version 1.1.0, xxxx-xx-xx
+    version 1.1.0, 2010-07-10
 --------------------------------------------------------------------------------
     * Images can now be tagged for filtering
     * Option to replace existing image during upload
     * Views statistics on admin pages
     * Real focal length is calculated if CCD width is given in EXIF data
     * Cleaned up stylesheets
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+    version 1.2.0, xxxx-xx-xx
+--------------------------------------------------------------------------------
+    * 
 --------------------------------------------------------------------------------

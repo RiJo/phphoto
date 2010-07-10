@@ -1,13 +1,11 @@
-<?php
-
-    require_once('phphoto.php');
-
-    $password = 'abc';
-
-?>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
+
+<?php
+
+require_once('phphoto.php');
+
+?>
 
 <html>
     <head>
@@ -18,30 +16,34 @@
         <link rel='stylesheet' href='./themes/<?php echo GALLERY_THEME; ?>/admin.css' type='text/css'>
     </head>
     <body>
-        <a href='index.php'>First page</a>
         <div style="margin:10px; width: 870px;">
-            
 
 <?php
-    if (isset($_POST['login']) && $_POST['login'] == $password) {
-        $_SESSION['authorized'] = true;
-    }
-    elseif (isset($_GET['q']) && $_GET['q'] == 'logout') {
-        unset($_SESSION['authorized']);
-    }
-    if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
-        $additional_items = array('Logout' => basename($_SERVER['PHP_SELF'])."?q=logout");
-        phphoto_admin_links($additional_items);
-    }
-    if (isset($_GET['q']) && $_GET['q'] == 'login') {
-        echo "\n    <form method='post' action='".basename($_SERVER['PHP_SELF'])."'>";
-        echo "\n        <input type='password' name='login'>";
-        echo "\n        <input type='submit' value='Authorize'>";
-        echo "\n    </form>";
-    }
-    else {
-        phphoto_main();
-    }
+
+$password = 'abc';
+if (isset($_POST['login']) && $_POST['login'] == $password) {
+    $_SESSION['authorized'] = true;
+}
+elseif (isset($_GET['q']) && $_GET['q'] == 'logout') {
+    unset($_SESSION['authorized']);
+}
+if (isset($_SESSION['authorized']) && $_SESSION['authorized']) {
+    $additional_items = array(
+        'Logout' => basename($_SERVER['PHP_SELF'])."?q=logout",
+        'First page' => basename($_SERVER['PHP_SELF'])
+    );
+    phphoto_admin_links($additional_items);
+}
+if (isset($_GET['q']) && $_GET['q'] == 'login') {
+    echo "\n    <form method='post' action='".basename($_SERVER['PHP_SELF'])."'>";
+    echo "\n        <input type='password' name='login'>";
+    echo "\n        <input type='submit' value='Authorize'>";
+    echo "\n    </form>";
+}
+else {
+    phphoto_main();
+}
+
 ?>
 
         </div>

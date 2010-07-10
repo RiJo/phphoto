@@ -6,8 +6,8 @@
  */
 
 define('GALLERY_NAME',                      'phphoto');
-define('GALLERY_VERSION',                   '1.0.0');
-define('GALLERY_DATE',                      '2010-05-30');
+define('GALLERY_VERSION',                   '1.1.0');
+define('GALLERY_DATE',                      '2010-07-10');
 
 define('GALLERY_CHARSET',                   'iso-8859-1');
 define('GALLERY_LANGUAGE',                  'sv');
@@ -62,18 +62,5 @@ define('GALLERY_THUMBNAIL_INVALID_COLOR',   '#990000');
 define('GALLERY_THUMBNAIL_MINIMUM_IMAGES',  4);
 define('GALLERY_THUMBNAIL_MAXIMUM_IMAGES',  16);
 define('GALLERY_THUMBNAIL_QUALITY',         50);
-
-/*
-
-    Image properties:
-        Name
-        Resolution
-        Colors
-        Type
-        Description
-        Camera settings (model, aperture, etc)
-        
-
-*/
 
 ?>
