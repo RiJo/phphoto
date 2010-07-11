@@ -6,8 +6,8 @@
  */
 
 define('GALLERY_NAME',                      'phphoto');
-define('GALLERY_VERSION',                   '1.1.0');
-define('GALLERY_DATE',                      '2010-07-10');
+define('GALLERY_VERSION',                   '1.2.0');
+define('GALLERY_DATE',                      '2010-07-11');
 define('GALLERY_DEVELOPERS',                'RiJo');
 
 define('GALLERY_CHARSET',                   'iso-8859-1');

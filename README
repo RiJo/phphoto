@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
 
     phphoto
-    current version:    1.1.0
+    current version:    1.2.0
     by:                 Rikard Johansson
-    bugs:               bugs.hermit.se
+    bugs:               http://bugs.hermit.se
 
     A photo gallery with a mySQL database as back-end.
 
@@ -35,11 +35,18 @@
 
 
 --------------------------------------------------------------------------------
-    version 1.2.0, xxxx-xx-xx
+    version 1.2.0, 2010-07-11
 --------------------------------------------------------------------------------
     * Camera overview
     * Ability to sort tables in admin pages
     * Improved look of popup messages
     * Bugfix: unauthorized users could run admin SQL queries
     * Bugfix: crash when tag/gallery was added with same name as existing one
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+    version 1.3.0 xxxx-xx-xx
+--------------------------------------------------------------------------------
+    * 
 --------------------------------------------------------------------------------
