@@ -222,8 +222,9 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                 // delete gallery
                 $sql = "DELETE FROM galleries WHERE id = ".$gallery_id;
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo '<meta http-equiv="refresh" content="0;url='.CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'" />';
-                    exit();
+                    phphoto_popup_message('Gallery has been removed', 'info');
+                    phphoto_echo_admin_galleries($db);
+                    return;
                 }
                 else {
                     phphoto_popup_message('Could not remove gallery', 'error');
@@ -418,8 +419,9 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                 // delete tag
                 $sql = "DELETE FROM tags WHERE id = ".$tag_id;
                 if (phphoto_db_query($db, $sql) == 1) {
-                    echo '<meta http-equiv="refresh" content="0;url='.CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'" />';
-                    exit();
+                    phphoto_popup_message('Tas has been removed', 'info');
+                    phphoto_echo_admin_tags($db);
+                    return;
                 }
                 else {
                     phphoto_popup_message('Could not remove tag', 'error');
@@ -583,8 +585,9 @@ function phphoto_echo_admin_image($db, $image_id) {
             // delete image
             $sql = "DELETE FROM images WHERE id = ".$image_id;
             if (phphoto_db_query($db, $sql) == 1) {
-                echo '<meta http-equiv="refresh" content="0;url='.CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'" />';
-                exit();
+                phphoto_popup_message('Image has been removed', 'info');
+                phphoto_echo_admin_images($db);
+                return;
             }
             else {
                 phphoto_popup_message('Could not remove image', 'error');
