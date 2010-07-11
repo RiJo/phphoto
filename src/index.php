@@ -12,8 +12,11 @@ require_once('phphoto.php');
         <title><?php echo GALLERY_NAME.' v.'.GALLERY_VERSION; ?></title>
         <meta http-equiv='Content-Type' content='text/html; charset=<?php echo GALLERY_CHARSET; ?>'>
         <meta http-equiv='Content-Language' content='<?php echo GALLERY_LANGUAGE; ?>'>
-        <link rel='stylesheet' href='./themes/<?php echo GALLERY_THEME; ?>/gallery.css' type='text/css'>
-        <link rel='stylesheet' href='./themes/<?php echo GALLERY_THEME; ?>/admin.css' type='text/css'>
+<?php
+
+phphoto_stylesheets();
+
+?>
     </head>
     <body>
         <div style="margin:10px; width: 870px;">

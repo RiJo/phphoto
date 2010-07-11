@@ -9,6 +9,11 @@ require_once('./gallery.php');
 
 $allowed_filetypes = array('jpg','jpeg','png');
 
+function phphoto_stylesheets() {
+    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/gallery.css' type='text/css'>";
+    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/admin.css' type='text/css'>";
+}
+
 function phphoto_main($authorized = false) {
     $db = phphoto_db_connect();
     $admin = (isset($_GET[GET_KEY_ADMIN_QUERY])) ? $_GET[GET_KEY_ADMIN_QUERY] : '';
