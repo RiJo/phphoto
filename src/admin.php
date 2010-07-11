@@ -353,7 +353,7 @@ function phphoto_echo_admin_galleries($db) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_GALLERY_ID."=$row[id]'></a>",
-            $row['title'],
+            format_string($row['title']),
             $row['views']." (".round($row['popularity']*100)."%)",
             $row['images'],
             ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
@@ -538,7 +538,7 @@ function phphoto_echo_admin_tags($db) {
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
-            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$row[id]'>$row[name]</a>",
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$row[id]'>".format_string($row[name])."</a>",
             $row['images'],
             ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_TAG_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
@@ -699,7 +699,7 @@ function phphoto_echo_admin_images($db) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
-            wordwrap($row['name'], 20, '<br>', true),
+            wordwrap(format_string($row['name']), 20, '<br>', true),
             $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
             format_byte($row['filesize']),
             $row['views']." (".round($row['popularity']*100)."%)",

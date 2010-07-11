@@ -48,8 +48,8 @@ function phphoto_echo_gallery($db, $gallery_id) {
     $gallery = $gallery[0];
 
     echo "\n<div class='container'>";
-    echo "\n    <h1>$gallery[title]</h1>";
-    echo "\n    <p>$gallery[description]</p>";
+    echo "\n    <h1>".format_string($gallery['title'])."</h1>";
+    echo "\n    <p>".format_string($gallery['description'])."</p>";
     foreach ($images as $image) {
         if ($image['exif']) {
             eval('$exif = ' . $image['exif'] . ';');
@@ -62,8 +62,9 @@ function phphoto_echo_gallery($db, $gallery_id) {
         echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";
         echo "\n            <img class='thumbnail' src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]'>";
         echo "\n        </a>";
-        echo "\n        <h3>$exif</h3>";
-        echo "\n        <p>$image[name]</p>";
+        echo "\n        <h2>$exif</h2>";
+        echo "\n        <h1>".format_string($gallery['title'], 30)."</h1>";
+        echo "\n        <p>".format_string($gallery['description'])."</p>";
         echo "\n    </div>";
     }
     echo "\n</div>";
@@ -128,7 +129,8 @@ function phphoto_echo_galleries($db) {
         echo "\n    <div class='gallery'>";
         echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
         echo "\n        <img class='thumbnail' src='image.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
-        echo "\n        <p>$gallery[title]</p>";
+        echo "\n        <h1>".format_string($gallery['title'], 30)."</h1>";
+        echo "\n        <p>".format_string($gallery['description'])."</p>";
         echo "\n        </a>";
         echo "\n    </div>";
     }

@@ -75,6 +75,13 @@ function phphoto_admin_links($additional_items = array()) {
 //   GENERATORS
 ////////////////////////////////////////////////////////////////////////////////
 
+function format_string($string, $max_length = 0) {
+    if ($max_length && strlen($string) > $max_length) {
+        $string = substr($string, 0, $max_length).'..';
+    }
+    return strip_tags($string);
+}
+
 function format_byte($bytes) {
     $bounds = array(
         array('TB', pow(1024, 4)),
@@ -177,7 +184,7 @@ EXIF flash values (http://www.colorpilot.com/exif_tags.html)
         }
     }
 
-    return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;&nbsp;', $summary) : null;
+    return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;', $summary) : null;
 }
 
 // Returns formatted aspect ratio for the width and height

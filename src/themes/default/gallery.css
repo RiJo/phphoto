@@ -38,13 +38,6 @@ div.container h1 {
     font-weight: bold;
 }
 
-div.container h3 {
-    color: #000000;
-    font-size: 7pt;
-    font-weight: none;
-    font-style: italic;
-}
-
 div.container p {
     margin-bottom: 10px;
     color: #a49a71;
@@ -77,8 +70,14 @@ div.gallery img.thumbnail {
     border: 1px #000000 solid;
 }
 
+div.gallery h1 {
+    color: #222222;
+    font-weight: bold;
+}
+
 div.gallery p {
     color: #222222;
+    display: none;
 }
 
 /* GALLERY: IMAGES */
@@ -99,6 +98,19 @@ div.image img.thumbnail {
     border: 1px #000000 solid;
 }
 
+div.image h1 {
+    color: #222222;
+    font-weight: bold;
+}
+
+div.image h2 {
+    color: #000000;
+    font-size: 7pt;
+    font-weight: none;
+    font-style: italic;
+}
+
 div.image p {
     color: #222222;
+    display: none;
 }
