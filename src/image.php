@@ -53,7 +53,10 @@ if (isset($_GET[GET_KEY_IMAGE_ID])) {
     $image = $result[0]['image'];
     $type = $result[0]['type'];
 
-    header('Content-type: ' . image_type_to_mime_type($type));
+    if ($thumbnail)
+        header('Content-type: image/png');
+    else
+        header('Content-type: ' . image_type_to_mime_type($type));
     echo ($image);
     exit;
 }
@@ -65,7 +68,7 @@ elseif (isset($_GET[GET_KEY_GALLERY_ID])) {
     }
 
     $db = phphoto_db_connect();
-    $result = phphoto_db_query($db, "SELECT thumbnail AS image, 2 AS type FROM galleries WHERE id = $id;");
+    $result = phphoto_db_query($db, "SELECT thumbnail AS image FROM galleries WHERE id = $id;");
     phphoto_db_connect($db);
 
     if (empty($result)) {
@@ -76,9 +79,8 @@ elseif (isset($_GET[GET_KEY_GALLERY_ID])) {
         $image = generate_null_image();
     else
         $image = $result[0]['image'];
-    $type = $result[0]['type'];
 
-    header('Content-type: ' . image_type_to_mime_type($type));
+    header('Content-type: image/png');
     echo ($image);
     exit;
 }

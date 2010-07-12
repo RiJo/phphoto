@@ -447,6 +447,10 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
     if (!$canvas_resource = ImageCreateTrueColor($canvas_width, $canvas_height))
         die('Failed to create destination image');
 
+    // Turn on alpha blending and set alpha flag
+    imagesavealpha($canvas_resource, true);
+    imagealphablending($canvas_resource, true);
+
     // set canvas background color
     $panel_color = str_replace('#', '', $panel_color);
     if (strlen($panel_color) != 6 && strlen($panel_color) != 8)
@@ -454,7 +458,7 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
     $canvas_r = hexdec(substr($panel_color, 0, 2));
     $canvas_g = hexdec(substr($panel_color, 2, 2));
     $canvas_b = hexdec(substr($panel_color, 4, 2));
-    $canvas_a = (strlen($panel_color) == 8) ? hexdec(substr($panel_color, 6, 2)) : 255;
+    $canvas_a = (strlen($panel_color) == 8) ? hexdec(substr($panel_color, 6, 2)) / 2 : 127;
     $canvas_bg = imagecolorallocatealpha($canvas_resource, $canvas_r, $canvas_g, $canvas_b, $canvas_a);
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 
@@ -464,7 +468,7 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
         die('Could not copy resampled image');
 
     // write canvas to file
-    switch ($image_type) {
+    /*switch ($image_type) {
         case 1: // GIF
             if (!imagegif($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
                 die('Could not create new gif image');
@@ -473,13 +477,13 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
             if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
                 die('Could not create new jpeg image');
             break;
-        case 3: // PNG
+        case 3: // PNG*/
             if (!imagepng($canvas_resource, IMAGE_TEMP_FILE))
                 die('Could not create new png image');
-            break;
+            /*break;
         default:
             die('Unrecognized image type');
-    }
+    }*/
 
     imagedestroy($image_resource);
     imagedestroy($canvas_resource);
