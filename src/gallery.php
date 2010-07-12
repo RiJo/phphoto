@@ -82,32 +82,13 @@ function phphoto_echo_galleries($db) {
             id,
             title,
             description,
-            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
-            (SELECT MAX(changed) FROM image_to_gallery WHERE gallery_id = id) AS changed
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) AS images,
+            (SELECT MAX(changed) FROM image_to_gallery WHERE gallery_id = g.id) AS changed
         FROM
             galleries g
         WHERE
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
     ";
-    /*$gallery_sql = "
-        SELECT
-            id,
-            title,
-            description,
-            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
-            (SELECT MAX(temp.changed) FROM (
-                    (SELECT changed FROM galleries foo WHERE id = g.id)
-                    UNION
-                    (SELECT changed FROM image_to_gallery WHERE gallery_id = g.id)
-                    UNION
-                    (SELECT changed FROM images c WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = g.id))
-                ) AS temp
-            ) AS changed
-        FROM
-            galleries g
-        WHERE
-            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
-    ";*/
 
     echo "\n<div class='header'>";
     echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
@@ -119,6 +100,7 @@ function phphoto_echo_galleries($db) {
         echo "\n        <a href='".CURRENT_PAGE."?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
         echo "\n        <img class='thumbnail' src='image.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
         echo "\n        <h1>".format_string($gallery['title'], 30)."</h1>";
+        echo "\n        <h2>updated ".format_date_time($gallery['changed'])."</h2>";
         echo "\n        <p>".format_string($gallery['description'])."</p>";
         echo "\n        </a>";
         echo "\n    </div>";
