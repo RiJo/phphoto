@@ -6,6 +6,10 @@
     color: #000000;
 }
 
+body {
+    background-color: #ffffff;
+}
+
 /* TEXT */
 
 a {
@@ -28,7 +32,7 @@ img {
 
 div.container {
     border: 1px #3c3824 solid;
-    background-color: #4F4A2F;
+    background-color: #252525;
     padding: 10px;
     overflow: auto;
 }
@@ -43,10 +47,17 @@ div.container p {
     color: #a49a71;
 }
 
+div.header {
+    background-color: #f8f8f8;
+    border: 1px #4b4b4b solid;
+    padding: 5px;
+    overflow: auto;
+}
+
 div.footer {
     border: 1px #3c3824 solid;
     border-top: none;
-    background-color: #756E45;
+    background-color: #f8f8f8;
     text-align: right;
     padding: 5px;
     overflow: auto;
