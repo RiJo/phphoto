@@ -76,7 +76,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
     echo "\n</div>";
 }
 
-function phphoto_echo_galleries($db, $login_url) {
+function phphoto_echo_galleries($db) {
     $gallery_sql = "
         SELECT
             id,
@@ -107,20 +107,7 @@ function phphoto_echo_galleries($db, $login_url) {
             galleries g
         WHERE
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
-    ";
-
-
-    /*$header = array('Title', 'Description', 'Images', 'Updated');
-    $data = array();
-    foreach (phphoto_db_query($db, $gallery_sql) as $row) {
-        array_push($data, array(
-            "<a href='".CURRENT_PAGE."?".GET_KEY_GALLERY_ID."=".$row['id']."'>".$row['title']."</a>",
-            $row['description'],
-            $row['images'],
-            format_date_time($row['changed'])
-        ));
-    }
-    phphoto_to_html_table($header, $data);*/
+    ";*/
 
     echo "\n<div class='header'>";
     echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
