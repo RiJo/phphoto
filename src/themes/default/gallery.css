@@ -49,9 +49,15 @@ div.container p {
 
 div.header {
     background-color: #f8f8f8;
+    background-image: url(header.png);
+    background-repeat: no-repeat;
+    height: 50px;
     border: 1px #4b4b4b solid;
-    padding: 5px;
     overflow: auto;
+}
+
+div.header p {
+    margin: 5px;
 }
 
 div.footer {

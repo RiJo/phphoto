@@ -48,7 +48,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
     $gallery = $gallery[0];
 
     echo "\n<div class='header'>";
-    echo "\n    <a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a>";
+    echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
     echo "\n</div>";
     echo "\n<div class='container'>";
     echo "\n    <h1>".format_string($gallery['title'])."</h1>";
@@ -127,7 +127,7 @@ function phphoto_echo_galleries($db) {
     phphoto_to_html_table($header, $data);*/
 
     echo "\n<div class='header'>";
-    echo "\n    <a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a>";
+    echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
     echo "\n</div>";
     echo "\n<div class='container'>";
     echo "\n    <h1>Galleries</h1>";
