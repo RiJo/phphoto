@@ -45,7 +45,8 @@ if (isset($_GET['q']) && $_GET['q'] == 'login') {
     echo "\n    </form>";
 }
 else {
-    phphoto_main($authorized);
+    $login_url = 'index.php?q=login';
+    phphoto_main($login_url, $authorized);
 }
 
 ?>

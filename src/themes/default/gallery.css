@@ -45,7 +45,7 @@ div.container h1 {
 
 div.container p {
     margin-bottom: 10px;
-    color: #a49a71;
+    color: #787878;
 }
 
 div.header {
@@ -118,7 +118,7 @@ div.gallery img.thumbnail {
 }
 
 div.gallery h1 {
-    color: #484848;
+    color: #787878;
     font-weight: normal;
 }
 
@@ -127,7 +127,6 @@ div.gallery h2 {
 }
 
 div.gallery p {
-    color: #222222;
     display: none;
 }
 
@@ -150,7 +149,7 @@ div.image img.thumbnail {
 }
 
 div.image h1 {
-    color: #222222;
+    color: #787878;
     font-weight: normal;
 }
 
@@ -162,6 +161,5 @@ div.image h2 {
 }
 
 div.image p {
-    color: #222222;
     display: none;
 }

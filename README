@@ -3,7 +3,7 @@
     phphoto
     current version:    1.2.0
     by:                 Rikard Johansson
-    bugs:               http://bugs.hermit.se
+    bugs:               http://bugs.hermit.se/index.php?project=6
 
     A photo gallery with a mySQL database as back-end.
 
@@ -48,5 +48,6 @@
 --------------------------------------------------------------------------------
     version 1.3.0 xxxx-xx-xx
 --------------------------------------------------------------------------------
+    * New lighter default theme
     * Moved stylesheet inclusion to phphoto module
 --------------------------------------------------------------------------------

@@ -74,13 +74,9 @@ function phphoto_echo_gallery($db, $gallery_id) {
     echo "\n<div class='footer'>";
     echo "\n    <p>..:: $gallery[views] views :: $gallery[images] images :: updated " . format_date_time($gallery['changed']) . " ::</p>";
     echo "\n</div>";
-
-//~ $query = sprintf("SELECT firstname, lastname, address, age FROM friends WHERE firstname='%s' AND lastname='%s'",
-    //~ mysql_real_escape_string($firstname),
-    //~ mysql_real_escape_string($lastname));
 }
 
-function phphoto_echo_galleries($db) {
+function phphoto_echo_galleries($db, $login_url) {
     $gallery_sql = "
         SELECT
             id,
@@ -118,7 +114,7 @@ function phphoto_echo_galleries($db) {
     $data = array();
     foreach (phphoto_db_query($db, $gallery_sql) as $row) {
         array_push($data, array(
-            "<a href='index.php?".GET_KEY_GALLERY_ID."=".$row['id']."'>".$row['title']."</a>",
+            "<a href='".CURRENT_PAGE."?".GET_KEY_GALLERY_ID."=".$row['id']."'>".$row['title']."</a>",
             $row['description'],
             $row['images'],
             format_date_time($row['changed'])
@@ -133,7 +129,7 @@ function phphoto_echo_galleries($db) {
     echo "\n    <h1>".GALLERY_WELCOME."</h1>";
     foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
         echo "\n    <div class='gallery'>";
-        echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
+        echo "\n        <a href='".CURRENT_PAGE."?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
         echo "\n        <img class='thumbnail' src='image.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
         echo "\n        <h1>".format_string($gallery['title'], 30)."</h1>";
         echo "\n        <p>".format_string($gallery['description'])."</p>";
