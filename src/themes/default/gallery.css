@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding: 0;
-    font-family:  georgia,"new century schoolbook", serif;
+    font-family:  helvetica,arial,freesans,clean,sans-serif,"new century schoolbook", serif;
     font-size: 11pt;
     color: #000000;
 }
@@ -57,8 +57,12 @@ div.header {
     overflow: auto;
 }
 
+div.header p * {
+    font-family:  "Courier";
+}
+
 div.header p {
-    margin: 10px 0 0 70px;
+    margin: 10px 0 0 75px;
 }
 
 div.header a {
@@ -84,6 +88,14 @@ div.footer p {
     color: #9f9f9f;
 }
 
+div.footer p * {
+    font-family:  "Courier";
+}
+
+div.footer a {
+    color: #9f9f9f;
+}
+
 /* GALLERY: GALLERIES */
 
 div.gallery {
@@ -104,6 +116,7 @@ div.gallery img.thumbnail {
 
 div.gallery h1 {
     color: #484848;
+    font-weight: normal;
 }
 
 div.gallery h2 {
@@ -135,13 +148,13 @@ div.image img.thumbnail {
 
 div.image h1 {
     color: #222222;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 div.image h2 {
     color: #000000;
     font-size: 7pt;
-    font-weight: none;
+    font-weight: normal;
     font-style: italic;
 }
 

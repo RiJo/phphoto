@@ -142,7 +142,7 @@ function phphoto_echo_galleries($db) {
     }
     echo "\n</div>";
     echo "\n<div class='footer'>";
-    echo "\n    <p>..:: " . GALLERY_NAME.' v.'.GALLERY_VERSION . " ::</p>";
+    echo "\n    <p>..:: <a href='http://github.com/RiJo/phphoto'>" . GALLERY_NAME.' v.'.GALLERY_VERSION . "</a> ::</p>";
     echo "\n</div>";
 }
 
