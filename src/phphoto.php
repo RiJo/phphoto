@@ -267,6 +267,9 @@ function store_image($db, $uploaded_image, $replace_existing = false){
             WHERE
                 filename = '$image_filename'
         ";
+
+        $result = phphoto_db_query($db, $sql);
+        return $result;
     }
     else {
         // Insert new
@@ -298,11 +301,10 @@ function store_image($db, $uploaded_image, $replace_existing = false){
                 NOW()
             )
         ";
+
+        $result = phphoto_db_query($db, $sql);
+        return ($result) ? mysql_insert_id($db) : INVALID_ID;
     }
-
-    $result = phphoto_db_query($db, $sql);
-
-    return ($result) ? mysql_insert_id($db) : INVALID_ID;
 }
 
 function regenerate_gallery_thumbnail($db, $gallery_id) {
@@ -422,11 +424,6 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
         $image_scaled_width = ceil($image_scaled_height * $image_aspect);
         $image_delta_x = round(($canvas_width - $image_scaled_width) / 2);
     }
-    
-    /*die("image_width: $image_width   image_height: $image_height   image_aspect: $image_aspect<br>" .
-        "canvas_width: $canvas_width   canvas_height: $canvas_height   canvas_aspect: $canvas_aspect<br>" .
-        "image_scaled_width: $image_scaled_width   image_scaled_height: $image_scaled_height<br>" .
-        "image_delta_x: $image_delta_x   image_delta_y: $image_delta_y");*/
 
     // Read image
     switch ($image_type) {
@@ -452,12 +449,13 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
 
     // set canvas background color
     $panel_color = str_replace('#', '', $panel_color);
-    if (strlen($panel_color) != 6)
+    if (strlen($panel_color) != 6 && strlen($panel_color) != 8)
         die("Panel color is not properly formatted: #$panel_color");
     $canvas_r = hexdec(substr($panel_color, 0, 2));
     $canvas_g = hexdec(substr($panel_color, 2, 2));
     $canvas_b = hexdec(substr($panel_color, 4, 2));
-    $canvas_bg = imagecolorallocate($canvas_resource, $canvas_r, $canvas_g, $canvas_b);
+    $canvas_a = (strlen($panel_color) == 8) ? hexdec(substr($panel_color, 6, 2)) : 255;
+    $canvas_bg = imagecolorallocatealpha($canvas_resource, $canvas_r, $canvas_g, $canvas_b, $canvas_a);
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 
     // resize and fit the image on the canvas
