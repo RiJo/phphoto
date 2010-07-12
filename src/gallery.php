@@ -72,7 +72,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
     }
     echo "\n</div>";
     echo "\n<div class='footer'>";
-    echo "\n    ..:: $gallery[views] views :: $gallery[images] images :: updated " . format_date_time($gallery['changed']) . " ::";
+    echo "\n    <p>..:: $gallery[views] views :: $gallery[images] images :: updated " . format_date_time($gallery['changed']) . " ::</p>";
     echo "\n</div>";
 
 //~ $query = sprintf("SELECT firstname, lastname, address, age FROM friends WHERE firstname='%s' AND lastname='%s'",
@@ -142,7 +142,7 @@ function phphoto_echo_galleries($db) {
     }
     echo "\n</div>";
     echo "\n<div class='footer'>";
-    echo "\n    ..:: " . GALLERY_NAME.' v.'.GALLERY_VERSION . " ::";
+    echo "\n    <p>..:: " . GALLERY_NAME.' v.'.GALLERY_VERSION . " ::</p>";
     echo "\n</div>";
 }
 

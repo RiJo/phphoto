@@ -31,14 +31,14 @@ img {
 /* GALLERY: COMMON */
 
 div.container {
-    border: 1px #3c3824 solid;
-    background-color: #252525;
+    border: 1px #9f9f9f solid;
+    background-color: #f8f8f8;
     padding: 10px;
     overflow: auto;
 }
 
 div.container h1 {
-    color: #bdb182;
+    color: #787878;
     font-weight: bold;
 }
 
@@ -48,25 +48,40 @@ div.container p {
 }
 
 div.header {
-    background-color: #f8f8f8;
+    background-color: transparent;
+    /*background-color: #f8f8f8;*/
     background-image: url(header.png);
     background-repeat: no-repeat;
     height: 50px;
-    border: 1px #4b4b4b solid;
+    /*border: 1px #4b4b4b solid;*/
     overflow: auto;
 }
 
 div.header p {
-    margin: 5px;
+    margin: 10px 0 0 70px;
+}
+
+div.header a {
+    font-size: 20pt;
+    color: #9f9f9f;
 }
 
 div.footer {
-    border: 1px #3c3824 solid;
-    border-top: none;
-    background-color: #f8f8f8;
+    /*border: 1px #3c3824 solid;
+    border-top: none;*/
+    background-color: transparent;
+    /*background-color: #f8f8f8;*/
+    background-image: url(footer.png);
+    background-repeat: no-repeat;
+    background-position: right bottom; 
+    height: 50px;
     text-align: right;
-    padding: 5px;
     overflow: auto;
+}
+
+div.footer p {
+    margin: 15px 20px 0 0;
+    color: #9f9f9f;
 }
 
 /* GALLERY: GALLERIES */
@@ -88,8 +103,7 @@ div.gallery img.thumbnail {
 }
 
 div.gallery h1 {
-    color: #222222;
-    font-weight: bold;
+    color: #484848;
 }
 
 div.gallery h2 {
