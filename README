@@ -50,4 +50,5 @@
 --------------------------------------------------------------------------------
     * New lighter default theme
     * Moved stylesheet inclusion to phphoto module
+    * Ability to use alpha blended colors on thumbnail borders
 --------------------------------------------------------------------------------
