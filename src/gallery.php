@@ -66,8 +66,8 @@ function phphoto_echo_gallery($db, $gallery_id) {
         echo "\n            <img class='thumbnail' src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]'>";
         echo "\n        </a>";
         echo "\n        <h2>$exif</h2>";
-        echo "\n        <h1>".format_string($gallery['title'], 30)."</h1>";
-        echo "\n        <p>".format_string($gallery['description'])."</p>";
+        echo "\n        <h1>".format_string($image['name'], 30)."</h1>";
+        echo "\n        <p>".format_string($image['description'])."</p>";
         echo "\n    </div>";
     }
     echo "\n</div>";
@@ -130,7 +130,7 @@ function phphoto_echo_galleries($db) {
     echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
     echo "\n</div>";
     echo "\n<div class='container'>";
-    echo "\n    <h1>Galleries</h1>";
+    echo "\n    <h1>".GALLERY_WELCOME."</h1>";
     foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
         echo "\n    <div class='gallery'>";
         echo "\n        <a href='index.php?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
