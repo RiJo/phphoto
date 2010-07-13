@@ -75,6 +75,10 @@ ul li {
     font-weight: none;
 }
 
+ul li.active {
+    background-color: #f8f8f8;
+}
+
 ul li a {
     border: 1px #999999 solid;
     font-size: 9pt;
