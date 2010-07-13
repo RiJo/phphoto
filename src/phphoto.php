@@ -332,15 +332,20 @@ function generate_gallery_data($images) {
     // create image canvas
     if (!$canvas_resource = ImageCreateTrueColor(GALLERY_THUMBNAIL_WIDTH, GALLERY_THUMBNAIL_HEIGHT))
         die('Failed to create destination image');
-    
+
+    // Turn on alpha blending and set alpha flag
+    imagesavealpha($canvas_resource, true);
+    imagealphablending($canvas_resource, true);
+
     // set canvas background color
     $panel_color = str_replace('#', '', GALLERY_THUMBNAIL_PANEL_COLOR);
-    if (strlen($panel_color) != 6)
+    if (strlen($panel_color) != 6 && strlen($panel_color) != 8)
         die("Panel color is not properly formatted: #$panel_color");
     $canvas_r = hexdec(substr($panel_color, 0, 2));
     $canvas_g = hexdec(substr($panel_color, 2, 2));
     $canvas_b = hexdec(substr($panel_color, 4, 2));
-    $canvas_bg = imagecolorallocate($canvas_resource, $canvas_r, $canvas_g, $canvas_b);
+    $canvas_a = (strlen($panel_color) == 8) ? hexdec(substr($panel_color, 6, 2)) / 2 : 0;
+    $canvas_bg = imagecolorallocatealpha($canvas_resource, $canvas_r, $canvas_g, $canvas_b, $canvas_a);
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 
     // draw image thumbnails on canvas
@@ -368,8 +373,8 @@ function generate_gallery_data($images) {
     }
 
     // write canvas to file
-    if (!imagejpeg($canvas_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
-        die('Could not create new jpeg image');
+    if (!imagepng($canvas_resource, IMAGE_TEMP_FILE))
+        die('Could not create new png image');
 
     imagedestroy($canvas_resource);
 
@@ -458,7 +463,7 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
     $canvas_r = hexdec(substr($panel_color, 0, 2));
     $canvas_g = hexdec(substr($panel_color, 2, 2));
     $canvas_b = hexdec(substr($panel_color, 4, 2));
-    $canvas_a = (strlen($panel_color) == 8) ? hexdec(substr($panel_color, 6, 2)) / 2 : 127;
+    $canvas_a = (strlen($panel_color) == 8) ? hexdec(substr($panel_color, 6, 2)) / 2 : 0;
     $canvas_bg = imagecolorallocatealpha($canvas_resource, $canvas_r, $canvas_g, $canvas_b, $canvas_a);
     imagefill($canvas_resource, 0, 0, $canvas_bg);
 

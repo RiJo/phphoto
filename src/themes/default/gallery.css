@@ -114,7 +114,7 @@ div.gallery {
 
 div.gallery img.thumbnail {
     margin: 10px auto 0 auto;
-    border: 1px #000000 solid;
+    border: 1px #9f9f9f solid;
 }
 
 div.gallery h1 {
@@ -149,7 +149,7 @@ div.image {
 
 div.image img.thumbnail {
     margin: 10px auto 0 auto;
-    border: 1px #000000 solid;
+    border: 1px #9f9f9f solid;
 }
 
 div.image h1 {
