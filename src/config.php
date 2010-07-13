@@ -1,8 +1,8 @@
 <?php
 
 define('GALLERY_NAME',                      'phphoto');
-define('GALLERY_VERSION',                   '1.2.0');
-define('GALLERY_DATE',                      '2010-07-11');
+define('GALLERY_VERSION',                   '1.3.0');
+define('GALLERY_DATE',                      '2010-07-13');
 define('GALLERY_DEVELOPERS',                'RiJo');
 define('GALLERY_TITLE',                     'gallery.hermit.se');
 define('GALLERY_WELCOME',                   'Welcome');
