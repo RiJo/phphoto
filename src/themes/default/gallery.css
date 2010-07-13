@@ -1,7 +1,12 @@
+
+/*
+ *   PUBLIC
+ */
+
 * {
     margin: 0;
     padding: 0;
-    font-family:  helvetica,arial,freesans,clean,sans-serif,"new century schoolbook", serif;
+    font-family:  helvetica,arial,freesans,clean,sans-serif,"new century schoolbook",serif;
     font-size: 11pt;
     color: #000000;
 }
@@ -9,8 +14,6 @@
 body {
     background-color: #ffffff;
 }
-
-/* TEXT */
 
 a {
     text-decoration: none;
@@ -21,14 +24,14 @@ a:hover {
     color: #000000;
 }
 
-/* IMAGE */
-
 img {
     border: 0;
     vertical-align: middle;
 }
 
-/* GALLERY: COMMON */
+/*
+ *   COMMON
+ */
 
 div.container {
     border: 1px #9f9f9f solid;
@@ -50,11 +53,9 @@ div.container p {
 
 div.header {
     background-color: transparent;
-    /*background-color: #f8f8f8;*/
     background-image: url(header.png);
     background-repeat: no-repeat;
     height: 50px;
-    /*border: 1px #4b4b4b solid;*/
     overflow: auto;
 }
 
@@ -73,10 +74,7 @@ div.header a {
 }
 
 div.footer {
-    /*border: 1px #3c3824 solid;
-    border-top: none;*/
     background-color: transparent;
-    /*background-color: #f8f8f8;*/
     background-image: url(footer.png);
     background-repeat: no-repeat;
     background-position: right bottom; 
@@ -99,7 +97,9 @@ div.footer a {
     color: #9f9f9f;
 }
 
-/* GALLERY: GALLERIES */
+/*
+ *   GALLERIES
+ */
 
 div.gallery {
     background-image: url(gallery.gif);
@@ -134,7 +134,9 @@ div.gallery p {
     display: none;
 }
 
-/* GALLERY: IMAGES */
+/*
+ *   GALLERY IMAGES
+ */
 
 div.image {
     background-image: url(image.gif);

@@ -1,5 +1,7 @@
 
-/* DIV */
+/*
+ *   COMMON
+ */
 
 div.admin {
     border: 1px #999999 solid;
@@ -23,6 +25,10 @@ div.admin h1 {
     color: #000000;
     font-weight: bold;
 }
+
+/*
+ *   POPUP MESSAGES
+ */
 
 div.message {
     margin-bottom: 10px;
@@ -52,7 +58,9 @@ div.message#error {
     background-color: #ffcccc;
 }
 
-/* LIST */
+/*
+ *   ADMIN MENU
+ */
 
 ul {
     margin-bottom: 10px;
@@ -78,7 +86,9 @@ ul li a:hover {
     border: 1px #000000 solid;
 }
 
-/* TABLE */
+/*
+ *   TABLES
+ */
 
 table {
     width: 100%;
@@ -104,7 +114,9 @@ table tr.data1 td {
     background-color: #dddddd;
 }
 
-/* FORM */
+/*
+ *   FORMS
+ */
 
 form {
     margin-bottom: 10px;

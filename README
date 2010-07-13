@@ -48,7 +48,7 @@
 --------------------------------------------------------------------------------
     version 1.3.0 xxxx-xx-xx
 --------------------------------------------------------------------------------
-    * New lighter default theme
+    * New brighter default theme
     * Moved stylesheet inclusion to phphoto module
     * Ability to use alpha blended colors on thumbnail borders
 --------------------------------------------------------------------------------
