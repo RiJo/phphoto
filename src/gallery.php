@@ -1,6 +1,7 @@
 <?php
 
 function phphoto_echo_gallery($db, $gallery_id) {
+
     // update views counter
     if (!isset($_SESSION[SESSION_KEY_VIEWS]) || !isset($_SESSION[SESSION_KEY_VIEWS]["g$gallery_id"])) {
         phphoto_db_query($db, "UPDATE galleries SET views = views + 1 WHERE id = $gallery_id");

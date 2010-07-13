@@ -111,10 +111,10 @@ function phphoto_regenerate_image_thumbnails($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>Regenerate thumbnails</h1>";
-    echo "\n    <p>Note: this may take a while depending on the number of images in the database.</p>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
     echo "\n        <input type='submit' name='regenerate_thumbs' value='Start'>";
     echo "\n    </form>";
+    echo "\n    <p>Note: this may take a while depending on the number of images in the database.</p>";
     echo "\n</div>";
 }
 
@@ -122,16 +122,16 @@ function phphoto_regenerate_image_thumbnails($db) {
 function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
     if(isset($_POST['regenerate_thumbs'])) {
         if (regenerate_gallery_thumbnail($db, $gallery_id)) {
-            phphoto_popup_message('Gallery thumbnail have been regenerated', 'info');
+            phphoto_popup_message('Gallery thumbnail has been regenerated', 'info');
         }
     }
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>Regenerate thumbnail</h1>";
-    echo "\n    <p>Note: this may take a while depending on the number of images in the gallery.</p>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery_id'>";
     echo "\n        <input type='submit' name='regenerate_thumbs' value='Start'>";
     echo "\n    </form>";
+    echo "\n    <p>Note: this may take a while depending on the number of images in the gallery.</p>";
     echo "\n</div>";
 }
 

@@ -1,10 +1,5 @@
 <?php
 
-/*
- * This file contains all the possible configuration variables that can be
- * changed in the gallery.
- */
-
 define('GALLERY_NAME',                      'phphoto');
 define('GALLERY_VERSION',                   '1.2.0');
 define('GALLERY_DATE',                      '2010-07-11');
@@ -22,7 +17,7 @@ define('DATABASE_PORT',                     3306);
 define('DATABASE_NAME',                     'phphoto');
 define('DATABASE_USER',                     'foo');
 define('DATABASE_PASSWORD',                 'bar');
-define('DATABASE_TABLE_PREFIX',             ''); /* not implemented */
+define('DATABASE_TABLE_PREFIX',             ''); /* not implemented yet */
 
 define('GET_KEY_GALLERY_ID',                'gid');
 define('GET_KEY_TAG_ID',                    'tid');
@@ -59,6 +54,7 @@ define('IMAGE_MAX_FILESIZE',                1024*1024*10); // should be same as 
 define('IMAGE_EXIF_KEYS',                   'Make,Model,FirmwareVersion,ImageType,DateTimeOriginal,CCDWidth,ExposureTime,ShutterSpeedValue, 
                                             ExposureBiasValue,ISOSpeedRatings,FNumber,FocalLength,WhiteBalance,Flash,ExifVersion');
 
+define('IMAGE_THUMBNAIL_SUFFIX',            't');
 define('IMAGE_THUMBNAIL_WIDTH',             150);
 define('IMAGE_THUMBNAIL_HEIGHT',            112.5);
 define('IMAGE_THUMBNAIL_PANEL_COLOR',       '#000000ff');
