@@ -110,7 +110,7 @@ EXIF flash values (http://www.colorpilot.com/exif_tags.html)
 }
 
 // Returns formatted aspect ratio for the width and height
-function aspect_ratio($width, $height) {
+function phphoto_image_aspect_ratio($width, $height) {
     $lcd = 1;
     for ($i = 2; $i < ($width/2) && $i < ($height/2); $i++) {
         if ($width % $i == 0 && $height % $i == 0)
@@ -119,7 +119,7 @@ function aspect_ratio($width, $height) {
     return $width/$lcd.':'.$height/$lcd;
 }
 
-function parse_exif_data($exif) {
+function phphoto_filter_exif_data($exif) {
     $parsed_exif = array();
     foreach (explode(',', IMAGE_EXIF_KEYS) as $key) {
         $key = trim($key);

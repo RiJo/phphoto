@@ -14,7 +14,7 @@ function store_image($db, $uploaded_image, $replace_existing = false){
     $image_type =  $image_info[2];
     // Read exif data
     $exif_temp = exif_read_data($image);
-    $exif = parse_exif_data($exif_temp);
+    $exif = phphoto_filter_exif_data($exif_temp);
 
     // add crop factor (field of view) to exif data
     if (isset($exif['Model'])) {

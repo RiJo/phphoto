@@ -628,7 +628,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array('Format',         image_type_to_mime_type($image_data['type'])));
     array_push($table_data, array('Filesize',       format_byte($image_data['filesize'])));
     array_push($table_data, array('Resolution',     $image_data['width'].'x'.$image_data['height'].' ('.
-                                                    aspect_ratio($image_data['width'], $image_data['height']).')'));
+                                                    phphoto_image_aspect_ratio($image_data['width'], $image_data['height']).')'));
     array_push($table_data, array('Filename',       $image_data['filename']));
     array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
     array_push($table_data, array('Camera',         "<img src='./icons/camera-photo.png'>&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
@@ -700,7 +700,7 @@ function phphoto_echo_admin_images($db) {
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t'></a>",
             wordwrap(format_string($row['name']), 20, '<br>', true),
-            $row['width'].'x'.$row['height'].'<br>'.aspect_ratio($row['width'], $row['height']),
+            $row['width'].'x'.$row['height'].'<br>'.phphoto_image_aspect_ratio($row['width'], $row['height']),
             format_byte($row['filesize']),
             $row['views']." (".round($row['popularity']*100)."%)",
             ((!$row['in_use']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
