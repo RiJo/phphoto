@@ -1,5 +1,8 @@
 <?php
 
+/*
+ * Prints out the given gallery
+ */
 function phphoto_echo_gallery($db, $gallery_id) {
 
     // update views counter
@@ -77,6 +80,9 @@ function phphoto_echo_gallery($db, $gallery_id) {
     echo "\n</div>";
 }
 
+/*
+ * Prints out all galleries with more than 0 images
+ */
 function phphoto_echo_galleries($db) {
     $gallery_sql = "
         SELECT

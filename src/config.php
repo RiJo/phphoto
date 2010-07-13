@@ -9,6 +9,7 @@ define('GALLERY_WELCOME',                   'Welcome');
 define('GALLERY_INDEX_PAGE',                'index.php');
 
 define('GALLERY_CHARSET',                   'iso-8859-1');
+define('GALLERY_TIMEZONE',                  'Europe/Stockholm');
 define('GALLERY_LANGUAGE',                  'sv');
 define('GALLERY_THEME',                     'default');
 

@@ -75,7 +75,7 @@ elseif (isset($_GET[GET_KEY_GALLERY_ID])) {
     }
 
     if ($result[0]['image'] == null)
-        $image = generate_null_image();
+        $image = phphoto_generate_null_image();
     else
         $image = $result[0]['image'];
 

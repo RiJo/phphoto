@@ -4,10 +4,12 @@ session_start();
 
 require_once('./config.php');
 require_once('./database.php');
+require_once('./common.php');
 require_once('./gd.php');
-require_once('./formatter.php');
 require_once('./admin.php');
 require_once('./gallery.php');
+
+date_default_timezone_set(GALLERY_TIMEZONE);
 
 $allowed_filetypes = array('jpg','jpeg','png');
 

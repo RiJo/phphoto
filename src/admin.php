@@ -1,10 +1,14 @@
 <?php
 
+/*
+ * Handles the image upload form
+ */
 function phphoto_upload_image() {
     global $allowed_filetypes;
     if(isset($_FILES['image'])) {
         $uploaded_image = $_FILES['image'];
-        $extension = end(explode('.', $uploaded_image['name']));
+        $temp = explode('.', $uploaded_image['name']);
+        $extension = end($temp);
         $filesize = filesize($uploaded_image['tmp_name']);
         $replace_existing = (isset($_POST['replace']) && $_POST['replace'] == 'true');
 
@@ -16,7 +20,7 @@ function phphoto_upload_image() {
         }
         else {
             $db = phphoto_db_connect();
-            $image_id = store_image($db, $uploaded_image, $replace_existing);
+            $image_id = phphoto_store_image($db, $uploaded_image, $replace_existing);
             if ($image_id == INVALID_ID) {
                 phphoto_popup_message('Could not insert the image in the database', 'error');
             }
@@ -51,6 +55,9 @@ function phphoto_upload_image() {
     echo "\n</div>";
 }
 
+/*
+ * Handles the create gallery form
+ */
 function phphoto_create_gallery($db) {
     if (isset($_POST['title'])) {
         $title = $_POST['title'];
@@ -77,6 +84,9 @@ function phphoto_create_gallery($db) {
     echo "\n</div>";
 }
 
+/*
+ * Handles the create tag form
+ */
 function phphoto_create_tag($db) {
     if (isset($_POST['name'])) {
         $name = $_POST['name'];
@@ -103,9 +113,12 @@ function phphoto_create_tag($db) {
     echo "\n</div>";
 }
 
-function phphoto_regenerate_image_thumbnails($db) {
+/*
+ * Handles the regenerate image thumbnails form
+ */
+function phphoto_image_thumbnails($db) {
     if(isset($_POST['regenerate_thumbs'])) {
-        $regenerated_thumbnails = regenerate_image_thumbnails($db);
+        $regenerated_thumbnails = phphoto_regenerate_image_thumbnails($db);
         phphoto_popup_message("$regenerated_thumbnails thumbnails have been regenerated", 'info');
     }
 
@@ -118,10 +131,12 @@ function phphoto_regenerate_image_thumbnails($db) {
     echo "\n</div>";
 }
 
-
-function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
+/*
+ * Handles the regenerate gallery thumbnail form
+ */
+function phphoto_gallery_thumbnail($db, $gallery_id) {
     if(isset($_POST['regenerate_thumbs'])) {
-        if (regenerate_gallery_thumbnail($db, $gallery_id)) {
+        if (phphoto_regenerate_gallery_thumbnail($db, $gallery_id)) {
             phphoto_popup_message('Gallery thumbnail has been regenerated', 'info');
         }
     }
@@ -233,7 +248,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
         }
     }
 
-    phphoto_regenerate_gallery_thumbnail($db, $gallery_id);
+    phphoto_gallery_thumbnail($db, $gallery_id);
 
     $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
     $gallery_data = phphoto_db_query($db, $sql);
@@ -538,7 +553,7 @@ function phphoto_echo_admin_tags($db) {
     $data = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
-            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$row[id]'>".format_string($row[name])."</a>",
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$row[id]'>".format_string($row['name'])."</a>",
             $row['images'],
             ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_TAG_ID."=$row[id]'><img src='./icons/process-stop.png'></a>" : "<img src='./icons/process-stop-inactive.png'>")
         ));
@@ -633,8 +648,8 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
     array_push($table_data, array('Camera',         "<img src='./icons/camera-photo.png'>&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
     array_push($table_data, array('Settings',       "<img src='./icons/image-x-generic.png'>&nbsp;&nbsp;&nbsp;".format_camera_settings($exif)));
-    array_push($table_data, array('Galleries',      implode('<br>', $gallery_names)));
-    array_push($table_data, array('Tags',           implode('<br>', $tag_names)));
+    array_push($table_data, array('Galleries',      format_string(implode('<br>', $gallery_names))));
+    array_push($table_data, array('Tags',           format_string(implode('<br>', $tag_names))));
     array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array('Description',    "<textarea name='description'>$image_data[description]</textarea>"));
     array_push($table_data, array('Changed',        format_date_time($image_data['changed'])));
@@ -657,7 +672,7 @@ function phphoto_echo_admin_image($db, $image_id) {
  */
 function phphoto_echo_admin_images($db) {
     phphoto_upload_image();
-    phphoto_regenerate_image_thumbnails($db);
+    phphoto_image_thumbnails($db);
 
     $order_by = (isset($_GET[GET_KEY_SORT_COLUMN])) ? $_GET[GET_KEY_SORT_COLUMN] : 2;
 

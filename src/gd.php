@@ -1,7 +1,9 @@
 <?php
 
-// Adds the image to the database and returns the image ID
-function store_image($db, $uploaded_image, $replace_existing = false){
+/*
+ * Adds the image to the database and returns the image ID
+ */
+function phphoto_store_image($db, $uploaded_image, $replace_existing = false){
     // Validate extension and filesiz
     $image_filename = $uploaded_image['name'];
     $image = $uploaded_image['tmp_name'];
@@ -27,8 +29,8 @@ function store_image($db, $uploaded_image, $replace_existing = false){
     //~ die('<pre>'.$image_exif.'\n\n'.print_r($exif, true).'\n\n'.print_r($exif_temp, true).'</pre>');
 
     // Generate image data
-    $image_data = generate_image_data($image);
-    $image_thumbnail = generate_image_data($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
+    $image_data = phphoto_generate_image_data($image);
+    $image_thumbnail = phphoto_generate_image_data($image, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
 
     // Check if exists
     $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM images WHERE filename = '$image_filename';");
@@ -91,7 +93,10 @@ function store_image($db, $uploaded_image, $replace_existing = false){
     }
 }
 
-function regenerate_gallery_thumbnail($db, $gallery_id) {
+/*
+ * Regenerates the thumbnail of the given gallery
+ */
+function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
     $sql = "
             SELECT
                 data,
@@ -106,13 +111,15 @@ function regenerate_gallery_thumbnail($db, $gallery_id) {
             LIMIT ".GALLERY_THUMBNAIL_MAXIMUM_IMAGES."
     ";
     $images = phphoto_db_query($db, $sql);
-    $thumbnail = generate_gallery_data($images);
+    $thumbnail = phphoto_generate_gallery_data($images);
     $sql = "UPDATE galleries SET thumbnail = '$thumbnail' WHERE id = $gallery_id";
     return (phphoto_db_query($db, $sql) == 1);
 }
 
-// Generates gallery thumbnail data as a byte[]
-function generate_gallery_data($images) {
+/*
+ * Generates gallery thumbnail data as a byte[]
+ */
+function phphoto_generate_gallery_data($images) {
     // create image canvas
     if (!$canvas_resource = ImageCreateTrueColor(GALLERY_THUMBNAIL_WIDTH, GALLERY_THUMBNAIL_HEIGHT))
         die('Failed to create destination image');
@@ -165,7 +172,10 @@ function generate_gallery_data($images) {
     return addslashes(file_get_contents(IMAGE_TEMP_FILE));
 }
 
-function regenerate_image_thumbnails($db) {
+/*
+ * Regenerate the thumbnails of all the images in the database
+ */
+function phphoto_regenerate_image_thumbnails($db) {
     $regenerated_thumbnails = 0;
     $sql = "SELECT id, data FROM images";
     foreach (phphoto_db_query($db, $sql) as $image) {
@@ -173,7 +183,7 @@ function regenerate_image_thumbnails($db) {
         if (!imagejpeg($temp_resource, IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_QUALITY))
                 die('Could not create new jpeg image');
 
-        $thumbnail = generate_image_data(IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
+        $thumbnail = phphoto_generate_image_data(IMAGE_TEMP_FILE, IMAGE_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_HEIGHT, IMAGE_THUMBNAIL_PANEL_COLOR);
         $sql = "UPDATE images SET thumbnail = '$thumbnail' WHERE id = $image[id]";
         $regenerated_thumbnails += phphoto_db_query($db, $sql);
     }
@@ -181,8 +191,10 @@ function regenerate_image_thumbnails($db) {
 }
 
 
-// Generates image data as a byte[]
-function generate_image_data($image, $max_width = null, $max_height = null, $panel_color = '#000000') {
+/*
+ * Generates image data as a byte[]
+ */
+function phphoto_generate_image_data($image, $max_width = null, $max_height = null, $panel_color = '#000000') {
     if ($max_width == null && $max_height == null) {
         // keep original image
         return addslashes(file_get_contents($image));
@@ -283,7 +295,7 @@ function generate_image_data($image, $max_width = null, $max_height = null, $pan
 /*
  * Generates a gallery thumbnail on-the-fly when no thumbnail exists
  */
-function generate_null_image() {
+function phphoto_generate_null_image() {
     // create image canvas
     if (!$canvas_resource = ImageCreateTrueColor(GALLERY_THUMBNAIL_WIDTH, GALLERY_THUMBNAIL_HEIGHT))
         die('Failed to create destination image');

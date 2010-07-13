@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * Strips HTML tags and makes sure the string is not too long
+ */
 function format_string($string, $max_length = 0) {
     if ($max_length && strlen($string) > $max_length) {
         $string = substr($string, 0, $max_length).'..';
     }
-    return strip_tags($string);
+    return strip_tags($string, '<br>');
 }
 
+/*
+ * Nice printout for the given bytes
+ */
 function format_byte($bytes) {
     $bounds = array(
         array('TB', pow(1024, 4)),
@@ -27,10 +33,16 @@ function format_byte($bytes) {
     return $bytes; // should not come here
 }
 
+/*
+ * Nice printout for the given date-time
+ */
 function format_date_time($string) {
     return date(DATE_FORMAT, strtotime($string));
 }
 
+/*
+ * Nice printout of the camera model based on the given exif data
+ */
 function format_camera_model($exif) {
     if (!is_array($exif))
         return 'Invalid exif array';
@@ -52,6 +64,9 @@ function format_camera_model($exif) {
     return (count($summary) > 0) ? implode('&nbsp;', $summary) : null;
 }
 
+/*
+ * Nice printout of the camera settings based on the given exif data
+ */
 function format_camera_settings($exif) {
     if (!is_array($exif))
         return 'Invalid exif array';
@@ -109,7 +124,9 @@ EXIF flash values (http://www.colorpilot.com/exif_tags.html)
     return (count($summary) > 0) ? implode('&nbsp;&nbsp;&nbsp;', $summary) : null;
 }
 
-// Returns formatted aspect ratio for the width and height
+/*
+ * Returns formatted aspect ratio for the width and height
+ */
 function phphoto_image_aspect_ratio($width, $height) {
     $lcd = 1;
     for ($i = 2; $i < ($width/2) && $i < ($height/2); $i++) {
@@ -119,6 +136,9 @@ function phphoto_image_aspect_ratio($width, $height) {
     return $width/$lcd.':'.$height/$lcd;
 }
 
+/*
+ * Filters the given exif data based upon the given keys in config.php
+ */
 function phphoto_filter_exif_data($exif) {
     $parsed_exif = array();
     foreach (explode(',', IMAGE_EXIF_KEYS) as $key) {
@@ -137,6 +157,9 @@ function phphoto_filter_exif_data($exif) {
 //   HTML GENERATORS
 ////////////////////////////////////////////////////////////////////////////////
 
+/*
+ * HTML table generator
+ */
 function phphoto_to_html_table($header, $tuples) {
     echo "\n<table>";
     if ($header) {
@@ -148,6 +171,9 @@ function phphoto_to_html_table($header, $tuples) {
     echo "\n</table>";
 }
 
+/*
+ * Popup generator, returns a div-tag
+ */
 function phphoto_popup_message($message, $type) {
     switch ($type) {
         case 'error':
@@ -169,6 +195,9 @@ function phphoto_popup_message($message, $type) {
 //   SQL GENERATORS
 ////////////////////////////////////////////////////////////////////////////////
 
+/*
+ * TBD
+ */
 function phphoto_sql_exif_values($key) {
     /// BUG: This should not return empty rows
     /// when fixed: clean up phphoto_echo_admin_cameras()
@@ -185,6 +214,9 @@ function phphoto_sql_exif_values($key) {
     ";
 }
 
+/*
+ * TBD
+ */
 function phphoto_sql_exif_images($key, $value) {
     return "
         SELECT
