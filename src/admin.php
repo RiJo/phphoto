@@ -156,9 +156,9 @@ function phphoto_gallery_thumbnail($db, $gallery_id) {
 function phphoto_echo_admin_default($db) {
     echo "\n<div class='admin'>";
     echo "\n    <h1>".GALLERY_NAME."</h1>";
-    echo "\n    version: ".GALLERY_VERSION."<br>";
-    echo "\n    updated: ".GALLERY_DATE."<br>";
-    echo "\n    developers: ".GALLERY_DEVELOPERS."<br>";
+    echo "\n    ".phphoto_text($db, 'information', 'version', GALLERY_VERSION)."<br>";
+    echo "\n    ".phphoto_text($db, 'information', 'last_updated', GALLERY_DATE)."<br>";
+    echo "\n    ".phphoto_text($db, 'information', 'developers', GALLERY_DEVELOPERS)."<br>";
     echo "\n</div>";
 }
 

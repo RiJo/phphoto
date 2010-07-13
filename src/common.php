@@ -1,5 +1,31 @@
 <?php
 
+function phphoto_text($db, $category, $name) {
+    $language = GALLERY_LANGUAGE;
+
+    $argv = func_get_args();
+
+    array_shift($argv); // $db
+    array_shift($argv); // $category
+    array_shift($argv); // $name
+
+    $sql = "SELECT text, parameters FROM texts WHERE language_id = '$language' AND category = '$category' AND name = '$name';";
+    $result = phphoto_db_query($db, $sql);
+    
+    if (count($result) != 1) {
+        echo "<b>INVALID TEXT (lang:$language category:$category name:$name)</b>";
+        return;
+    }
+    $text = $result[0];
+
+    if ($text['parameters'] != count($argv)) {
+        echo "<b>INVALID NUMBER OF ARGUMENTS</b>";
+        return;
+    }
+
+    return call_user_func_array('sprintf', array_merge((array) $text['text'], $argv));
+}
+
 /*
  * Strips HTML tags and makes sure the string is not too long
  */
