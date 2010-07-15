@@ -22,7 +22,7 @@ function phphoto_text($db, $category, $name) {
     $text = $result[0];
 
     if ($text['parameters'] != count($argv)) {
-        echo "<b>INVALID NUMBER OF ARGUMENTS</b>";
+        echo "<b>INVALID TEXT (wrong number of arguments)</b>";
         return;
     }
 

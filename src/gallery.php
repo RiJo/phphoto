@@ -4,7 +4,7 @@
  * Prints out the given gallery
  */
 function phphoto_echo_gallery($db, $gallery_id) {
-    assert(is_numeric($gallery_id));
+    assert(is_numeric($gallery_id)); // prevent SQL injections
 
     // update views counter
     if (!isset($_SESSION[SESSION_KEY_VIEWS]) || !isset($_SESSION[SESSION_KEY_VIEWS]["g$gallery_id"])) {
