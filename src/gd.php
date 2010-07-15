@@ -97,6 +97,8 @@ function phphoto_store_image($db, $uploaded_image, $replace_existing = false){
  * Regenerates the thumbnail of the given gallery
  */
 function phphoto_regenerate_gallery_thumbnail($db, $gallery_id) {
+    assert(is_numeric($gallery_id));
+
     $sql = "
             SELECT
                 data,

@@ -11,6 +11,8 @@ require_once('./gallery.php');
 
 date_default_timezone_set(GALLERY_TIMEZONE);
 
+assert_options(ASSERT_BAIL, true); // stop executing on assertion
+
 $allowed_filetypes = array('jpg','jpeg','png');
 
 /*

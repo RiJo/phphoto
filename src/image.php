@@ -88,7 +88,7 @@ else {
 }
 
 function not_valid_id($id, $message) {
-    die("not a valid image id ($id):<br>$message");
+    die("Not a valid image id ($id): $message");
     exit;
 }
 

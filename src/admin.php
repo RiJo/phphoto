@@ -62,13 +62,16 @@ function phphoto_create_gallery($db) {
     if (isset($_POST['title'])) {
         $title = $_POST['title'];
 
-        $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM galleries WHERE title = '$title';");
+        $sql = sprintf("SELECT COUNT(id) AS exist FROM galleries WHERE title = '%s';",
+                mysql_real_escape_string($title, $db));
+        $result = phphoto_db_query($db, $sql);
         $gallery_exists = ($result[0]['exist'] == 1);
         if ($gallery_exists) {
             phphoto_popup_message("Gallery '$title' already exists", 'warning');
         }
         else {
-            $sql = "INSERT INTO galleries (title, description, created) VALUES ('$title', '', NOW())";
+            $sql = sprintf("INSERT INTO galleries (title, description, created) VALUES ('%s', '', NOW())",
+                    mysql_real_escape_string($title, $db));
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message("Gallery '$title' has has been added", 'info');
             else
@@ -91,13 +94,16 @@ function phphoto_create_tag($db) {
     if (isset($_POST['name'])) {
         $name = $_POST['name'];
 
-        $result = phphoto_db_query($db, "SELECT COUNT(id) AS exist FROM tags WHERE name = '$name';");
+        $sql = sprintf("SELECT COUNT(id) AS exist FROM tags WHERE name = '%s';",
+                mysql_real_escape_string($name, $db));
+        $result = phphoto_db_query($db, $sql);
         $tag_exists = ($result[0]['exist'] == 1);
         if ($tag_exists) {
             phphoto_popup_message("Tag '$name' already exists", 'warning');
         }
         else {
-            $sql = "INSERT INTO tags (name, created) VALUES ('$name', NOW())";
+            $sql = sprintf("INSERT INTO tags (name, created) VALUES ('%s', NOW())",
+                    mysql_real_escape_string($name, $db));
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message("Tag '$name' has has been added", 'info');
             else
@@ -216,14 +222,18 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             $image_id = $_REQUEST[GET_KEY_IMAGE_ID];
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE) {
                 // add image to gallery
-                $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, $image_id, NOW())";
+                $sql = sprintf("INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES (%s, %s, NOW())",
+                        mysql_real_escape_string($gallery_id, $db),
+                        mysql_real_escape_string($image_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Image has has been added', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // remove image from gallery
-                $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = $image_id";
+                $sql = sprintf("DELETE FROM image_to_gallery WHERE gallery_id = %s AND image_id = %s",
+                        mysql_real_escape_string($gallery_id, $db),
+                        mysql_real_escape_string($image_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Image has has been removed', 'info');
                 }
@@ -235,14 +245,18 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                 $title = $_POST['title'];
                 $description = $_POST['description'];
 
-                $sql = "UPDATE galleries SET title = '$title', description = '$description' WHERE id = $gallery_id";
+                $sql = sprintf("UPDATE galleries SET title = '%s', description = '%s' WHERE id = %s",
+                        mysql_real_escape_string($title, $db),
+                        mysql_real_escape_string($description, $db),
+                        mysql_real_escape_string($gallery_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Gallery has been updated', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // delete gallery
-                $sql = "DELETE FROM galleries WHERE id = ".$gallery_id;
+                $sql = sprintf("DELETE FROM galleries WHERE id = %s",
+                        mysql_real_escape_string($gallery_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Gallery has been removed', 'info');
                     phphoto_echo_admin_galleries($db);
@@ -257,7 +271,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 
     phphoto_gallery_thumbnail($db, $gallery_id);
 
-    $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
+    $sql = sprintf("SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = %s",
+            mysql_real_escape_string($gallery_id, $db));
     $gallery_data = phphoto_db_query($db, $sql);
 
     if (count($gallery_data) != 1) {
@@ -290,7 +305,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     // images not in this gallery
     echo "\n<div class='admin'>";
     echo "\n    <h1>Images not in gallery</h1>";
-    $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
+    $sql = sprintf("SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = %s)",
+            mysql_real_escape_string($gallery_id, $db));
     $images = phphoto_db_query($db, $sql);
     if (count($images) > 0) {
         echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
@@ -308,7 +324,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     echo "\n</div>";
 
     // images in this gallery
-    $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
+    $sql = sprintf("SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = %s)",
+            mysql_real_escape_string($gallery_id, $db));
 
     $header = array('Thumbnail', 'Filename', 'Title', 'Description', '&nbsp;');
     $images = array();
@@ -340,14 +357,17 @@ function phphoto_echo_admin_galleries($db) {
     phphoto_create_gallery($db);
 
     $order_by = (isset($_GET[GET_KEY_SORT_COLUMN])) ? $_GET[GET_KEY_SORT_COLUMN] : 2;
-
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
+    assert(is_numeric($items_per_page)); // prevent SQL injections
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
-    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM galleries";
+    assert(is_numeric($page_number)); // prevent SQL injections
+
+    $sql = sprintf("SELECT CEIL(COUNT(*) / %s) AS pages FROM galleries",
+            mysql_real_escape_string($items_per_page, $db));
     $pages = phphoto_db_query($db, $sql);
     $pages = $pages[0]['pages'];
 
-    $sql = "
+    $sql = sprintf("
         SELECT
             id,
             title,
@@ -357,10 +377,11 @@ function phphoto_echo_admin_galleries($db) {
         FROM
             galleries
         ORDER BY
-            $order_by
+            %s
         LIMIT
-            ".($page_number * $items_per_page).", $items_per_page
-    ";
+            ".($page_number * $items_per_page).", $items_per_page",
+            mysql_real_escape_string($order_by, $db)
+    );
 
     $header = array(
         'Thumbnail',
@@ -414,14 +435,18 @@ function phphoto_echo_admin_tag($db, $tag_id) {
             $image_id = $_REQUEST[GET_KEY_IMAGE_ID];
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_CREATE) {
                 // add image to tag
-                $sql = "INSERT INTO image_to_tag (tag_id, image_id, created) VALUES ($tag_id, $image_id, NOW())";
+                $sql = sprintf("INSERT INTO image_to_tag (tag_id, image_id, created) VALUES (%s, %s, NOW())",
+                        mysql_real_escape_string($tag_id, $db),
+                        mysql_real_escape_string($image_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Image has has been added', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // remove image from tag
-                $sql = "DELETE FROM image_to_tag WHERE tag_id = $tag_id AND image_id = $image_id";
+                $sql = sprintf("DELETE FROM image_to_tag WHERE tag_id = %s AND image_id = %s",
+                        mysql_real_escape_string($tag_id, $db),
+                        mysql_real_escape_string($image_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Image has has been removed', 'info');
                 }
@@ -432,14 +457,17 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                 // update tag
                 $name = $_POST['name'];
 
-                $sql = "UPDATE tags SET name = '$name' WHERE id = $tag_id";
+                $sql = sprintf("UPDATE tags SET name = '%s' WHERE id = %s",
+                        mysql_real_escape_string($name, $db),
+                        mysql_real_escape_string($tag_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Tag has been updated', 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // delete tag
-                $sql = "DELETE FROM tags WHERE id = ".$tag_id;
+                $sql = sprintf("DELETE FROM tags WHERE id = %s",
+                        mysql_real_escape_string($tag_id, $db));
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message('Tas has been removed', 'info');
                     phphoto_echo_admin_tags($db);
@@ -452,7 +480,8 @@ function phphoto_echo_admin_tag($db, $tag_id) {
         }
     }
 
-    $sql = "SELECT id, name, (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images, changed, created FROM tags WHERE id = $tag_id";
+    $sql = sprintf("SELECT id, name, (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images, changed, created FROM tags WHERE id = %s",
+            mysql_real_escape_string($tag_id, $db));
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($tag_data) != 1) {
@@ -481,7 +510,8 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     // images not tagged with this tag
     echo "\n<div class='admin'>";
     echo "\n    <h1>Images not tagged</h1>";
-    $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
+    $sql = sprintf("SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_tag WHERE tag_id = %s)",
+            mysql_real_escape_string($tag_id, $db));
     $images = phphoto_db_query($db, $sql);
     if (count($images) > 0) {
         echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
@@ -499,7 +529,8 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     echo "\n</div>";
 
     // images tagged
-    $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
+    $sql = sprintf("SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_tag WHERE tag_id = %s)",
+            mysql_real_escape_string($tag_id, $db));
 
     $header = array('Thumbnail', 'Filename', 'Title', 'Description', '&nbsp;');
     $images = array();
@@ -534,11 +565,12 @@ function phphoto_echo_admin_tags($db) {
 
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
-    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM tags";
+    $sql = sprintf("SELECT CEIL(COUNT(*) / %s) AS pages FROM tags",
+            mysql_real_escape_string($items_per_page, $db));
     $pages = phphoto_db_query($db, $sql);
     $pages = $pages[0]['pages'];
 
-    $sql = "
+    $sql = sprintf("
         SELECT
             id,
             name,
@@ -548,8 +580,12 @@ function phphoto_echo_admin_tags($db) {
         ORDER BY
             $order_by
         LIMIT
-            ".($page_number * $items_per_page).", $items_per_page
-    ";
+            ".($page_number * $items_per_page).", $items_per_page",
+                mysql_real_escape_string($order_by, $db),
+                mysql_real_escape_string($page_number, $db),
+                mysql_real_escape_string($items_per_page, $db),
+                mysql_real_escape_string($items_per_page, $db)
+    );
 
     $header = array(
         "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=2'>Name</a>",
@@ -598,14 +634,18 @@ function phphoto_echo_admin_image($db, $image_id) {
             $title = $_POST['title'];
             $description = $_POST['description'];
 
-            $sql = "UPDATE images SET title = '$title', description = '$description' WHERE id = $image_id";
+            $sql = sprintf("UPDATE images SET title = '%s', description = '%s' WHERE id = %s",
+                    mysql_real_escape_string($title, $db),
+                    mysql_real_escape_string($description, $db),
+                    mysql_real_escape_string($image_id, $db));
             if (phphoto_db_query($db, $sql) == 1) {
                 phphoto_popup_message('Image has been updated', 'info');
             }
         }
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
             // delete image
-            $sql = "DELETE FROM images WHERE id = ".$image_id;
+            $sql = sprintf("DELETE FROM images WHERE id = %s",
+                    mysql_real_escape_string($image_id, $db));
             if (phphoto_db_query($db, $sql) == 1) {
                 phphoto_popup_message('Image has been removed', 'info');
                 phphoto_echo_admin_images($db);
@@ -617,11 +657,14 @@ function phphoto_echo_admin_image($db, $image_id) {
         }
     }
 
-    $sql = "SELECT id, type, width, height, filesize, filename, exif, title, description, changed, created FROM images WHERE id = $image_id";
+    $sql = sprintf("SELECT id, type, width, height, filesize, filename, exif, title, description, changed, created FROM images WHERE id = %s",
+            mysql_real_escape_string($image_id, $db));
     $image_data = phphoto_db_query($db, $sql);
-    $sql = "SELECT id, title FROM galleries WHERE id IN (SELECT gallery_id FROM image_to_gallery WHERE image_id = $image_id)";
+    $sql = sprintf("SELECT id, title FROM galleries WHERE id IN (SELECT gallery_id FROM image_to_gallery WHERE image_id = %s)",
+            mysql_real_escape_string($image_id, $db));
     $gallery_data = phphoto_db_query($db, $sql);
-    $sql = "SELECT id, name FROM tags WHERE id IN (SELECT tag_id FROM image_to_tag WHERE image_id = $image_id)";
+    $sql = sprintf("SELECT id, name FROM tags WHERE id IN (SELECT tag_id FROM image_to_tag WHERE image_id = %s)",
+            mysql_real_escape_string($image_id, $db));
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($image_data) != 1) {
@@ -685,11 +728,12 @@ function phphoto_echo_admin_images($db) {
 
     $items_per_page = (isset($_GET[GET_KEY_ITEMS_PER_PAGE])) ? $_GET[GET_KEY_ITEMS_PER_PAGE] : DEFAULT_ITEMS_PER_PAGE;
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
-    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM images";
+    $sql = sprintf("SELECT CEIL(COUNT(*) / %s) AS pages FROM images",
+            mysql_real_escape_string($items_per_page, $db));
     $pages = phphoto_db_query($db, $sql);
     $pages = $pages[0]['pages'];
 
-    $sql = "
+    $sql = sprintf("
         SELECT
             id,
             IF (LENGTH(title) > 0, title, filename) AS name,
@@ -704,8 +748,12 @@ function phphoto_echo_admin_images($db) {
         ORDER BY
             $order_by
         LIMIT
-            ".($page_number * $items_per_page).", $items_per_page
-    ";
+            ".($page_number * $items_per_page).", $items_per_page",
+                mysql_real_escape_string($order_by, $db),
+                mysql_real_escape_string($page_number, $db),
+                mysql_real_escape_string($items_per_page, $db),
+                mysql_real_escape_string($items_per_page, $db)
+    );
 
     $header = array(
         'Thumbnail',

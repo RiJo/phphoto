@@ -9,7 +9,10 @@ function phphoto_text($db, $category, $name) {
     array_shift($argv); // $category
     array_shift($argv); // $name
 
-    $sql = "SELECT text, parameters FROM texts WHERE language_id = '$language' AND category = '$category' AND name = '$name';";
+    $sql = sprintf("SELECT text, parameters FROM texts WHERE language_id = '%s' AND category = '%s' AND name = '%s';",
+            mysql_real_escape_string($language),
+            mysql_real_escape_string($category),
+            mysql_real_escape_string($name));
     $result = phphoto_db_query($db, $sql);
     
     if (count($result) != 1) {
