@@ -58,7 +58,7 @@ define('IMAGE_EXIF_KEYS',                   'Make,Model,FirmwareVersion,ImageTyp
 define('IMAGE_THUMBNAIL_SUFFIX',            't');
 define('IMAGE_THUMBNAIL_WIDTH',             150);
 define('IMAGE_THUMBNAIL_HEIGHT',            112.5);
-define('IMAGE_THUMBNAIL_PANEL_COLOR',       '#000000ff');
+define('IMAGE_THUMBNAIL_PANEL_COLOR',       '#111111');
 define('IMAGE_THUMBNAIL_QUALITY',           80);
 
 define('GALLERY_THUMBNAIL_WIDTH',           200);
