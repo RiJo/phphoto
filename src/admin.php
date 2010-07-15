@@ -632,11 +632,11 @@ function phphoto_echo_admin_image($db, $image_id) {
 
     $gallery_names = array();
     foreach ($gallery_data as $gallery)
-        array_push($gallery_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$gallery[id]'>$gallery[title]</a>");
+        array_push($gallery_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$gallery[id]'>".format_string($gallery['title'])."</a>");
 
     $tag_names = array();
     foreach ($tag_data as $tag)
-        array_push($tag_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$tag[id]'>$tag[name]</a>");
+        array_push($tag_names, "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$tag[id]'>".format_string($tag['name'])."</a>");
 
     $image_data = $image_data[0];
     if ($image_data['exif'])
@@ -655,8 +655,8 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
     array_push($table_data, array('Camera',         "<img src='./icons/camera-photo.png' />&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
     array_push($table_data, array('Settings',       "<img src='./icons/image-x-generic.png' />&nbsp;&nbsp;&nbsp;".format_camera_settings($exif)));
-    array_push($table_data, array('Galleries',      format_string(implode('<br>', $gallery_names))));
-    array_push($table_data, array('Tags',           format_string(implode('<br>', $tag_names))));
+    array_push($table_data, array('Galleries',      implode('<br>', $gallery_names)));
+    array_push($table_data, array('Tags',           implode('<br>', $tag_names)));
     array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array('Description',    "<textarea name='description'>$image_data[description]</textarea>"));
     array_push($table_data, array('Changed',        format_date_time($image_data['changed'])));
