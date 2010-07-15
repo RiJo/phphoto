@@ -26,6 +26,10 @@ div.admin h1 {
     font-weight: bold;
 }
 
+div.admin p {
+    margin-bottom: 10px;
+}
+
 /*
  *   POPUP MESSAGES
  */

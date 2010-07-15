@@ -10,8 +10,8 @@ require_once('phphoto.php');
 <html>
     <head>
         <title><?php echo GALLERY_TITLE; ?></title>
-        <meta http-equiv='Content-Type' content='text/html; charset=<?php echo GALLERY_CHARSET; ?>'>
-        <meta http-equiv='Content-Language' content='<?php echo GALLERY_LANGUAGE; ?>'>
+        <meta http-equiv='Content-Type' content='text/html; charset=<?php echo GALLERY_CHARSET; ?>' />
+        <meta http-equiv='Content-Language' content='<?php echo GALLERY_LANGUAGE; ?>' />
 <?php
 
 phphoto_stylesheets();

@@ -67,7 +67,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
         }
         echo "\n    <div class='image'>";
         echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";
-        echo "\n            <img class='thumbnail' src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]'>";
+        echo "\n            <img class='thumbnail' src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]' />";
         echo "\n        </a>";
         echo "\n        <h2>$exif</h2>";
         echo "\n        <h1>".format_string($image['name'], 30)."</h1>";
@@ -105,7 +105,7 @@ function phphoto_echo_galleries($db) {
     foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
         echo "\n    <div class='gallery'>";
         echo "\n        <a href='".CURRENT_PAGE."?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
-        echo "\n        <img class='thumbnail' src='image.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]'>";
+        echo "\n        <img class='thumbnail' src='image.php?".GET_KEY_GALLERY_ID."=$gallery[id]' title='$gallery[description]' alt='$gallery[title]' />";
         echo "\n        <h1>".format_string($gallery['title'], 30)."</h1>";
         echo "\n        <h2>updated ".format_date_time($gallery['changed'])."</h2>";
         echo "\n        <p>".format_string($gallery['description'])."</p>";

@@ -17,8 +17,8 @@ $allowed_filetypes = array('jpg','jpeg','png');
  * Prints out the required stylesheets
  */
 function phphoto_stylesheets() {
-    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/gallery.css' type='text/css'>";
-    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/admin.css' type='text/css'>";
+    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/gallery.css' type='text/css' />";
+    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/admin.css' type='text/css' />";
 }
 
 /*
