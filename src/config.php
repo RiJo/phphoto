@@ -55,12 +55,14 @@ define('IMAGE_MAX_FILESIZE',                1024*1024*10); // should be same as 
 define('IMAGE_EXIF_KEYS',                   'Make,Model,FirmwareVersion,ImageType,DateTimeOriginal,CCDWidth,ExposureTime,ShutterSpeedValue, 
                                             ExposureBiasValue,ISOSpeedRatings,FNumber,FocalLength,WhiteBalance,Flash,ExifVersion');
 
+define('IMAGE_SORT_COLUMN',                 'name');
 define('IMAGE_THUMBNAIL_SUFFIX',            't');
 define('IMAGE_THUMBNAIL_WIDTH',             150);
 define('IMAGE_THUMBNAIL_HEIGHT',            112.5);
 define('IMAGE_THUMBNAIL_PANEL_COLOR',       '#111111');
 define('IMAGE_THUMBNAIL_QUALITY',           80);
 
+define('GALLERY_SORT_COLUMN',               'title');
 define('GALLERY_THUMBNAIL_WIDTH',           200);
 define('GALLERY_THUMBNAIL_HEIGHT',          150);
 define('GALLERY_THUMBNAIL_PANEL_COLOR',     '#111111');

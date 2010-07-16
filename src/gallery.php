@@ -39,7 +39,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
         WHERE
             image_to_gallery.gallery_id = $gallery_id
         ORDER BY
-            name
+            ".IMAGE_SORT_COLUMN."
     ";
 
     $gallery = phphoto_db_query($db, $gallery_sql);
@@ -96,6 +96,8 @@ function phphoto_echo_galleries($db) {
             galleries g
         WHERE
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
+        ORDER BY
+            ".GALLERY_SORT_COLUMN."
     ";
 
     echo "\n<div class='header'>";
