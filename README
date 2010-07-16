@@ -59,4 +59,5 @@
 --------------------------------------------------------------------------------
     * Improved security against SQL injections
     * CSS now validates according to W3C
+    * Added login link to index.php
 --------------------------------------------------------------------------------

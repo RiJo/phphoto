@@ -2,25 +2,6 @@
 
 require_once('phphoto.php');
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
-    <head>
-        <title><?php echo GALLERY_TITLE; ?></title>
-        <meta http-equiv='Content-Type' content='text/html; charset=<?php echo GALLERY_CHARSET; ?>' />
-        <meta http-equiv='Content-Language' content='<?php echo GALLERY_LANGUAGE; ?>' />
-<?php
-
-phphoto_stylesheets();
-
-?>
-    </head>
-    <body>
-        <div style="margin:10px; width: 870px;">
-
-<?php
-
 $password = 'abc';
 if (isset($_POST['login']) && $_POST['login'] == $password) {
     $_SESSION['authorized'] = true;
@@ -29,12 +10,30 @@ elseif (isset($_GET['q']) && $_GET['q'] == 'logout') {
     unset($_SESSION['authorized']);
 }
 $authorized = (isset($_SESSION['authorized']) && $_SESSION['authorized']);
+
+echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN'";
+echo "\n'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>";
+
+echo "\n<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>";
+echo "\n    <head>";
+echo "\n        <title>".GALLERY_TITLE."</title>";
+echo "\n        <meta http-equiv='Content-Type' content='text/html; charset=".GALLERY_CHARSET."' />";
+echo "\n        <meta http-equiv='Content-Language' content='".GALLERY_LANGUAGE."' />";
+
+phphoto_stylesheets();
+
+echo "\n   </head>";
+echo "\n    <body>";
+
+if ($authorized)
+    echo "\n        <a href='".basename($_SERVER['PHP_SELF'])."?q=logout' style='float:right;margin:10px;color:#aaa;'>Logout</a>";
+else
+    echo "\n        <a href='".basename($_SERVER['PHP_SELF'])."?q=login' style='float:right;margin:10px;color:#aaa;'>Login</a>";
+
+echo "\n        <div style='margin:10px; width: 870px;'>";
+
 if ($authorized) {
-    $additional_items = array(
-        'First page' => basename($_SERVER['PHP_SELF']),
-        'Logout' => basename($_SERVER['PHP_SELF'])."?q=logout"
-    );
-    phphoto_admin_links($additional_items);
+    phphoto_admin_links();
 }
 if (isset($_GET['q']) && $_GET['q'] == 'login') {
     echo "\n    <form method='post' action='".basename($_SERVER['PHP_SELF'])."'>";
@@ -46,8 +45,8 @@ else {
     phphoto_main($authorized);
 }
 
-?>
+echo "\n        </div>";
+echo "\n    </body>";
+echo "\n</html>";
 
-        </div>
-    </body>
-</html>
+?>

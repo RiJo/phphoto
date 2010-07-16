@@ -85,8 +85,10 @@ function phphoto_admin($db, $admin) {
 /*
  * Prints out links used for the admin pages
  */
-function phphoto_admin_links($additional_items = array()) {
+function phphoto_admin_links() {
     echo "\n<ul>";
+    echo "\n    <li".((!isset($_GET[GET_KEY_ADMIN_QUERY]))?" class=active":'').
+            "><a href='".CURRENT_PAGE."'>First page</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_DEFAULT)?" class=active":'').
             "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_DEFAULT."'>Admin</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_GALLERY)?" class=active":'').
@@ -97,8 +99,6 @@ function phphoto_admin_links($additional_items = array()) {
             "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_CAMERA)?" class=active":'').
             "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_CAMERA."'>Cameras</a></li>";
-    foreach ($additional_items as $name=>$url)
-        echo "\n    <li><a href='$url'>$name</a></li>";
     echo "\n</ul>";
 }
 
