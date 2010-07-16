@@ -29,6 +29,8 @@ function phphoto_stylesheets() {
 function phphoto_main($authorized = false) {
     $db = phphoto_db_connect();
     $admin = (isset($_GET[GET_KEY_ADMIN_QUERY])) ? $_GET[GET_KEY_ADMIN_QUERY] : '';
+    if ($authorized)
+        phphoto_admin_links($db);
     if ($authorized && strlen($admin) > 0)
         phphoto_admin($db, $admin);
     else
@@ -85,20 +87,27 @@ function phphoto_admin($db, $admin) {
 /*
  * Prints out links used for the admin pages
  */
-function phphoto_admin_links() {
+function phphoto_admin_links($db) {
+    $text_index = phphoto_text($db, 'menu', 'index');
+    $text_admin = phphoto_text($db, 'menu', 'admin');
+    $text_galleries = phphoto_text($db, 'menu', 'galleries');
+    $text_tags = phphoto_text($db, 'menu', 'tags');
+    $text_images = phphoto_text($db, 'menu', 'images');
+    $text_cameras = phphoto_text($db, 'menu', 'cameras');
+    
     echo "\n<ul>";
     echo "\n    <li".((!isset($_GET[GET_KEY_ADMIN_QUERY]))?" class=active":'').
-            "><a href='".CURRENT_PAGE."'>First page</a></li>";
+            "><a href='".CURRENT_PAGE."'>$text_index</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_DEFAULT)?" class=active":'').
-            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_DEFAULT."'>Admin</a></li>";
+            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_DEFAULT."'>$text_admin</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_GALLERY)?" class=active":'').
-            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY."'>Galleries</a></li>";
+            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY."'>$text_galleries</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_TAG)?" class=active":'').
-            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG."'>Tags</a></li>";
+            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG."'>$text_tags</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_IMAGE)?" class=active":'').
-            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE."'>Images</a></li>";
+            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE."'>$text_images</a></li>";
     echo "\n    <li".((isset($_GET[GET_KEY_ADMIN_QUERY]) && $_GET[GET_KEY_ADMIN_QUERY] == GET_VALUE_ADMIN_CAMERA)?" class=active":'').
-            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_CAMERA."'>Cameras</a></li>";
+            "><a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_CAMERA."'>$text_cameras</a></li>";
     echo "\n</ul>";
 }
 

@@ -3,54 +3,58 @@
 /*
  * Handles the image upload form
  */
-function phphoto_upload_image() {
+function phphoto_upload_image($db) {
     global $allowed_filetypes;
     if(isset($_FILES['image'])) {
         $uploaded_image = $_FILES['image'];
-        $temp = explode('.', $uploaded_image['name']);
-        $extension = end($temp);
-        $filesize = filesize($uploaded_image['tmp_name']);
-        $replace_existing = (isset($_POST['replace']) && $_POST['replace'] == 'true');
 
-        if (!in_array(strtolower($extension), $allowed_filetypes)) {
-            phphoto_popup_message("Not a valid filetype: $extension", 'error');
-        }
-        elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
-            phphoto_popup_message("The file is too big (".format_byte($filesize)."), allowed is less than ".format_byte(IMAGE_MAX_FILESIZE), 'error');
-        }
-        else {
-            $db = phphoto_db_connect();
-            $image_id = phphoto_store_image($db, $uploaded_image, $replace_existing);
-            if ($image_id == INVALID_ID) {
-                phphoto_popup_message('Could not insert the image in the database', 'error');
+        if (file_exists($uploaded_image['tmp_name'])) {
+            $temp = explode('.', $uploaded_image['name']);
+            $extension = end($temp);
+            $filesize = filesize($uploaded_image['tmp_name']);
+            $replace_existing = (isset($_POST['replace']) && $_POST['replace'] == 'true');
+
+            if (!in_array(strtolower($extension), $allowed_filetypes)) {
+                phphoto_popup_message(phphoto_text($db, 'image', 'invalid_filetype', $extension), 'error');
             }
-            elseif ($image_id == -2) {
-                phphoto_popup_message("Filename '$uploaded_image[name]' already exists in database", 'warning');
+            elseif (!is_numeric($filesize) || $filesize > IMAGE_MAX_FILESIZE) {
+                phphoto_popup_message(phphoto_text($db, 'image', 'invalid_filesize', format_byte($filesize)), 'error');
             }
             else {
-                if ($replace_existing)
-                    phphoto_popup_message("Image '$uploaded_image[name]' uploaded successfully (replace existing)", 'info');
-                else
-                    phphoto_popup_message("Image '$uploaded_image[name]' uploaded successfully", 'info');
+                $db = phphoto_db_connect();
+                $image_id = phphoto_store_image($db, $uploaded_image, $replace_existing);
+                if ($image_id == INVALID_ID) {
+                    phphoto_popup_message(phphoto_text($db, 'image', 'store_error'), 'error');
+                }
+                elseif ($image_id == -2) {
+                    phphoto_popup_message(phphoto_text($db, 'image', 'exists', $uploaded_image['name']), 'warning');
+                }
+                else {
+                    if ($replace_existing)
+                        phphoto_popup_message(phphoto_text($db, 'image', 'uploaded_replace', $uploaded_image['name']), 'info');
+                    else
+                        phphoto_popup_message(phphoto_text($db, 'image', 'uploaded_normal', $uploaded_image['name']), 'info');
+                }
             }
+            unlink($uploaded_image['tmp_name']); // delete temp file
         }
-        unlink($uploaded_image['tmp_name']); // delete temp file
+        else {
+            phphoto_popup_message(phphoto_text($db, 'image', 'invalid_temp_file'), 'error');
+        }
     }
 
-    $filetypes = implode(', ', $allowed_filetypes);
-
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Upload image</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'image', 'upload')."</h1>";
     echo "\n    <p>";
-    echo "\n    allowed formats: $filetypes";
+    echo "\n    ".phphoto_text($db, 'image', 'allowed_extensions', implode(', ', $allowed_filetypes));
     echo "\n    <br>";
-    echo "\n    maximum size: ".format_byte(IMAGE_MAX_FILESIZE);
+    echo "\n    ".phphoto_text($db, 'image', 'maximum_filesize', format_byte(IMAGE_MAX_FILESIZE));
     echo "\n    </p>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."' enctype='multipart/form-data'>";
     echo "\n        <input type='file' name='image'>";
     echo "\n        <br>";
     echo "\n        <input type='submit' value='Upload'>";
-    echo "\n        <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>Replace existing</label>";
+    echo "\n        <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>".phphoto_text($db, 'image', 'replace_existing')."</label>";
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -163,9 +167,9 @@ function phphoto_echo_admin_default($db) {
     echo "\n<div class='admin'>";
     echo "\n    <h1>".GALLERY_NAME."</h1>";
     echo "\n    <p>";
-    echo "\n        ".phphoto_text($db, 'information', 'version', GALLERY_VERSION)."<br>";
-    echo "\n        ".phphoto_text($db, 'information', 'last_updated', GALLERY_DATE)."<br>";
-    echo "\n        ".phphoto_text($db, 'information', 'developers', GALLERY_DEVELOPERS)."<br>";
+    echo "\n        ".phphoto_text($db, 'info', 'version', GALLERY_VERSION)."<br>";
+    echo "\n        ".phphoto_text($db, 'info', 'last_updated', GALLERY_DATE)."<br>";
+    echo "\n        ".phphoto_text($db, 'info', 'developers', GALLERY_DEVELOPERS)."<br>";
     echo "\n    </p>";
     echo "\n    <p>";
     echo "\n        <a href='http://jigsaw.w3.org/css-validator/check/referer'>";
@@ -551,7 +555,7 @@ function phphoto_echo_admin_tags($db) {
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
     assert(is_numeric($page_number)); // prevent SQL injections
 
-    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM galleries";
+    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM tags";
     $pages = phphoto_db_query($db, $sql);
     $pages = $pages[0]['pages'];
 
@@ -698,7 +702,7 @@ function phphoto_echo_admin_image($db, $image_id) {
  * Table showing all images available for editing
  */
 function phphoto_echo_admin_images($db) {
-    phphoto_upload_image();
+    phphoto_upload_image($db);
     phphoto_image_thumbnails($db);
 
     $order_by = (isset($_GET[GET_KEY_SORT_COLUMN])) ? $_GET[GET_KEY_SORT_COLUMN] : 2;
@@ -707,7 +711,7 @@ function phphoto_echo_admin_images($db) {
     $page_number = (isset($_GET[GET_KEY_PAGE_NUMBER])) ? $_GET[GET_KEY_PAGE_NUMBER] : 0;
     assert(is_numeric($page_number)); // prevent SQL injections
 
-    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM galleries";
+    $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM images";
     $pages = phphoto_db_query($db, $sql);
     $pages = $pages[0]['pages'];
 

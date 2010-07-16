@@ -14,19 +14,19 @@ function phphoto_text($db, $category, $name) {
             mysql_real_escape_string($category),
             mysql_real_escape_string($name));
     $result = phphoto_db_query($db, $sql);
+
+    if (count($result) != 1)
+        return "<font style='font-size:10pt;color:#b00;'>@$category:$name@</font>";
     
-    if (count($result) != 1) {
-        echo "<b>INVALID TEXT (lang:$language category:$category name:$name)</b>";
-        return;
-    }
     $text = $result[0];
+    if ($text['parameters'] != count($argv))
+        return "<font style='font-size:10pt;color:#b00;'>@$category:$name:$text[parameters]@</font>";
 
-    if ($text['parameters'] != count($argv)) {
-        echo "<b>INVALID TEXT (wrong number of arguments)</b>";
-        return;
-    }
-
-    return call_user_func_array('sprintf', array_merge((array) $text['text'], $argv));
+    //~ return call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
+    
+    $text = call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
+    $text = "@$text@";
+    return $text;
 }
 
 /*
@@ -52,7 +52,7 @@ function format_byte($bytes) {
     );
 
     for ($i = 0; $i < count($bounds); $i++) {
-        if ($bytes >= $bounds[$i+1][1]) {
+        if ($bytes >= $bounds[$i][1]) {
             if ($i == count($bounds)-1)
                 return sprintf('%d %s', $bytes/$bounds[$i][1], $bounds[$i][0]);
             else

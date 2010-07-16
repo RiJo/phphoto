@@ -32,9 +32,6 @@ else
 
 echo "\n        <div style='margin:10px; width: 870px;'>";
 
-if ($authorized) {
-    phphoto_admin_links();
-}
 if (isset($_GET['q']) && $_GET['q'] == 'login') {
     echo "\n    <form method='post' action='".basename($_SERVER['PHP_SELF'])."'>";
     echo "\n        <input type='password' name='login'>";
