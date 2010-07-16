@@ -229,14 +229,14 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                 // add image to gallery
                 $sql = "INSERT INTO image_to_gallery (gallery_id, image_id, created) VALUES ($gallery_id, $image_id, NOW())";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Image has has been added', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'gallery', 'image_added'), 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // remove image from gallery
                 $sql = "DELETE FROM image_to_gallery WHERE gallery_id = $gallery_id AND image_id = $image_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Image has has been removed', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'gallery', 'image_removed'), 'info');
                 }
             }
         }
@@ -251,35 +251,35 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                         mysql_real_escape_string($description, $db),
                         $gallery_id);
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Gallery has been updated', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'gallery', 'updated'), 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // delete gallery
                 $sql = "DELETE FROM galleries WHERE id = $gallery_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Gallery has been removed', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'gallery', 'deleted'), 'info');
                     phphoto_echo_admin_galleries($db);
                     return;
                 }
                 else {
-                    phphoto_popup_message('Could not remove gallery', 'error');
+                    phphoto_popup_message(phphoto_text($db, 'gallery', 'delete_error'), 'error');
                 }
             }
         }
     }
 
-    phphoto_gallery_thumbnail($db, $gallery_id);
-
     $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
     $gallery_data = phphoto_db_query($db, $sql);
 
     if (count($gallery_data) != 1) {
-        phphoto_popup_message("Unknown gallery: $gallery_id", 'error');
+        phphoto_popup_message(phphoto_text($db, 'gallery', 'unknown'), 'error');
         echo "\n</div>";
         return;
     }
     $gallery_data = $gallery_data[0];
+
+    phphoto_gallery_thumbnail($db, $gallery_id);
 
     $table_data = array();
     array_push($table_data, array('&nbsp;',                                     "<img src='image.php?".GET_KEY_GALLERY_ID."=".$gallery_id."' />"));
@@ -440,14 +440,14 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                 // add image to tag
                 $sql = "INSERT INTO image_to_tag (tag_id, image_id, created) VALUES ($tag_id, $image_id, NOW())";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Image has has been added', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'tag', 'image_added'), 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // remove image from tag
                 $sql = "DELETE FROM image_to_tag WHERE tag_id = $tag_id AND image_id = $image_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Image has has been removed', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'tag', 'image_removed'), 'info');
                 }
             }
         }
@@ -459,19 +459,19 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                         mysql_real_escape_string($name, $db),
                         $tag_id);
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Tag has been updated', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'tag', 'updated'), 'info');
                 }
             }
             if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE) {
                 // delete tag
                 $sql = "DELETE FROM tags WHERE id = $tag_id";
                 if (phphoto_db_query($db, $sql) == 1) {
-                    phphoto_popup_message('Tas has been removed', 'info');
+                    phphoto_popup_message(phphoto_text($db, 'tag', 'deleted'), 'info');
                     phphoto_echo_admin_tags($db);
                     return;
                 }
                 else {
-                    phphoto_popup_message('Could not remove tag', 'error');
+                    phphoto_popup_message(phphoto_text($db, 'tag', 'delete_error'), 'error');
                 }
             }
         }
@@ -481,7 +481,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($tag_data) != 1) {
-        phphoto_popup_message("Unknown tag: $tag_id", 'error');
+        phphoto_popup_message(phphoto_text($db, 'tag', 'unknown'), 'error');
         echo "\n</div>";
         return;
     }
@@ -636,19 +636,19 @@ function phphoto_echo_admin_image($db, $image_id) {
                     mysql_real_escape_string($description, $db),
                     $image_id);
             if (phphoto_db_query($db, $sql) == 1) {
-                phphoto_popup_message('Image has been updated', 'info');
+                phphoto_popup_message(phphoto_text($db, 'image', 'updated'), 'info');
             }
         }
         if($_GET[GET_KEY_OPERATION] == GET_VALUE_DELETE && isset($_GET[GET_KEY_IMAGE_ID])) {
             // delete image
             $sql = "DELETE FROM images WHERE id = $image_id";
             if (phphoto_db_query($db, $sql) == 1) {
-                phphoto_popup_message('Image has been removed', 'info');
+                phphoto_popup_message(phphoto_text($db, 'image', 'deleted'), 'info');
                 phphoto_echo_admin_images($db);
                 return;
             }
             else {
-                phphoto_popup_message('Could not remove image', 'error');
+                phphoto_popup_message(phphoto_text($db, 'image', 'delete_error'), 'error');
             }
         }
     }
@@ -661,7 +661,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($image_data) != 1) {
-        phphoto_popup_message("Unknown image: $image_id", 'error');
+        phphoto_popup_message(phphoto_text($db, 'image', 'unknown'), 'error');
         echo "\n</div>";
         return;
     }

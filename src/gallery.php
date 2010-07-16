@@ -45,16 +45,17 @@ function phphoto_echo_gallery($db, $gallery_id) {
     $gallery = phphoto_db_query($db, $gallery_sql);
     $images = phphoto_db_query($db, $images_sql);
 
+    echo "\n<div class='header'>";
+    echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
+    echo "\n</div>";
+
     if (count($gallery) != 1) {
-        echo "\n<div class='error'>Unkown gallery</div>";
+        echo "\n<div class='container'>".phphoto_text($db, 'gallery', 'unknown')."</div>";
         return;
     }
 
     $gallery = $gallery[0];
 
-    echo "\n<div class='header'>";
-    echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
-    echo "\n</div>";
     echo "\n<div class='container'>";
     echo "\n    <h1>".format_string($gallery['title'])."</h1>";
     echo "\n    <p>".format_string($gallery['description'])."</p>";
@@ -77,7 +78,10 @@ function phphoto_echo_gallery($db, $gallery_id) {
     }
     echo "\n</div>";
     echo "\n<div class='footer'>";
-    echo "\n    <p>..:: $gallery[views] views :: $gallery[images] images :: updated " . format_date_time($gallery['changed']) . " ::</p>";
+    echo "\n    <p>..:: ".phphoto_text($db, 'footer', 'views', $gallery['views'])." :: "
+                         .phphoto_text($db, 'footer', 'images', $gallery['images'])." :: "
+                         .phphoto_text($db, 'footer', 'updated', format_date_time($gallery['changed']))
+                         ." ::</p>";
     echo "\n</div>";
 }
 

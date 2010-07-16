@@ -217,7 +217,7 @@ function phphoto_popup_message($message, $type) {
             echo "\n<div class='message' id='info'><img src='./icons/dialog-information.png'>$message</div>";
             break;
         default:
-            echo "\n<div class='message'>Unknown message ($type): $message</div>";
+            echo "\n<div class='message'>Unknown message type ($type): $message</div>";
             break;
     }
 }

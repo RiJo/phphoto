@@ -55,10 +55,11 @@
 
 
 --------------------------------------------------------------------------------
-    version 1.4.0 xxxx-xx-xx
+    version 1.4.0 2010-07-16
 --------------------------------------------------------------------------------
+    * All texts are placed in the database
     * Improved security against SQL injections
     * CSS now validates according to W3C
     * Added login link to index.php
-    * Macros for sroting galleries and images
+    * Macros for sorting galleries and images
 --------------------------------------------------------------------------------
