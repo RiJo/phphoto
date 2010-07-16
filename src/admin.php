@@ -79,7 +79,7 @@ function phphoto_create_gallery($db) {
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message(phphoto_text($db, 'gallery', 'created', $title), 'info');
             else
-                phphoto_popup_message(phphoto_text($db, 'gallery', 'store_error', $title), 'info');
+                phphoto_popup_message(phphoto_text($db, 'gallery', 'store_error', $title), 'error');
         }
     }
     echo "\n<div class='admin'>";
@@ -109,16 +109,16 @@ function phphoto_create_tag($db) {
             $sql = sprintf("INSERT INTO tags (name, created) VALUES ('%s', NOW())",
                     mysql_real_escape_string($name, $db));
             if (phphoto_db_query($db, $sql) == 1)
-                phphoto_popup_message("Tag '$name' has has been added", 'info');
+                phphoto_popup_message(phphoto_text($db, 'tag', 'created', $name), 'info');
             else
-                phphoto_popup_message("Could not create tag '$name'", 'info');
+                phphoto_popup_message(phphoto_text($db, 'tag', 'store_error', $name), 'error');
         }
     }
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Create tag</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'tag', 'create')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_TAG."'>";
     echo "\n        <input type='input' name='name' maxlength='255'>";
-    echo "\n        <input type='submit' value='Create'>";
+    echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'create')."'>";
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -127,15 +127,15 @@ function phphoto_create_tag($db) {
  * Handles the regenerate image thumbnails form
  */
 function phphoto_image_thumbnails($db) {
-    if(isset($_POST['regenerate_thumbs'])) {
+    if(isset($_POST['regenerate_image_thumbs'])) {
         $regenerated_thumbnails = phphoto_regenerate_image_thumbnails($db);
-        phphoto_popup_message("$regenerated_thumbnails thumbnails have been regenerated", 'info');
+        phphoto_popup_message(phphoto_text($db, 'image', 'thumbs_regenerated', $regenerated_thumbnails), 'info');
     }
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'image', 'regenerate_thumbs')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
-    echo "\n        <input type='submit' name='regenerate_thumbs' value='".phphoto_text($db, 'button', 'start')."'>";
+    echo "\n        <input type='submit' name='regenerate_image_thumbs' value='".phphoto_text($db, 'button', 'start')."'>";
     echo "\n    </form>";
     echo "\n    <p>".phphoto_text($db, 'image', 'note_long_time')."</p>";
     echo "\n</div>";
@@ -145,18 +145,18 @@ function phphoto_image_thumbnails($db) {
  * Handles the regenerate gallery thumbnail form
  */
 function phphoto_gallery_thumbnail($db, $gallery_id) {
-    if(isset($_POST['regenerate_thumbs'])) {
+    if(isset($_POST['regenerate_gallery_thumb'])) {
         if (phphoto_regenerate_gallery_thumbnail($db, $gallery_id)) {
-            phphoto_popup_message('Gallery thumbnail has been regenerated', 'info');
+            phphoto_popup_message(phphoto_text($db, 'gallery', 'thumb_regenerated'), 'info');
         }
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Regenerate thumbnail</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'gallery', 'regenerate_thumb')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery_id'>";
-    echo "\n        <input type='submit' name='regenerate_thumbs' value='Start'>";
+    echo "\n        <input type='submit' name='regenerate_gallery_thumb' value='".phphoto_text($db, 'button', 'start')."'>";
     echo "\n    </form>";
-    echo "\n    <p>Note: this may take a while depending on the number of images in the gallery.</p>";
+    echo "\n    <p>".phphoto_text($db, 'gallery', 'note_long_time')."</p>";
     echo "\n</div>";
 }
 
@@ -574,8 +574,8 @@ function phphoto_echo_admin_tags($db) {
     );
 
     $header = array(
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=2'>Name</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=3'>Images</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=2'>".phphoto_text($db, 'header', 'name')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'images')."</a>",
         '&nbsp;'
     );
 
