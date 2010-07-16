@@ -187,9 +187,9 @@ function phphoto_echo_admin_cameras($db) {
     $table_data = array();
 
     $header = array(
-        'Model',
-        'Crop factor',
-        'Images'
+        phphoto_text($db, 'header', 'model'),
+        phphoto_text($db, 'header', 'crop_factor'),
+        phphoto_text($db, 'header', 'images')
     );
 
     foreach (phphoto_db_query($db, $sql) as $row) {
@@ -207,7 +207,7 @@ function phphoto_echo_admin_cameras($db) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Cameras</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'section', 'cameras')."</h1>";
     phphoto_to_html_table($header, $table_data);
     echo "\n    </form>";
     echo "\n</div>";
@@ -282,17 +282,17 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $gallery_data = $gallery_data[0];
 
     $table_data = array();
-    array_push($table_data, array('&nbsp;',         "<img src='image.php?".GET_KEY_GALLERY_ID."=".$gallery_id."' />"));
-    array_push($table_data, array('Views',          $gallery_data['views']));
-    array_push($table_data, array('Images',         $gallery_data['images']));
-    array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
-    array_push($table_data, array('Description',    "<textarea name='description'>$gallery_data[description]</textarea>"));
-    array_push($table_data, array('Changed',        format_date_time($gallery_data['changed'])));
-    array_push($table_data, array('Created',        format_date_time($gallery_data['created'])));
-    array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
+    array_push($table_data, array('&nbsp;',                                     "<img src='image.php?".GET_KEY_GALLERY_ID."=".$gallery_id."' />"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'views'),         $gallery_data['views']));
+    array_push($table_data, array(phphoto_text($db, 'header', 'images'),        $gallery_data['images']));
+    array_push($table_data, array(phphoto_text($db, 'header', 'title'),         "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$gallery_data[description]</textarea>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'changed'),       format_date_time($gallery_data['changed'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'created'),       format_date_time($gallery_data['created'])));
+    array_push($table_data, array('&nbsp;',                                     "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Edit gallery</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'gallery', 'edit')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
             GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
@@ -303,7 +303,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 
     // images not in this gallery
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Images not in gallery</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'gallery', 'images_not_in')."</h1>";
     $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
     $images = phphoto_db_query($db, $sql);
     if (count($images) > 0) {
@@ -316,7 +316,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             echo "\n            <option value='$row[id]'>".((empty($row['title'])?$row['filename']:$row['title']))."</option>";
         }
         echo "\n        </select>";
-        echo "\n        <input type='submit' value='Add'>";
+        echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'add')."'>";
         echo "\n    </form>";
     }
     echo "\n</div>";
@@ -324,7 +324,13 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     // images in this gallery
     $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
 
-    $header = array('Thumbnail', 'Filename', 'Title', 'Description', '&nbsp;');
+    $header = array(
+        phphoto_text($db, 'header', 'thumbnail'),
+        phphoto_text($db, 'header', 'filename'),
+        phphoto_text($db, 'header', 'title'),
+        phphoto_text($db, 'header', 'description'),
+        '&nbsp;'
+    );
     $images = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($images, array(
@@ -341,7 +347,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Images in gallery</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'gallery', 'images_in')."</h1>";
     phphoto_to_html_table($header, $images);
 
     echo "\n</div>";
@@ -482,13 +488,13 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $tag_data = $tag_data[0];
 
     $table_data = array();
-    array_push($table_data, array('Name',           "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
-    array_push($table_data, array('Changed',        format_date_time($tag_data['changed'])));
-    array_push($table_data, array('Created',        format_date_time($tag_data['created'])));
-    array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'name'),      "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'changed'),   format_date_time($tag_data['changed'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'created'),   format_date_time($tag_data['created'])));
+    array_push($table_data, array('&nbsp;',         "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Edit tag</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'tag', 'edit')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
             GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
@@ -499,7 +505,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
 
     // images not tagged with this tag
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Images not tagged</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'tag', 'not_tagged_images')."</h1>";
     $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
     $images = phphoto_db_query($db, $sql);
     if (count($images) > 0) {
@@ -512,7 +518,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
             echo "\n            <option value='$row[id]'>".((empty($row['title'])?$row['filename']:$row['title']))."</option>";
         }
         echo "\n        </select>";
-        echo "\n        <input type='submit' value='Add'>";
+        echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'add')."'>";
         echo "\n    </form>";
     }
     echo "\n</div>";
@@ -520,7 +526,13 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     // images tagged
     $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
 
-    $header = array('Thumbnail', 'Filename', 'Title', 'Description', '&nbsp;');
+    $header = array(
+        phphoto_text($db, 'header', 'thumbnail'),
+        phphoto_text($db, 'header', 'filename'),
+        phphoto_text($db, 'header', 'title'),
+        phphoto_text($db, 'header', 'description'),
+        '&nbsp;'
+    );
     $images = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($images, array(
@@ -537,7 +549,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Tagged images</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'tag', 'tagged_images')."</h1>";
     phphoto_to_html_table($header, $images);
 
     echo "\n</div>";
@@ -669,26 +681,24 @@ function phphoto_echo_admin_image($db, $image_id) {
         $exif = array();
 
     $table_data = array();
-    array_push($table_data, array('&nbsp;',         "<a href='image.php?".GET_KEY_IMAGE_ID.'='.$image_id.'&'.GET_KEY_ADMIN_QUERY."=preview'><img src='image.php?".GET_KEY_IMAGE_ID.'='.$image_id."t' /></a>"));
-    array_push($table_data, array('Filename',       $image_data['filename']));
-    array_push($table_data, array('Format',         image_type_to_mime_type($image_data['type'])));
-    array_push($table_data, array('Filesize',       format_byte($image_data['filesize'])));
-    array_push($table_data, array('Resolution',     $image_data['width'].'x'.$image_data['height'].' ('.
+    array_push($table_data, array('&nbsp;',                                     "<a href='image.php?".GET_KEY_IMAGE_ID.'='.$image_id.'&'.GET_KEY_ADMIN_QUERY."=preview'><img src='image.php?".GET_KEY_IMAGE_ID.'='.$image_id."t' /></a>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'filename'),      $image_data['filename']));
+    array_push($table_data, array(phphoto_text($db, 'header', 'format'),        image_type_to_mime_type($image_data['type'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'filesize'),      format_byte($image_data['filesize'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'resolution'),    $image_data['width'].'x'.$image_data['height'].' ('.
                                                     phphoto_image_aspect_ratio($image_data['width'], $image_data['height']).')'));
-    array_push($table_data, array('Filename',       $image_data['filename']));
-    array_push($table_data, array('EXIF version',   ((isset($exif['ExifVersion'])) ? $exif['ExifVersion'] : VARIABLE_NOT_SET)));
-    array_push($table_data, array('Camera',         "<img src='./icons/camera-photo.png' />&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
-    array_push($table_data, array('Settings',       "<img src='./icons/image-x-generic.png' />&nbsp;&nbsp;&nbsp;".format_camera_settings($exif)));
-    array_push($table_data, array('Galleries',      implode('<br>', $gallery_names)));
-    array_push($table_data, array('Tags',           implode('<br>', $tag_names)));
-    array_push($table_data, array('Title',          "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
-    array_push($table_data, array('Description',    "<textarea name='description'>$image_data[description]</textarea>"));
-    array_push($table_data, array('Changed',        format_date_time($image_data['changed'])));
-    array_push($table_data, array('Created',        format_date_time($image_data['created'])));
-    array_push($table_data, array('&nbsp;',         "<input type='submit' value='Save'>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'camera'),        "<img src='./icons/camera-photo.png' />&nbsp;&nbsp;&nbsp;".format_camera_model($exif)));
+    array_push($table_data, array(phphoto_text($db, 'header', 'settings'),      "<img src='./icons/image-x-generic.png' />&nbsp;&nbsp;&nbsp;".format_camera_settings($exif)));
+    array_push($table_data, array(phphoto_text($db, 'header', 'galleries'),     implode('<br>', $gallery_names)));
+    array_push($table_data, array(phphoto_text($db, 'header', 'tags'),          implode('<br>', $tag_names)));
+    array_push($table_data, array(phphoto_text($db, 'header', 'title'),         "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$image_data[description]</textarea>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'changed'),       format_date_time($image_data['changed'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'created'),       format_date_time($image_data['created'])));
+    array_push($table_data, array('&nbsp;',         "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Edit image</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'image', 'edit')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.
             GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
