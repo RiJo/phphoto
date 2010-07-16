@@ -53,7 +53,7 @@ function phphoto_upload_image($db) {
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."' enctype='multipart/form-data'>";
     echo "\n        <input type='file' name='image'>";
     echo "\n        <br>";
-    echo "\n        <input type='submit' value='Upload'>";
+    echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'upload')."'>";
     echo "\n        <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>".phphoto_text($db, 'image', 'replace_existing')."</label>";
     echo "\n    </form>";
     echo "\n</div>";
@@ -71,22 +71,22 @@ function phphoto_create_gallery($db) {
         $result = phphoto_db_query($db, $sql);
         $gallery_exists = ($result[0]['exist'] == 1);
         if ($gallery_exists) {
-            phphoto_popup_message("Gallery '$title' already exists", 'warning');
+            phphoto_popup_message(phphoto_text($db, 'gallery', 'exists', $title), 'warning');
         }
         else {
             $sql = sprintf("INSERT INTO galleries (title, description, created) VALUES ('%s', '', NOW())",
                     mysql_real_escape_string($title, $db));
             if (phphoto_db_query($db, $sql) == 1)
-                phphoto_popup_message("Gallery '$title' has has been added", 'info');
+                phphoto_popup_message(phphoto_text($db, 'gallery', 'created', $title), 'info');
             else
-                phphoto_popup_message("Could not create gallery '$title'", 'info');
+                phphoto_popup_message(phphoto_text($db, 'gallery', 'store_error', $title), 'info');
         }
     }
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Create gallery</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'gallery', 'create')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."'>";
     echo "\n        <input type='input' name='title' maxlength='255'>";
-    echo "\n        <input type='submit' value='Create'>";
+    echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'create')."'>";
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -133,11 +133,11 @@ function phphoto_image_thumbnails($db) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Regenerate thumbnails</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'image', 'regenerate_thumbs')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
-    echo "\n        <input type='submit' name='regenerate_thumbs' value='Start'>";
+    echo "\n        <input type='submit' name='regenerate_thumbs' value='".phphoto_text($db, 'button', 'start')."'>";
     echo "\n    </form>";
-    echo "\n    <p>Note: this may take a while depending on the number of images in the database.</p>";
+    echo "\n    <p>".phphoto_text($db, 'image', 'note_long_time')."</p>";
     echo "\n</div>";
 }
 
@@ -380,10 +380,10 @@ function phphoto_echo_admin_galleries($db) {
     );
 
     $header = array(
-        'Thumbnail',
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=2'>Title</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=3'>Views</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=5'>Images</a>",
+        phphoto_text($db, 'header', 'thumbnail'),
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=2'>".phphoto_text($db, 'header', 'title')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'views')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=5'>".phphoto_text($db, 'header', 'images')."</a>",
         '&nbsp;'
     );
 
@@ -400,7 +400,7 @@ function phphoto_echo_admin_galleries($db) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Galleries</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'section', 'galleries')."</h1>";
     phphoto_to_html_table($header, $data);
 
     echo "\n    <div class='admin' id='footer'>";
@@ -408,7 +408,7 @@ function phphoto_echo_admin_galleries($db) {
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png' /></a>";
     else
         echo "<img src='./icons/go-previous-inactive.png' />";
-    echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
+    echo '&nbsp;'.phphoto_text($db, 'common', 'page_number', $page_number + 1, $pages).'&nbsp;';
     if ($page_number < ($pages - 1))
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png' /></a>";
     else
@@ -597,7 +597,7 @@ function phphoto_echo_admin_tags($db) {
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png' /></a>";
     else
         echo "<img src='./icons/go-previous-inactive.png' />";
-    echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
+    echo '&nbsp;'.phphoto_text($db, 'common', 'page_number', $page_number + 1, $pages).'&nbsp;';
     if ($page_number < ($pages - 1))
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png' /></a>";
     else
@@ -735,11 +735,11 @@ function phphoto_echo_admin_images($db) {
     );
 
     $header = array(
-        'Thumbnail',
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=2'>Name</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=3'>Resolution</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=5'>Filesize</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=6'>Views</a>",
+        phphoto_text($db, 'header', 'thumbnail'),
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=2'>".phphoto_text($db, 'header', 'name')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'resolution')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=5'>".phphoto_text($db, 'header', 'filesize')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=6'>".phphoto_text($db, 'header', 'views')."</a>",
         '&nbsp;'
     );
     $max_text_length = 12;
@@ -757,7 +757,7 @@ function phphoto_echo_admin_images($db) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>Images</h1>";
+    echo "\n    <h1>".phphoto_text($db, 'section', 'images')."</h1>";
     phphoto_to_html_table($header, $data);
     
     echo "\n    <div class='admin' id='footer'>";
@@ -765,7 +765,7 @@ function phphoto_echo_admin_images($db) {
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png' /></a>";
     else
         echo "<img src='./icons/go-previous-inactive.png' />";
-    echo "&nbsp;".($page_number + 1)." (of $pages)&nbsp;";
+    echo '&nbsp;'.phphoto_text($db, 'common', 'page_number', $page_number + 1, $pages).'&nbsp;';
     if ($page_number < ($pages - 1))
         echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png' /></a>";
     else

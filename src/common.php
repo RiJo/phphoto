@@ -24,9 +24,11 @@ function phphoto_text($db, $category, $name) {
 
     //~ return call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
     
+    // temp
     $text = call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
     $text = "@$text@";
     return $text;
+    // temp
 }
 
 /*

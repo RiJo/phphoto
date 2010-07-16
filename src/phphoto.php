@@ -88,12 +88,12 @@ function phphoto_admin($db, $admin) {
  * Prints out links used for the admin pages
  */
 function phphoto_admin_links($db) {
-    $text_index = phphoto_text($db, 'menu', 'index');
-    $text_admin = phphoto_text($db, 'menu', 'admin');
-    $text_galleries = phphoto_text($db, 'menu', 'galleries');
-    $text_tags = phphoto_text($db, 'menu', 'tags');
-    $text_images = phphoto_text($db, 'menu', 'images');
-    $text_cameras = phphoto_text($db, 'menu', 'cameras');
+    $text_index = phphoto_text($db, 'section', 'index');
+    $text_admin = phphoto_text($db, 'section', 'admin');
+    $text_galleries = phphoto_text($db, 'section', 'galleries');
+    $text_tags = phphoto_text($db, 'section', 'tags');
+    $text_images = phphoto_text($db, 'section', 'images');
+    $text_cameras = phphoto_text($db, 'section', 'cameras');
     
     echo "\n<ul>";
     echo "\n    <li".((!isset($_GET[GET_KEY_ADMIN_QUERY]))?" class=active":'').
