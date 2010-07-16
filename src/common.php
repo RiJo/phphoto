@@ -22,13 +22,7 @@ function phphoto_text($db, $category, $name) {
     if ($text['parameters'] != count($argv))
         return "<font style='font-size:10pt;color:#b00;'>@$category:$name:$text[parameters]@</font>";
 
-    //~ return call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
-    
-    // temp
-    $text = call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
-    $text = "@$text@";
-    return $text;
-    // temp
+    return call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
 }
 
 /*
