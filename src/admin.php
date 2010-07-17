@@ -103,7 +103,7 @@ function phphoto_create_tag($db) {
         $result = phphoto_db_query($db, $sql);
         $tag_exists = ($result[0]['exist'] == 1);
         if ($tag_exists) {
-            phphoto_popup_message("Tag '$name' already exists", 'warning');
+            phphoto_popup_message(phphoto_text($db, 'tag', 'exists', $name), 'warning');
         }
         else {
             $sql = sprintf("INSERT INTO tags (name, created) VALUES ('%s', NOW())",
