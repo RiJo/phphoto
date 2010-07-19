@@ -13,6 +13,8 @@ define('GALLERY_TIMEZONE',                  'Europe/Stockholm');
 define('GALLERY_LANGUAGE',                  'en');
 define('GALLERY_THEME',                     'default');
 
+define('SETTINGS_FILE',                     'settings.txt');
+
 define('DATABASE_HOST',                     'localhost');
 define('DATABASE_PORT',                     3306);
 define('DATABASE_NAME',                     'phphoto');

@@ -111,4 +111,38 @@ function phphoto_admin_links($db) {
     echo "\n</ul>";
 }
 
+/*
+ * Loads and returns an associative array containing the settings
+ */
+function phphoto_load_settings() {
+    $settings = array();
+    $handle = fopen(SETTINGS_FILE, "r");
+    while (!feof($handle)) {
+        $buffer = fgets($handle);
+        $buffer = explode(':', $buffer);
+        if (count($buffer) == 2) {
+            $settings[trim($buffer[0])] = trim($buffer[1]);
+        }
+    }
+    fclose($handle);
+    return $settings;
+}
+
+/*
+ * Writes the associative array with the settings back to the file
+ */
+function phphoto_dump_settings($settings) {
+    $data = array();
+    foreach ($settings as $key=>$value) {
+        array_push($data, trim($key).':'.trim($value));
+    }
+    $data = implode(chr(13), $data);
+
+    $handle = fopen(SETTINGS_FILE, "w");
+    if (!$handle)
+        die("could not open file ". SETTINGS_FILE);
+    fwrite($handle, $data);
+    fclose($handle);
+}
+
 ?>
