@@ -1,15 +1,16 @@
 <?php
 
 function phphoto_db_connect() {
-    if (!$link = mysql_connect(DATABASE_HOST.':'.DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD))
+    if (!$db = mysql_connect(DATABASE_HOST.':'.DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD))
         die('Could not connect: ' . mysql_error());
-    if (!mysql_select_db(DATABASE_NAME, $link))
+    if (!mysql_select_db(DATABASE_NAME, $db))
         die('Could not select database: ' . mysql_error());
-    return $link;
+    mysql_set_charset('utf8', $db);
+    return $db;
 }
 
-function phphoto_db_disconnect($link) {
-    mysql_close($link);
+function phphoto_db_disconnect($db) {
+    mysql_close($db);
 }
 
 function phphoto_db_query($db, $sql) {

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2010 at 10:20 AM
+-- Generation Time: Jul 20, 2010 at 09:34 AM
 -- Server version: 5.0.27
 -- PHP Version: 5.2.9
 
@@ -13,6 +13,9 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Database: `phphoto`
 --
 
+CREATE DATABASE `phphoto` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `phphoto`;
+
 -- --------------------------------------------------------
 
 --
@@ -20,12 +23,12 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `cameras` (
-  `model` varchar(255) collate latin1_general_ci NOT NULL,
+  `model` varchar(255) collate utf8_general_ci NOT NULL,
   `crop_factor` float NOT NULL default '1',
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`model`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -36,14 +39,14 @@ CREATE TABLE IF NOT EXISTS `cameras` (
 CREATE TABLE IF NOT EXISTS `galleries` (
   `id` int(11) NOT NULL auto_increment,
   `thumbnail` blob,
-  `title` varchar(255) collate latin1_general_ci NOT NULL,
-  `description` text collate latin1_general_ci,
+  `title` varchar(255) collate utf8_general_ci NOT NULL,
+  `description` text collate utf8_general_ci,
   `views` int(11) NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `UNIQUE` (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=COMPACT AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -59,16 +62,16 @@ CREATE TABLE IF NOT EXISTS `images` (
   `width` int(5) NOT NULL,
   `height` int(5) NOT NULL,
   `filesize` bigint(20) NOT NULL,
-  `filename` varchar(255) collate latin1_general_ci NOT NULL,
-  `exif` text collate latin1_general_ci,
-  `title` varchar(255) collate latin1_general_ci default NULL,
-  `description` text collate latin1_general_ci,
+  `filename` varchar(255) collate utf8_general_ci NOT NULL,
+  `exif` text collate utf8_general_ci,
+  `title` varchar(255) collate utf8_general_ci default NULL,
+  `description` text collate utf8_general_ci,
   `views` int(11) NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `UNIQUE` (`filename`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ROW_FORMAT=COMPACT AUTO_INCREMENT=18 ;
 
 -- --------------------------------------------------------
 
@@ -83,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `image_to_gallery` (
   `created` datetime NOT NULL,
   PRIMARY KEY  (`gallery_id`,`image_id`),
   KEY `image_id` (`image_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -98,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `image_to_tag` (
   `created` datetime NOT NULL,
   PRIMARY KEY  (`tag_id`,`image_id`),
   KEY `image_id` (`image_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -107,12 +110,12 @@ CREATE TABLE IF NOT EXISTS `image_to_tag` (
 --
 
 CREATE TABLE IF NOT EXISTS `languages` (
-  `id` varchar(3) collate latin1_general_ci NOT NULL,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
+  `id` varchar(3) collate utf8_general_ci NOT NULL,
+  `name` varchar(255) collate utf8_general_ci NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 --
@@ -131,12 +134,12 @@ INSERT INTO `languages` (`id`, `name`, `changed`, `created`) VALUES
 
 CREATE TABLE IF NOT EXISTS `tags` (
   `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
+  `name` varchar(255) collate utf8_general_ci NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -145,15 +148,15 @@ CREATE TABLE IF NOT EXISTS `tags` (
 --
 
 CREATE TABLE IF NOT EXISTS `texts` (
-  `language_id` varchar(3) collate latin1_general_ci NOT NULL,
-  `category` varchar(255) collate latin1_general_ci NOT NULL,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
-  `text` text collate latin1_general_ci NOT NULL,
+  `language_id` varchar(3) collate utf8_general_ci NOT NULL,
+  `category` varchar(255) collate utf8_general_ci NOT NULL,
+  `name` varchar(255) collate utf8_general_ci NOT NULL,
+  `text` text collate utf8_general_ci NOT NULL,
   `parameters` int(11) NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   UNIQUE KEY `UNIQUE` (`language_id`,`category`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `texts`
@@ -245,7 +248,7 @@ INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `c
 ('en', 'tag', 'unknown', 'Could not find the tag requested', 0, NOW(), NOW()),
 ('en', 'tag', 'updated', 'Tag has been updated', 0, NOW(), NOW()),
 
-('se', 'button', 'add', 'Lägg till', 0, NOW(), NOW()),
+('se', 'button', 'add', 'LÃ¤gg till', 0, NOW(), NOW()),
 ('se', 'button', 'create', 'Skapa', 0, NOW(), NOW()),
 ('se', 'button', 'start', 'Start', 0, NOW(), NOW()),
 ('se', 'button', 'update', 'Uppdatera', 0, NOW(), NOW()),
@@ -258,55 +261,55 @@ INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `c
 ('se', 'gallery', 'created', 'Galleriet ''%s'' har skapats', 1, NOW(), NOW()),
 ('se', 'gallery', 'deleted', 'Galleriet har raderats', 0, NOW(), NOW()),
 ('se', 'gallery', 'delete_error', 'Kunde inte radera galleri', 0, NOW(), NOW()),
-('se', 'gallery', 'edit', 'Ändra galleri', 0, NOW(), NOW()),
+('se', 'gallery', 'edit', 'Ã„ndra galleri', 0, NOW(), NOW()),
 ('se', 'gallery', 'exists', 'Galleriet ''%s'' finns redan', 1, NOW(), NOW()),
 ('se', 'gallery', 'images_in', 'Bilder i galleriet', 0, NOW(), NOW()),
 ('se', 'gallery', 'images_not_in', 'Bilder inte i galleriet', 0, NOW(), NOW()),
 ('se', 'gallery', 'image_added', 'Bilden har lagts till', 0, NOW(), NOW()),
 ('se', 'gallery', 'image_removed', 'Bilden har tagits bort', 0, NOW(), NOW()),
-('se', 'gallery', 'note_long_time', 'Notera: detta kan ta ett tag beroende på hur många bilder det finns i galleriet', 0, NOW(), NOW()),
+('se', 'gallery', 'note_long_time', 'Notera: detta kan ta ett tag beroende pÃ¥ hur mÃ¥nga bilder det finns i galleriet', 0, NOW(), NOW()),
 ('se', 'gallery', 'regenerate_thumb', 'Regenerera miniatyr', 0, NOW(), NOW()),
 ('se', 'gallery', 'store_error', 'Kunde inte skapa galleriet ''%s''', 1, NOW(), NOW()),
 ('se', 'gallery', 'thumb_regenerated', 'Galleriets miniatyr har regenererats', 0, NOW(), NOW()),
-('se', 'gallery', 'unknown', 'Kunde inte hitta det begärda galleriet', 0, NOW(), NOW()),
+('se', 'gallery', 'unknown', 'Kunde inte hitta det begÃ¤rda galleriet', 0, NOW(), NOW()),
 ('se', 'gallery', 'updated', 'Galleriet har uppdaterats', 0, NOW(), NOW()),
 ('se', 'header', 'camera', 'Kamera', 0, NOW(), NOW()),
-('se', 'header', 'changed', 'Ändrad', 0, NOW(), NOW()),
+('se', 'header', 'changed', 'Ã„ndrad', 0, NOW(), NOW()),
 ('se', 'header', 'created', 'Skapad', 0, NOW(), NOW()),
-('se', 'header', 'crop_factor', 'Beskärings faktor', 0, NOW(), NOW()),
+('se', 'header', 'crop_factor', 'BeskÃ¤rings faktor', 0, NOW(), NOW()),
 ('se', 'header', 'description', 'Beskrivning', 0, NOW(), NOW()),
 ('se', 'header', 'filename', 'Filnamn', 0, NOW(), NOW()),
 ('se', 'header', 'filesize', 'Filstorlek', 0, NOW(), NOW()),
 ('se', 'header', 'format', 'Format', 0, NOW(), NOW()),
 ('se', 'header', 'galleries', 'Gallerier', 0, NOW(), NOW()),
 ('se', 'header', 'images', 'Bilder', 0, NOW(), NOW()),
-('se', 'header', 'model', 'Model', 0, NOW(), NOW()),
+('se', 'header', 'model', 'Modell', 0, NOW(), NOW()),
 ('se', 'header', 'name', 'Namn', 0, NOW(), NOW()),
-('se', 'header', 'resolution', 'Upplösning', 0, NOW(), NOW()),
-('se', 'header', 'settings', 'Inställningar', 0, NOW(), NOW()),
+('se', 'header', 'resolution', 'UpplÃ¶sning', 0, NOW(), NOW()),
+('se', 'header', 'settings', 'InstÃ¤llningar', 0, NOW(), NOW()),
 ('se', 'header', 'tags', 'Taggar', 0, NOW(), NOW()),
 ('se', 'header', 'thumbnail', 'Miniatyr', 0, NOW(), NOW()),
 ('se', 'header', 'title', 'Titel', 0, NOW(), NOW()),
 ('se', 'header', 'views', 'Visningar', 0, NOW(), NOW()),
-('se', 'image', 'allowed_extensions', 'Tillåtna filändelser: %s', 1, NOW(), NOW()),
+('se', 'image', 'allowed_extensions', 'TillÃ¥tna filÃ¤ndelser: %s', 1, NOW(), NOW()),
 ('se', 'image', 'deleted', 'Bilden har raderats', 0, NOW(), NOW()),
 ('se', 'image', 'delete_error', 'Kunde inte radera bilden', 0, NOW(), NOW()),
-('se', 'image', 'edit', 'Ändra bild', 0, NOW(), NOW()),
+('se', 'image', 'edit', 'Ã„ndra bild', 0, NOW(), NOW()),
 ('se', 'image', 'exists', 'Bilden ''%s'' finns redan', 1, NOW(), NOW()),
 ('se', 'image', 'invalid_filesize', 'Ingen giltlig filstorlek: %s', 1, NOW(), NOW()),
-('se', 'image', 'invalid_filetype', 'Ingen giltlig filändelse: %s', 1, NOW(), NOW()),
+('se', 'image', 'invalid_filetype', 'Ingen giltlig filÃ¤ndelse: %s', 1, NOW(), NOW()),
 ('se', 'image', 'invalid_temp_file', 'Kunde inte hitta den uppladdade temp filen', 0, NOW(), NOW()),
-('se', 'image', 'maximum_filesize', 'Största tillåtna filstorlek: %s', 1, NOW(), NOW()),
-('se', 'image', 'note_long_time', 'Notera: detta kan ta ett tag beroende på hur många bilder som är lagrade', 0, NOW(), NOW()),
+('se', 'image', 'maximum_filesize', 'StÃ¶rsta tillÃ¥tna filstorlek: %s', 1, NOW(), NOW()),
+('se', 'image', 'note_long_time', 'Notera: detta kan ta ett tag beroende pÃ¥ hur mÃ¥nga bilder som Ã¤r lagrade', 0, NOW(), NOW()),
 ('se', 'image', 'regenerate_thumbs', 'Regenerera miniatyr', 0, NOW(), NOW()),
-('se', 'image', 'replace_existing', 'Ersätt existerande', 0, NOW(), NOW()),
+('se', 'image', 'replace_existing', 'ErsÃ¤tt existerande', 0, NOW(), NOW()),
 ('se', 'image', 'store_error', 'Kunde inte spara bilden', 0, NOW(), NOW()),
 ('se', 'image', 'thumbs_regenerated', '%d miniatyrer har regenererats', 1, NOW(), NOW()),
-('se', 'image', 'unknown', 'Kunde inte hitta den begärda bilden', 0, NOW(), NOW()),
+('se', 'image', 'unknown', 'Kunde inte hitta den begÃ¤rda bilden', 0, NOW(), NOW()),
 ('se', 'image', 'updated', 'Bilden har uppdaterats', 0, NOW(), NOW()),
 ('se', 'image', 'upload', 'Ladda upp bild', 0, NOW(), NOW()),
 ('se', 'image', 'uploaded_normal', 'Bilden ''%s'' har laddats upp', 1, NOW(), NOW()),
-('se', 'image', 'uploaded_replace', 'Bilden ''%s'' har laddats upp (ersätt existerande)', 1, NOW(), NOW()),
+('se', 'image', 'uploaded_replace', 'Bilden ''%s'' har laddats upp (ersÃ¤tt existerande)', 1, NOW(), NOW()),
 ('se', 'info', 'developers', 'Utvecklare: %s', 1, NOW(), NOW()),
 ('se', 'info', 'last_updated', 'Uppdaterad: %s', 1, NOW(), NOW()),
 ('se', 'info', 'version', 'Version: %s', 1, NOW(), NOW()),
@@ -314,20 +317,20 @@ INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `c
 ('se', 'section', 'cameras', 'Kameror', 0, NOW(), NOW()),
 ('se', 'section', 'galleries', 'Gallerier', 0, NOW(), NOW()),
 ('se', 'section', 'images', 'Bilder', 0, NOW(), NOW()),
-('se', 'section', 'index', 'Första sidan', 0, NOW(), NOW()),
+('se', 'section', 'index', 'FÃ¶rsta sidan', 0, NOW(), NOW()),
 ('se', 'section', 'tags', 'Taggar', 0, NOW(), NOW()),
 ('se', 'tag', 'create', 'Skapa tagg', 0, NOW(), NOW()),
 ('se', 'tag', 'created', 'Taggen ''%s'' har skapats', 1, NOW(), NOW()),
 ('se', 'tag', 'deleted', 'Taggen har raderats', 0, NOW(), NOW()),
 ('se', 'tag', 'delete_error', 'Kunde inte radera taggen', 0, NOW(), NOW()),
-('se', 'tag', 'edit', 'Ändra tagg', 0, NOW(), NOW()),
+('se', 'tag', 'edit', 'Ã„ndra tagg', 0, NOW(), NOW()),
 ('se', 'tag', 'exists', 'Taggen ''%s'' finns redan', 1, NOW(), NOW()),
 ('se', 'tag', 'image_added', 'Bilden har lagts till', 0, NOW(), NOW()),
 ('se', 'tag', 'image_removed', 'Bilden har tagits bort', 0, NOW(), NOW()),
-('se', 'tag', 'not_tagged_images', 'Bilder som inte är taggade', 0, NOW(), NOW()),
+('se', 'tag', 'not_tagged_images', 'Bilder som inte Ã¤r taggade', 0, NOW(), NOW()),
 ('se', 'tag', 'store_error', 'Kunde inte skapa taggen ''%s''', 1, NOW(), NOW()),
-('se', 'tag', 'tagged_images', 'Bilder som är taggade', 0, NOW(), NOW()),
-('se', 'tag', 'unknown', 'Kunde inte hitta den begärde taggen', 0, NOW(), NOW()),
+('se', 'tag', 'tagged_images', 'Bilder som Ã¤r taggade', 0, NOW(), NOW()),
+('se', 'tag', 'unknown', 'Kunde inte hitta den begÃ¤rda taggen', 0, NOW(), NOW()),
 ('se', 'tag', 'updated', 'Taggen har uppdaterats', 0, NOW(), NOW());
 
 --

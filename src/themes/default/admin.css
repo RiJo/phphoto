@@ -107,18 +107,25 @@ table tr td, table tr th {
     border-bottom: 1px #cccccc solid;
 }
 
-table tr th {
+table thead {
     background-color: #dddddd;
+}
+
+table tfoot {
+    background-color: #dddddd;
+}
+
+table tr th {
     border-bottom: 1px #aaaaaa solid;
     text-align: left;
     font-weight: normal;
 }
 
-table tr.row0 td {
+table tbody tr.row0 td {
     background-color: #eeeeee;
 }
 
-table tr.row1 td {
+table tbody tr.row1 td {
     background-color: #dddddd;
 }
 
@@ -133,4 +140,10 @@ form {
 input {
     margin-bottom: 4px;
     margin-right: 4px;
+}
+
+fieldset {
+    padding: 10px;
+    background-color: #fafafa;
+    border: 1px solid #aaaaaa;
 }
