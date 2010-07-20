@@ -185,14 +185,23 @@ function phphoto_filter_exif_data($exif) {
 /*
  * HTML table generator
  */
-function phphoto_to_html_table($header, $tuples) {
+function phphoto_to_html_table($body, $header = array(), $footer = array()) {
     echo "\n<table>";
-    if ($header) {
-        echo "\n    <tr class='header'><td>".implode('</td><td>', $header)."</td></tr>";
+    if (count($header) > 0) {
+        echo "\n    <thead>";
+        echo "\n        <tr><th>".implode('</th><th>', $header)."</th></tr>";
+        echo "\n    </thead>";
     }
-    for ($i = 0; $i < count($tuples); $i++) {
-        echo "\n    <tr class='data".($i % 2)."'><td>".implode('</td><td>', $tuples[$i])."</td></tr>";
+    if (count($footer) > 0) {
+        echo "\n    <tfoot>";
+        echo "\n        <tr><td>".implode('</td><td>', $footer)."</td></tr>";
+        echo "\n    </tfoot>";
     }
+    echo "\n    <tbody>";
+    for ($i = 0; $i < count($body); $i++) {
+        echo "\n        <tr class='row".($i % 2)."'><td>".implode('</td><td>', $body[$i])."</td></tr>";
+    }
+    echo "\n    <tbody>";
     echo "\n</table>";
 }
 

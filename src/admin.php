@@ -208,7 +208,7 @@ function phphoto_echo_admin_cameras($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'section', 'cameras')."</h1>";
-    phphoto_to_html_table($header, $table_data);
+    phphoto_to_html_table($table_data, $header);
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -297,7 +297,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
             GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
             GET_KEY_GALLERY_ID."=$gallery_id'>";
-    phphoto_to_html_table(null, $table_data);
+    phphoto_to_html_table($table_data);
     echo "\n    </form>";
     echo "\n</div>";
 
@@ -348,7 +348,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'gallery', 'images_in')."</h1>";
-    phphoto_to_html_table($header, $images);
+    phphoto_to_html_table($images, $header);
 
     echo "\n</div>";
 }
@@ -407,7 +407,7 @@ function phphoto_echo_admin_galleries($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'section', 'galleries')."</h1>";
-    phphoto_to_html_table($header, $data);
+    phphoto_to_html_table($data, $header);
 
     echo "\n    <div class='admin' id='footer'>";
     if ($page_number > 0)
@@ -499,7 +499,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
             GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
             GET_KEY_TAG_ID."=$tag_id'>";
-    phphoto_to_html_table(null, $table_data);
+    phphoto_to_html_table($table_data);
     echo "\n    </form>";
     echo "\n</div>";
 
@@ -550,7 +550,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'tag', 'tagged_images')."</h1>";
-    phphoto_to_html_table($header, $images);
+    phphoto_to_html_table($images, $header);
 
     echo "\n</div>";
 }
@@ -602,7 +602,7 @@ function phphoto_echo_admin_tags($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>Tags</h1>";
-    phphoto_to_html_table($header, $data);
+    phphoto_to_html_table($data, $header);
 
     echo "\n    <div class='admin' id='footer'>";
     if ($page_number > 0)
@@ -703,7 +703,7 @@ function phphoto_echo_admin_image($db, $image_id) {
             GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.
             GET_KEY_OPERATION.'='.GET_VALUE_UPDATE.'&'.
             GET_KEY_IMAGE_ID."=$image_id'>";
-    phphoto_to_html_table(null, $table_data);
+    phphoto_to_html_table($table_data);
     echo "\n    </form>";
     echo "\n</div>";
 }
@@ -768,7 +768,7 @@ function phphoto_echo_admin_images($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'section', 'images')."</h1>";
-    phphoto_to_html_table($header, $data);
+    phphoto_to_html_table($data, $header);
     
     echo "\n    <div class='admin' id='footer'>";
     if ($page_number > 0)

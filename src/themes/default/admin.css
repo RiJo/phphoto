@@ -102,21 +102,23 @@ table {
     border-spacing: 0px;
 }
 
-table tr td {
+table tr td, table tr th {
     padding: 3px;
     border-bottom: 1px #cccccc solid;
 }
 
-table tr.header td {
+table tr th {
     background-color: #dddddd;
     border-bottom: 1px #aaaaaa solid;
+    text-align: left;
+    font-weight: normal;
 }
 
-table tr.data0 td {
+table tr.row0 td {
     background-color: #eeeeee;
 }
 
-table tr.data1 td {
+table tr.row1 td {
     background-color: #dddddd;
 }
 
