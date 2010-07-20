@@ -276,7 +276,7 @@ INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `c
 ('se', 'header', 'camera', 'Kamera', 0, NOW(), NOW()),
 ('se', 'header', 'changed', 'Ändrad', 0, NOW(), NOW()),
 ('se', 'header', 'created', 'Skapad', 0, NOW(), NOW()),
-('se', 'header', 'crop_factor', 'Beskärings faktor', 0, NOW(), NOW()),
+('se', 'header', 'crop_factor', 'Beskäringsfaktor', 0, NOW(), NOW()),
 ('se', 'header', 'description', 'Beskrivning', 0, NOW(), NOW()),
 ('se', 'header', 'filename', 'Filnamn', 0, NOW(), NOW()),
 ('se', 'header', 'filesize', 'Filstorlek', 0, NOW(), NOW()),
