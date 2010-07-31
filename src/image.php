@@ -1,10 +1,6 @@
 <?php
 
-session_start();
-
-require_once('./config.php');
-require_once('./database.php');
-require_once('./gd.php');
+require_once('./phphoto.php');
 
 if (isset($_GET[GET_KEY_IMAGE_ID])) {
     $id = $_GET[GET_KEY_IMAGE_ID];

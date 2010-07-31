@@ -85,6 +85,80 @@ function phphoto_echo_gallery($db, $gallery_id) {
     echo "\n</div>";
 }
 
+function phphoto_echo_tag($db, $tag_id) {
+    assert(is_numeric($tag_id)); // prevent SQL injections
+
+    $tag_sql = "
+        SELECT
+            name,
+            description,
+            (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images,
+            (SELECT MAX(changed) FROM image_to_tag WHERE tag_id = id) AS changed
+        FROM
+            tags
+        WHERE
+            id = $tag_id
+    ";
+    $images_sql = "
+        SELECT
+            id,
+            exif,
+            IF (LENGTH(title) > 0, title, filename) AS name,
+            description
+        FROM
+            images
+                INNER JOIN
+            image_to_tag
+                ON
+            (images.id = image_to_tag.image_id)
+        WHERE
+            image_to_tag.tag_id = $tag_id
+        ORDER BY
+            ".IMAGE_SORT_COLUMN."
+    ";
+
+    $tag = phphoto_db_query($db, $tag_sql);
+    $images = phphoto_db_query($db, $images_sql);
+
+    echo "\n<div class='header'>";
+    echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
+    echo "\n</div>";
+
+    if (count($tag) != 1) {
+        echo "\n<div class='container'>".phphoto_text($db, 'tag', 'unknown')."</div>";
+        return;
+    }
+
+    $tag = $tag[0];
+
+    echo "\n<div class='container'>";
+    echo "\n    <h1>".format_string($tag['name'])."</h1>";
+    echo "\n    <p>".format_string($tag['description'])."</p>";
+    foreach ($images as $image) {
+        if ($image['exif']) {
+            eval('$exif = ' . $image['exif'] . ';');
+            $exif = format_camera_settings($exif);
+        }
+        if (!$image['exif'] || !$exif) {
+            $exif = NO_EXIF_DATA;
+        }
+        echo "\n    <div class='image'>";
+        echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";
+        echo "\n            <img class='thumbnail' src='image.php?".GET_KEY_IMAGE_ID."=$image[id]t' title='$image[description]' alt='$image[name]' />";
+        echo "\n        </a>";
+        echo "\n        <h2>$exif</h2>";
+        echo "\n        <h1>".format_string($image['name'], 30)."</h1>";
+        echo "\n        <p>".format_string($image['description'])."</p>";
+        echo "\n    </div>";
+    }
+    echo "\n</div>";
+    echo "\n<div class='footer'>";
+    echo "\n    <p>..:: ".phphoto_text($db, 'footer', 'images', $tag['images'])." :: "
+                         .phphoto_text($db, 'footer', 'updated', format_date_time($tag['changed']))
+                         ." ::</p>";
+    echo "\n</div>";
+}
+
 /*
  * Prints out all galleries with more than 0 images
  */

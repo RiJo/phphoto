@@ -135,6 +135,7 @@ INSERT INTO `languages` (`id`, `name`, `changed`, `created`) VALUES
 CREATE TABLE IF NOT EXISTS `tags` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) collate utf8_general_ci NOT NULL,
+  `description` text collate utf8_general_ci,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`),

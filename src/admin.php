@@ -109,7 +109,7 @@ function phphoto_create_tag($db) {
             phphoto_popup_message(phphoto_text($db, 'tag', 'exists', $name), 'warning');
         }
         elseif (strlen($name) > 0) {
-            $sql = sprintf("INSERT INTO tags (name, created) VALUES ('%s', NOW())",
+            $sql = sprintf("INSERT INTO tags (name, description, created) VALUES ('%s', '', NOW())",
                     mysql_real_escape_string($name, $db));
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message(phphoto_text($db, 'tag', 'created', $name), 'info');
@@ -508,11 +508,14 @@ function phphoto_echo_admin_tag($db, $tag_id) {
             }
         }
         else {
-            if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['name'])) {
+            if ($_GET[GET_KEY_OPERATION] == GET_VALUE_UPDATE && isset($_POST['name']) && isset($_POST['description'])) {
                 // update tag
                 $name = $_POST['name'];
-                $sql = sprintf("UPDATE tags SET name = '%s' WHERE id = %s",
+                $description = $_POST['description'];
+
+                $sql = sprintf("UPDATE tags SET name = '%s', description = '%s' WHERE id = %s",
                         mysql_real_escape_string($name, $db),
+                        mysql_real_escape_string($description, $db),
                         $tag_id);
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message(phphoto_text($db, 'tag', 'updated'), 'info');
@@ -537,6 +540,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
         SELECT
             id,
             name,
+            description,
             (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images,
             changed,
             created
@@ -555,9 +559,10 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $tag_data = $tag_data[0];
 
     $table_data = array();
-    array_push($table_data, array(phphoto_text($db, 'header', 'name'),      "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
-    array_push($table_data, array(phphoto_text($db, 'header', 'changed'),   format_date_time($tag_data['changed'])));
-    array_push($table_data, array(phphoto_text($db, 'header', 'created'),   format_date_time($tag_data['created'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'name'), "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$tag_data[description]</textarea>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'changed'), format_date_time($tag_data['changed'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'created'), format_date_time($tag_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
 
     echo "\n<div class='admin'>";

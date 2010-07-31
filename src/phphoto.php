@@ -47,8 +47,11 @@ function phphoto_main($authorized = false) {
  */
 function phphoto_gallery($db) {
     $gallery_id = (isset($_GET[GET_KEY_GALLERY_ID])) ? $_GET[GET_KEY_GALLERY_ID] : INVALID_ID;
+    $tag_id = (isset($_GET[GET_KEY_TAG_ID])) ? $_GET[GET_KEY_TAG_ID] : INVALID_ID;
     if (is_numeric($gallery_id) && $gallery_id != INVALID_ID)
         phphoto_echo_gallery($db, $gallery_id);
+    elseif (is_numeric($tag_id) && $tag_id != INVALID_ID)
+        phphoto_echo_tag($db, $tag_id);
     else
         phphoto_echo_galleries($db);
 }

@@ -16,11 +16,11 @@ function phphoto_text($db, $category, $name) {
     $result = phphoto_db_query($db, $sql);
 
     if (count($result) != 1)
-        return "<font style='font-size:10pt;color:#b00;'>@$category:$name@</font>";
+        return "@$category:$name@";
     
     $text = $result[0];
     if ($text['parameters'] != count($argv))
-        return "<font style='font-size:10pt;color:#b00;'>@$category:$name:$text[parameters]@</font>";
+        return "@$category:$name:$text[parameters]@";
 
     return call_user_func_array('sprintf', array_merge((array) $result[0]['text'], $argv));
 }
