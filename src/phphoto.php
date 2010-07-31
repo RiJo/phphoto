@@ -151,7 +151,7 @@ function phphoto_dump_settings($settings) {
     foreach ($settings as $key=>$value) {
         array_push($data, trim($key).':'.trim($value));
     }
-    $data = implode(chr(10).chr(13), $data);
+    $data = implode(chr(10), $data);
 
     $handle = fopen(SETTINGS_FILE, "w");
     if (!$handle)
