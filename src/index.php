@@ -1,5 +1,18 @@
 <?php
 
+/*
+ * demostration of phphoto gallery
+ *
+ * index.php is only an example of how the gallery is used. phphoto is developed
+ * in such way that it will fit into its parent container. in this example the
+ * parent container is a div with a specific width. this makes the gallery as
+ * wide as the divs width.
+ *
+ * there are only two function calls needed to create the gallery:
+ *    - phphoto_stylesheets()   includes the proper stylesheets
+ *    - phphoto_main(bool);     echoes the gallery, parameter shows admin stuff
+ */
+
 require_once('phphoto.php');
 
 $password = 'abc';
