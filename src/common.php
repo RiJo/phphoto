@@ -192,9 +192,9 @@ function phphoto_to_html_table($body, $header = array(), $footer = array()) {
         echo "\n        <tr><th>".implode('</th><th>', $header)."</th></tr>";
         echo "\n    </thead>";
     }
-    if (count($footer) > 0) {
+    if (count($footer) > 0 && count($footer) <= count($header)) {
         echo "\n    <tfoot>";
-        echo "\n        <tr><td>".implode('</td><td>', $footer)."</td></tr>";
+        echo "\n        <tr><td colspan='".(count($header)-count($footer)+1)."'>".implode('</td><td>', $footer)."</td></tr>";
         echo "\n    </tfoot>";
     }
     echo "\n    <tbody>";
@@ -223,6 +223,24 @@ function phphoto_popup_message($message, $type) {
             echo "\n<div class='message'>Unknown message type ($type): $message</div>";
             break;
     }
+}
+
+/*
+ * Returns a string with previous/next links depending on current page
+ */
+function phphoto_page_numbering($db, $page_number, $pages, $url_previous, $url_next) {
+    $string = '';
+    if ($page_number > 0)
+        $string .= "<a href='$url_previous'><img src='./icons/go-previous.png' /></a>";
+    else
+        $string .= "<img src='./icons/go-previous-inactive.png' />";
+    $string .= '&nbsp;'.phphoto_text($db, 'common', 'page_number', $page_number + 1, $pages).'&nbsp;';
+    if ($page_number < ($pages - 1))
+        $string .= "<a href='$url_next'><img src='./icons/go-next.png' /></a>";
+    else
+        $string .= "<img src='./icons/go-next-inactive.png' />";
+    //~ echo "\n    </div>";
+    return $string;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

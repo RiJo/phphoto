@@ -368,7 +368,7 @@ function phphoto_echo_admin_galleries($db) {
 
     $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM galleries";
     $pages = phphoto_db_query($db, $sql);
-    $pages = $pages[0]['pages'];
+    $pages = ($pages[0]['pages'] > 0) ? $pages[0]['pages'] : 1;
 
     $sql = sprintf("
         SELECT
@@ -408,19 +408,12 @@ function phphoto_echo_admin_galleries($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'section', 'galleries')."</h1>";
-    phphoto_to_html_table($data, $header);
 
-    echo "\n    <div class='admin' id='footer'>";
-    if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png' /></a>";
-    else
-        echo "<img src='./icons/go-previous-inactive.png' />";
-    echo '&nbsp;'.phphoto_text($db, 'common', 'page_number', $page_number + 1, $pages).'&nbsp;';
-    if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png' /></a>";
-    else
-        echo "<img src='./icons/go-next-inactive.png' />";
-    echo "\n    </div>";
+    $url_previous = CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1);
+    $url_next = CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1);
+    $footer = array( phphoto_page_numbering($db, $page_number, $pages, $url_previous, $url_next) );
+
+    phphoto_to_html_table($data, $header, $footer);
 
     echo "\n</div>";
 }
@@ -570,7 +563,7 @@ function phphoto_echo_admin_tags($db) {
 
     $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM tags";
     $pages = phphoto_db_query($db, $sql);
-    $pages = $pages[0]['pages'];
+    $pages = ($pages[0]['pages'] > 0) ? $pages[0]['pages'] : 1;
 
     $sql = sprintf("
         SELECT
@@ -603,19 +596,12 @@ function phphoto_echo_admin_tags($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'section', 'tags')."</h1>";
-    phphoto_to_html_table($data, $header);
 
-    echo "\n    <div class='admin' id='footer'>";
-    if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png' /></a>";
-    else
-        echo "<img src='./icons/go-previous-inactive.png' />";
-    echo '&nbsp;'.phphoto_text($db, 'common', 'page_number', $page_number + 1, $pages).'&nbsp;';
-    if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png' /></a>";
-    else
-        echo "<img src='./icons/go-next-inactive.png' />";
-    echo "\n    </div>";
+    $url_previous = CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1);
+    $url_next = CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1);
+    $footer = array( phphoto_page_numbering($db, $page_number, $pages, $url_previous, $url_next) );
+
+    phphoto_to_html_table($data, $header, $footer);
 
     echo "\n</div>";
 }
@@ -724,7 +710,7 @@ function phphoto_echo_admin_images($db) {
 
     $sql = "SELECT CEIL(COUNT(*) / $items_per_page) AS pages FROM images";
     $pages = phphoto_db_query($db, $sql);
-    $pages = $pages[0]['pages'];
+    $pages = ($pages[0]['pages'] > 0) ? $pages[0]['pages'] : 1;
 
     $sql = sprintf("
         SELECT
@@ -769,19 +755,12 @@ function phphoto_echo_admin_images($db) {
 
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'section', 'images')."</h1>";
-    phphoto_to_html_table($data, $header);
-    
-    echo "\n        <div class='admin' id='footer'>";
-    if ($page_number > 0)
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1)."'><img src='./icons/go-previous.png' /></a>";
-    else
-        echo "<img src='./icons/go-previous-inactive.png' />";
-    echo '&nbsp;'.phphoto_text($db, 'common', 'page_number', $page_number + 1, $pages).'&nbsp;';
-    if ($page_number < ($pages - 1))
-        echo "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1)."'><img src='./icons/go-next.png' /></a>";
-    else
-        echo "<img src='./icons/go-next-inactive.png' />";
-    echo "\n        </div>";
+
+    $url_previous = CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number - 1);
+    $url_next = CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_PAGE_NUMBER.'='.($page_number + 1);
+    $footer = array( phphoto_page_numbering($db, $page_number, $pages, $url_previous, $url_next) );
+
+    phphoto_to_html_table($data, $header, $footer);
 
     echo "\n</div>";
 }
