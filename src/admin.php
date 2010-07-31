@@ -73,13 +73,16 @@ function phphoto_create_gallery($db) {
         if ($gallery_exists) {
             phphoto_popup_message(phphoto_text($db, 'gallery', 'exists', $title), 'warning');
         }
-        else {
+        elseif (strlen($title) > 0) {
             $sql = sprintf("INSERT INTO galleries (title, description, created) VALUES ('%s', '', NOW())",
                     mysql_real_escape_string($title, $db));
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message(phphoto_text($db, 'gallery', 'created', $title), 'info');
             else
                 phphoto_popup_message(phphoto_text($db, 'gallery', 'store_error', $title), 'error');
+        }
+        else {
+            phphoto_popup_message(phphoto_text($db, 'gallery', 'empty_title'), 'error');
         }
     }
     echo "\n<div class='admin'>";
@@ -105,13 +108,16 @@ function phphoto_create_tag($db) {
         if ($tag_exists) {
             phphoto_popup_message(phphoto_text($db, 'tag', 'exists', $name), 'warning');
         }
-        else {
+        elseif (strlen($name) > 0) {
             $sql = sprintf("INSERT INTO tags (name, created) VALUES ('%s', NOW())",
                     mysql_real_escape_string($name, $db));
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message(phphoto_text($db, 'tag', 'created', $name), 'info');
             else
                 phphoto_popup_message(phphoto_text($db, 'tag', 'store_error', $name), 'error');
+        }
+        else {
+            phphoto_popup_message(phphoto_text($db, 'tag', 'empty_name'), 'error');
         }
     }
     echo "\n<div class='admin'>";

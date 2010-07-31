@@ -70,5 +70,6 @@
 --------------------------------------------------------------------------------
     * New language available: Swedish/se
     * Bugfix: problems with encoding (utf-8)
+    * Bugfix: ability to create gallery/tag with empty name
     * Bugfix: added missing texts to database
 --------------------------------------------------------------------------------

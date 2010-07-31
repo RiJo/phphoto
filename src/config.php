@@ -10,7 +10,7 @@ define('GALLERY_INDEX_PAGE',                'index.php');
 
 define('GALLERY_CHARSET',                   'utf-8');
 define('GALLERY_TIMEZONE',                  'Europe/Stockholm');
-define('GALLERY_LANGUAGE',                  'se');
+define('GALLERY_LANGUAGE',                  'en');
 define('GALLERY_THEME',                     'default');
 
 define('SETTINGS_FILE',                     'settings.txt');
