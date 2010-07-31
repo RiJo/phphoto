@@ -8,9 +8,12 @@
  * parent container is a div with a specific width. this makes the gallery as
  * wide as the divs width.
  *
+ * the phphoto library must be included at first:
+ *    - require_once('phphoto.php');
+ *
  * there are only two function calls needed to create the gallery:
- *    - phphoto_stylesheets()   includes the proper stylesheets
- *    - phphoto_main(bool);     echoes the gallery, parameter shows admin stuff
+ *    - phphoto_stylesheets();  includes the proper stylesheets
+ *    - phphoto_main(bool);     echoes the gallery, parameter is admin auth
  */
 
 require_once('phphoto.php');
