@@ -4,16 +4,9 @@ define('GALLERY_NAME',                      'phphoto');
 define('GALLERY_VERSION',                   '1.5.0');
 define('GALLERY_DATE',                      '2010-07-31');
 define('GALLERY_DEVELOPERS',                'RiJo');
-define('GALLERY_TITLE',                     'gallery.hermit.se');
-define('GALLERY_WELCOME',                   'Welcome');
 define('GALLERY_INDEX_PAGE',                'index.php');
 
-define('GALLERY_CHARSET',                   'utf-8');
-define('GALLERY_TIMEZONE',                  'Europe/Stockholm');
-define('GALLERY_LANGUAGE',                  'en');
-define('GALLERY_THEME',                     'default');
-
-define('SETTINGS_FILE',                     'settings.txt');
+define('SETTINGS_FILE',                     './settings.txt');
 
 define('DATABASE_HOST',                     'localhost');
 define('DATABASE_PORT',                     3306);
@@ -50,8 +43,6 @@ define('VARIABLE_NOT_SET',                  '-');
 define('NO_EXIF_DATA',                      '(no exif data)');
 define('DEFAULT_ITEMS_PER_PAGE',            20); // only on admin pages
 
-define('DATE_FORMAT',                       'Y-m-d (H:i)');
-
 define('IMAGE_TEMP_FILE',                   '/tmp/phphoto.tmp');
 define('IMAGE_MAX_FILESIZE',                1024*1024*10); // should be same as MySQL's 'max allowed packet'
 define('IMAGE_EXIF_KEYS',                   'Make,Model,FirmwareVersion,ImageType,DateTimeOriginal,CCDWidth,ExposureTime,ShutterSpeedValue, 
@@ -59,16 +50,9 @@ define('IMAGE_EXIF_KEYS',                   'Make,Model,FirmwareVersion,ImageTyp
 
 define('IMAGE_SORT_COLUMN',                 'name');
 define('IMAGE_THUMBNAIL_SUFFIX',            't');
-define('IMAGE_THUMBNAIL_WIDTH',             150);
-define('IMAGE_THUMBNAIL_HEIGHT',            112.5);
-define('IMAGE_THUMBNAIL_PANEL_COLOR',       '#f8f8f8');
 define('IMAGE_THUMBNAIL_QUALITY',           80);
 
 define('GALLERY_SORT_COLUMN',               'title');
-define('GALLERY_THUMBNAIL_WIDTH',           200);
-define('GALLERY_THUMBNAIL_HEIGHT',          150);
-define('GALLERY_THUMBNAIL_PANEL_COLOR',     '#f8f8f8');
-define('GALLERY_THUMBNAIL_INVALID_COLOR',   '#990000');
 define('GALLERY_THUMBNAIL_MINIMUM_IMAGES',  4);
 define('GALLERY_THUMBNAIL_MAXIMUM_IMAGES',  16);
 define('GALLERY_THUMBNAIL_QUALITY',         50);

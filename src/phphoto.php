@@ -9,30 +9,34 @@ require_once('./gd.php');
 require_once('./admin.php');
 require_once('./gallery.php');
 
+$allowed_filetypes = array('jpg','jpeg','png');
+$settings = phphoto_load_settings();
+
+require_once(GALLERY_THEME_PATH.'/theme.php');
+
 date_default_timezone_set(GALLERY_TIMEZONE);
 
 assert_options(ASSERT_BAIL, true); // stop executing on assertion
-
-$allowed_filetypes = array('jpg','jpeg','png');
 
 /*
  * Prints out the required stylesheets
  */
 function phphoto_stylesheets() {
-    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/gallery.css' type='text/css' />";
-    echo "\n<link rel='stylesheet' href='./themes/".GALLERY_THEME."/admin.css' type='text/css' />";
+    echo "\n<link rel='stylesheet' href='".GALLERY_THEME_PATH."/gallery.css' type='text/css' />";
+    echo "\n<link rel='stylesheet' href='".GALLERY_THEME_PATH."/admin.css' type='text/css' />";
 }
 
 /*
  * Prints out the gallery/admin pages depending on query strings
  */
 function phphoto_main($authorized = false) {
+    global $settings;
     $db = phphoto_db_connect();
     $admin = (isset($_GET[GET_KEY_ADMIN_QUERY])) ? $_GET[GET_KEY_ADMIN_QUERY] : '';
     if ($authorized)
         phphoto_admin_links($db);
     if ($authorized && strlen($admin) > 0)
-        phphoto_admin($db, $admin);
+        phphoto_admin($db, $settings, $admin);
     else
         phphoto_gallery($db);
     phphoto_db_disconnect($db);
@@ -52,7 +56,7 @@ function phphoto_gallery($db) {
 /*
  * Prints out the admin pages
  */
-function phphoto_admin($db, $admin) {
+function phphoto_admin($db, $settings, $admin) {
     switch ($admin) {
         case GET_VALUE_ADMIN_GALLERY:
             $gallery_id = (isset($_GET[GET_KEY_GALLERY_ID])) ? $_GET[GET_KEY_GALLERY_ID] : INVALID_ID;
@@ -79,7 +83,7 @@ function phphoto_admin($db, $admin) {
             phphoto_echo_admin_cameras($db);
             break;
         default:
-            phphoto_echo_admin_default($db);
+            phphoto_echo_admin_default($db, $settings);
             break;
     }
 }
@@ -119,12 +123,23 @@ function phphoto_load_settings() {
     $handle = fopen(SETTINGS_FILE, "r");
     while (!feof($handle)) {
         $buffer = fgets($handle);
-        $buffer = explode(':', $buffer);
+        $buffer = explode(':', $buffer, 2);
         if (count($buffer) == 2) {
             $settings[trim($buffer[0])] = trim($buffer[1]);
         }
     }
     fclose($handle);
+
+    // create macros for read-only access
+    define('GALLERY_TITLE',         $settings['GALLERY_TITLE']);
+    define('GALLERY_WELCOME',       $settings['GALLERY_WELCOME']);
+    define('GALLERY_CHARSET',       $settings['GALLERY_CHARSET']);
+    define('GALLERY_TIMEZONE',      $settings['GALLERY_TIMEZONE']);
+    define('GALLERY_LANGUAGE',      $settings['GALLERY_LANGUAGE']);
+    define('GALLERY_THEME_NAME',    $settings['GALLERY_THEME_NAME']);
+    define('GALLERY_THEME_PATH',    './themes/'.GALLERY_THEME_NAME);
+    define('DATE_FORMAT',           $settings['DATE_FORMAT']);
+
     return $settings;
 }
 
@@ -136,7 +151,7 @@ function phphoto_dump_settings($settings) {
     foreach ($settings as $key=>$value) {
         array_push($data, trim($key).':'.trim($value));
     }
-    $data = implode(chr(13), $data);
+    $data = implode(chr(10).chr(13), $data);
 
     $handle = fopen(SETTINGS_FILE, "w");
     if (!$handle)

@@ -170,7 +170,27 @@ function phphoto_gallery_thumbnail($db, $gallery_id) {
 /*
  * The default page of the admin pages
  */
-function phphoto_echo_admin_default($db) {
+function phphoto_echo_admin_default($db, $settings) {
+    if(isset($_POST['settings'])) {
+        foreach ($_POST as $key=>$value) {
+            if (isset($settings[$key])) {
+                $settings[$key] = $value;
+            }
+        }
+        phphoto_dump_settings($settings);
+        phphoto_popup_message(phphoto_text($db, 'admin', 'settings_saved'), 'info');
+    }
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>".phphoto_text($db, 'admin', 'settings')."</h1>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_DEFAULT."'>";
+    foreach ($settings as $key=>$value) {
+        echo "\n        $key: <input type='input' name='$key' value='$settings[$key]' maxlength='255'><br>";
+    }
+    echo "\n        <input type='submit' name='settings' value='".phphoto_text($db, 'button', 'update')."'>";
+    echo "\n    </form>";
+    echo "\n</div>";
+
     echo "\n<div class='admin'>";
     echo "\n    <h1>".GALLERY_NAME."</h1>";
     echo "\n    <p>";

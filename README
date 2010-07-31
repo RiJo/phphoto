@@ -73,3 +73,15 @@
     * Bugfix: ability to create gallery/tag with empty name
     * Bugfix: added missing texts to database
 --------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+    version 1.6.0 xxxx-xx-xx
+--------------------------------------------------------------------------------
+    * Added settingsfile which can be changed through the user interface
+    * Moved some of the macros to a theme spcific configuration file
+
+    TODO:
+     * Make dropdowns of Language and Themes
+     * Create table of settings in admin page
+--------------------------------------------------------------------------------
