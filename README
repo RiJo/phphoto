@@ -78,14 +78,16 @@
 --------------------------------------------------------------------------------
     version 1.6.0 xxxx-xx-xx
 --------------------------------------------------------------------------------
-    * Added settingsfile which can be changed with the user interface
+    * New settingsfile which can be changed with the user interface
     * Moved some of the macros to a theme specific configuration file
     * Added description field to tags
-    * Ability to show a gallery of all images with a certain tag
+    * Gallery of a tag
+    * Added tag links on first page
 
     TODO:
      * Make dropdowns of Language and Themes
      * Ability to add camera crop factor
      * Clean up gallery.php, remove redundant code
      * Consistency in parameters of texts
+     * Hide galleries/tags/images from first page
 --------------------------------------------------------------------------------

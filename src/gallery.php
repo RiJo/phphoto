@@ -59,6 +59,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
     echo "\n<div class='container'>";
     echo "\n    <h1>".format_string($gallery['title'])."</h1>";
     echo "\n    <p>".format_string($gallery['description'])."</p>";
+    echo "\n    <div class='wrapper'>";
     foreach ($images as $image) {
         if ($image['exif']) {
             eval('$exif = ' . $image['exif'] . ';');
@@ -76,6 +77,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
         echo "\n        <p>".format_string($image['description'])."</p>";
         echo "\n    </div>";
     }
+    echo "\n    </div>";
     echo "\n</div>";
     echo "\n<div class='footer'>";
     echo "\n    <p>..:: ".phphoto_text($db, 'footer', 'views', $gallery['views'])." :: "
@@ -134,6 +136,7 @@ function phphoto_echo_tag($db, $tag_id) {
     echo "\n<div class='container'>";
     echo "\n    <h1>".format_string($tag['name'])."</h1>";
     echo "\n    <p>".format_string($tag['description'])."</p>";
+    echo "\n    <div class='wrapper'>";
     foreach ($images as $image) {
         if ($image['exif']) {
             eval('$exif = ' . $image['exif'] . ';');
@@ -151,6 +154,7 @@ function phphoto_echo_tag($db, $tag_id) {
         echo "\n        <p>".format_string($image['description'])."</p>";
         echo "\n    </div>";
     }
+    echo "\n    </div>";
     echo "\n</div>";
     echo "\n<div class='footer'>";
     echo "\n    <p>..:: ".phphoto_text($db, 'footer', 'images', $tag['images'])." :: "
@@ -178,11 +182,25 @@ function phphoto_echo_galleries($db) {
             ".GALLERY_SORT_COLUMN."
     ";
 
+    $tag_sql = "
+        SELECT
+            id,
+            name,
+            description
+        FROM
+            tags t
+        WHERE
+            (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = t.id) > 0
+        ORDER BY
+            name
+    ";
+
     echo "\n<div class='header'>";
     echo "\n    <p><a href='".GALLERY_INDEX_PAGE."'>".GALLERY_TITLE."</a></p>";
     echo "\n</div>";
     echo "\n<div class='container'>";
     echo "\n    <h1>".GALLERY_WELCOME."</h1>";
+    echo "\n    <div class='wrapper'>";
     foreach (phphoto_db_query($db, $gallery_sql) as $gallery) {
         echo "\n    <div class='gallery'>";
         echo "\n        <a href='".CURRENT_PAGE."?".GET_KEY_GALLERY_ID."=$gallery[id]'>";
@@ -193,6 +211,17 @@ function phphoto_echo_galleries($db) {
         echo "\n        </a>";
         echo "\n    </div>";
     }
+    echo "\n    </div>";
+
+    // echo links for the different tags
+    $tags = array();
+    foreach (phphoto_db_query($db, $tag_sql) as $tag) {
+        array_push($tags, "<a href='".CURRENT_PAGE."?".GET_KEY_TAG_ID."=$tag[id]' title='$tag[description]'>$tag[name]</a>");
+    }
+    if (count($tags) > 0) {
+        echo "\n    <p>".phphoto_text($db, 'section', 'tags').": ".implode(', ', $tags).'</p>';
+    }
+
     echo "\n</div>";
     echo "\n<div class='footer'>";
     echo "\n    <p>..:: <a href='http://github.com/RiJo/phphoto'>" . GALLERY_NAME.' v.'.GALLERY_VERSION . "</a> ::</p>";
