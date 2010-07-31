@@ -82,7 +82,7 @@ function phphoto_create_gallery($db) {
                 phphoto_popup_message(phphoto_text($db, 'gallery', 'store_error', $title), 'error');
         }
         else {
-            phphoto_popup_message(phphoto_text($db, 'gallery', 'empty_title'), 'error');
+            phphoto_popup_message(phphoto_text($db, 'gallery', 'empty_title'), 'warning');
         }
     }
     echo "\n<div class='admin'>";
@@ -117,7 +117,7 @@ function phphoto_create_tag($db) {
                 phphoto_popup_message(phphoto_text($db, 'tag', 'store_error', $name), 'error');
         }
         else {
-            phphoto_popup_message(phphoto_text($db, 'tag', 'empty_name'), 'error');
+            phphoto_popup_message(phphoto_text($db, 'tag', 'empty_name'), 'warning');
         }
     }
     echo "\n<div class='admin'>";

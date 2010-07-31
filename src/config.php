@@ -48,7 +48,7 @@ define('CURRENT_QUERY',                     $_SERVER['QUERY_STRING']);
 define('CURRENT_URL',                       CURRENT_PAGE.'?'.CURRENT_QUERY);
 define('VARIABLE_NOT_SET',                  '-');
 define('NO_EXIF_DATA',                      '(no exif data)');
-define('DEFAULT_ITEMS_PER_PAGE',            20); // only on admin pages so far
+define('DEFAULT_ITEMS_PER_PAGE',            20); // only on admin pages
 
 define('DATE_FORMAT',                       'Y-m-d (H:i)');
 

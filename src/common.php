@@ -32,7 +32,8 @@ function format_string($string, $max_length = 0) {
     if ($max_length && strlen($string) > $max_length) {
         $string = substr($string, 0, $max_length).'..';
     }
-    return strip_tags($string, '<br>');
+    $string = strip_tags($string, '<br>');
+    return (strlen($string) > 0) ? $string : '&nbsp;';
 }
 
 /*
