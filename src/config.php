@@ -61,13 +61,13 @@ define('IMAGE_SORT_COLUMN',                 'name');
 define('IMAGE_THUMBNAIL_SUFFIX',            't');
 define('IMAGE_THUMBNAIL_WIDTH',             150);
 define('IMAGE_THUMBNAIL_HEIGHT',            112.5);
-define('IMAGE_THUMBNAIL_PANEL_COLOR',       '#111111');
+define('IMAGE_THUMBNAIL_PANEL_COLOR',       '#f8f8f8');
 define('IMAGE_THUMBNAIL_QUALITY',           80);
 
 define('GALLERY_SORT_COLUMN',               'title');
 define('GALLERY_THUMBNAIL_WIDTH',           200);
 define('GALLERY_THUMBNAIL_HEIGHT',          150);
-define('GALLERY_THUMBNAIL_PANEL_COLOR',     '#111111');
+define('GALLERY_THUMBNAIL_PANEL_COLOR',     '#f8f8f8');
 define('GALLERY_THUMBNAIL_INVALID_COLOR',   '#990000');
 define('GALLERY_THUMBNAIL_MINIMUM_IMAGES',  4);
 define('GALLERY_THUMBNAIL_MAXIMUM_IMAGES',  16);
