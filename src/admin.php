@@ -43,19 +43,20 @@ function phphoto_upload_image($db) {
         }
     }
 
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>".phphoto_text($db, 'image', 'upload')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."' enctype='multipart/form-data'>";
-    echo "\n        <fieldset>";
-    echo "\n            <legend>".phphoto_text($db, 'image', 'upload')."</legend>";
-    echo "\n            ".phphoto_text($db, 'image', 'allowed_extensions', implode(', ', $allowed_filetypes));
-    echo "\n            <br>";
-    echo "\n            ".phphoto_text($db, 'image', 'maximum_filesize', format_byte(IMAGE_MAX_FILESIZE));
-    echo "\n            <br>";
-    echo "\n            <input type='file' name='image'>";
-    echo "\n            <br>";
-    echo "\n            <input type='submit' value='".phphoto_text($db, 'button', 'upload')."'>";
-    echo "\n            <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>".phphoto_text($db, 'image', 'replace_existing')."</label>";
-    echo "\n        </fieldset>";
+    echo "\n        ".phphoto_text($db, 'image', 'allowed_extensions', implode(', ', $allowed_filetypes));
+    echo "\n        <br>";
+    echo "\n        ".phphoto_text($db, 'image', 'maximum_filesize', format_byte(IMAGE_MAX_FILESIZE));
+    echo "\n        <br>";
+    echo "\n        <input type='file' name='image'>";
+    echo "\n        <br>";
+    echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'upload')."'>";
+    echo "\n        <input type='checkbox' name='replace' value='true' id='replace'><label for='replace'>".phphoto_text($db, 'image', 'replace_existing')."</label>";
     echo "\n    </form>";
+    echo "\n</div>";
 }
 
 /*
@@ -131,14 +132,14 @@ function phphoto_image_thumbnails($db) {
         phphoto_popup_message(phphoto_text($db, 'image', 'thumbs_regenerated', $regenerated_thumbnails), 'info');
     }
 
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>".phphoto_text($db, 'image', 'regenerate_thumbs')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
-    echo "\n        <fieldset>";
-    echo "\n            <legend>".phphoto_text($db, 'image', 'regenerate_thumbs')."</legend>";
-    echo "\n            <input type='submit' name='regenerate_image_thumbs' value='".phphoto_text($db, 'button', 'start')."'>";
-    echo "\n            <br>";
-    echo "\n            ".phphoto_text($db, 'image', 'note_long_time');
-    echo "\n        </fieldset>";
+    echo "\n        <input type='submit' name='regenerate_image_thumbs' value='".phphoto_text($db, 'button', 'start')."'>";
+    echo "\n        <br>";
+    echo "\n        ".phphoto_text($db, 'image', 'note_long_time');
     echo "\n    </form>";
+    echo "\n</div>";
 }
 
 /*
@@ -712,7 +713,6 @@ function phphoto_echo_admin_image($db, $image_id) {
  * Table showing all images available for editing
  */
 function phphoto_echo_admin_images($db) {
-    echo "\n<div class='admin'>";
     phphoto_upload_image($db);
     phphoto_image_thumbnails($db);
 
@@ -767,8 +767,8 @@ function phphoto_echo_admin_images($db) {
         ));
     }
 
-    echo "\n    <fieldset>";
-    echo "\n        <legend>".phphoto_text($db, 'section', 'images')."</legend>";
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>".phphoto_text($db, 'section', 'images')."</h1>";
     phphoto_to_html_table($data, $header);
     
     echo "\n        <div class='admin' id='footer'>";
@@ -783,7 +783,6 @@ function phphoto_echo_admin_images($db) {
         echo "<img src='./icons/go-next-inactive.png' />";
     echo "\n        </div>";
 
-    echo "\n    </fieldset>";
     echo "\n</div>";
 }
 
