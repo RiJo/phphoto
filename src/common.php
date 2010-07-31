@@ -47,15 +47,12 @@ function format_byte($bytes) {
         array('bytes', pow(1024, 0))
     );
 
-    for ($i = 0; $i < count($bounds); $i++) {
-        if ($bytes >= $bounds[$i][1]) {
-            if ($i == count($bounds)-1)
-                return sprintf('%d %s', $bytes/$bounds[$i][1], $bounds[$i][0]);
-            else
-                return sprintf('%d %s (%.1f %s)', $bytes/$bounds[$i+1][1], $bounds[$i+1][0], $bytes/$bounds[$i][1], $bounds[$i][0]);
+    for ($i = count($bounds) - 1; $i > 0; $i--) {
+        if ($bytes <= $bounds[$i-1][1]) {
+            return sprintf('%.0f %s (%.2f %s)', $bytes/$bounds[$i][1], $bounds[$i][0], $bytes/$bounds[$i-1][1], $bounds[$i-1][0]);
         }
     }
-    return $bytes; // should not come here
+    return sprintf('%.0f %s', $bytes/$bounds[$i][1], $bounds[$i][0]);
 }
 
 /*

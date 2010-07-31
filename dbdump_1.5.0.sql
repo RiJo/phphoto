@@ -166,7 +166,7 @@ INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `c
 ('en', 'button', 'add', 'Add', 0, NOW(), NOW()),
 ('en', 'button', 'create', 'Create', 0, NOW(), NOW()),
 ('en', 'button', 'start', 'Start', 0, NOW(), NOW()),
-('en', 'button', 'update', 'update', 0, NOW(), NOW()),
+('en', 'button', 'update', 'Update', 0, NOW(), NOW()),
 ('en', 'button', 'upload', 'Upload', 0, NOW(), NOW()),
 ('en', 'common', 'page_number', '%d (of %d)', 2, NOW(), NOW()),
 ('en', 'footer', 'images', '%d images', 1, NOW(), NOW()),

@@ -276,7 +276,20 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
         }
     }
 
-    $sql = "SELECT id, title, description, views, (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images, changed, created FROM galleries WHERE id = $gallery_id";
+    $sql = "
+        SELECT
+            id,
+            title,
+            description,
+            views,
+            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
+            changed,
+            created
+        FROM
+            galleries
+        WHERE
+            id = $gallery_id
+    ";
     $gallery_data = phphoto_db_query($db, $sql);
 
     if (count($gallery_data) != 1) {
@@ -311,8 +324,18 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     // images not in this gallery
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'gallery', 'images_not_in')."</h1>";
-    $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
+
+    $sql = "
+        SELECT
+            id,
+            IF (LENGTH(title) > 0, title, filename) AS name
+        FROM
+            images
+        WHERE
+            id NOT IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)
+    ";
     $images = phphoto_db_query($db, $sql);
+
     if (count($images) > 0) {
         echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
                 GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
@@ -320,7 +343,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                 GET_KEY_GALLERY_ID."=$gallery_id'>";
         echo "\n        <select name='".GET_KEY_IMAGE_ID."'>";
         foreach ($images as $row) {
-            echo "\n            <option value='$row[id]'>".((empty($row['title'])?$row['filename']:$row['title']))."</option>";
+            echo "\n            <option value='$row[id]'>$row[name]</option>";
         }
         echo "\n        </select>";
         echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'add')."'>";
@@ -329,12 +352,20 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     echo "\n</div>";
 
     // images in this gallery
-    $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)";
+    $sql = "
+        SELECT
+            id,
+            IF (LENGTH(title) > 0, title, filename) AS name,
+            description
+        FROM
+            images
+        WHERE
+            id IN (SELECT image_id FROM image_to_gallery WHERE gallery_id = $gallery_id)
+    ";
 
     $header = array(
         phphoto_text($db, 'header', 'thumbnail'),
-        phphoto_text($db, 'header', 'filename'),
-        phphoto_text($db, 'header', 'title'),
+        phphoto_text($db, 'header', 'name'),
         phphoto_text($db, 'header', 'description'),
         '&nbsp;'
     );
@@ -342,8 +373,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($images, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
-            $row['filename'],
-            $row['title'],
+            $row['name'],
             $row['description'],
             "<a href='".CURRENT_PAGE.'?'.
                     GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
@@ -477,7 +507,18 @@ function phphoto_echo_admin_tag($db, $tag_id) {
         }
     }
 
-    $sql = "SELECT id, name, (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images, changed, created FROM tags WHERE id = $tag_id";
+    $sql = "
+        SELECT
+            id,
+            name,
+            (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images,
+            changed,
+            created
+        FROM
+            tags
+        WHERE
+            id = $tag_id
+    ";
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($tag_data) != 1) {
@@ -506,8 +547,18 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     // images not tagged with this tag
     echo "\n<div class='admin'>";
     echo "\n    <h1>".phphoto_text($db, 'tag', 'not_tagged_images')."</h1>";
-    $sql = "SELECT id, title, filename FROM images WHERE id NOT IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
+
+    $sql = "
+        SELECT
+            id,
+            IF (LENGTH(title) > 0, title, filename) AS name
+        FROM
+            images
+        WHERE
+            id NOT IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)
+    ";
     $images = phphoto_db_query($db, $sql);
+
     if (count($images) > 0) {
         echo "\n    <form method='post' action='".CURRENT_PAGE.'?'.
                 GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
@@ -515,7 +566,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                 GET_KEY_TAG_ID."=$tag_id'>";
         echo "\n        <select name='".GET_KEY_IMAGE_ID."'>";
         foreach ($images as $row) {
-            echo "\n            <option value='$row[id]'>".((empty($row['title'])?$row['filename']:$row['title']))."</option>";
+            echo "\n            <option value='$row[id]'>$row[name]</option>";
         }
         echo "\n        </select>";
         echo "\n        <input type='submit' value='".phphoto_text($db, 'button', 'add')."'>";
@@ -524,12 +575,20 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     echo "\n</div>";
 
     // images tagged
-    $sql = "SELECT id, title, description, filename FROM images WHERE id IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)";
+    $sql = "
+        SELECT
+            id,
+            IF (LENGTH(title) > 0, title, filename) AS name,
+            description
+        FROM
+            images
+        WHERE
+            id IN (SELECT image_id FROM image_to_tag WHERE tag_id = $tag_id)
+    ";
 
     $header = array(
         phphoto_text($db, 'header', 'thumbnail'),
-        phphoto_text($db, 'header', 'filename'),
-        phphoto_text($db, 'header', 'title'),
+        phphoto_text($db, 'header', 'name'),
         phphoto_text($db, 'header', 'description'),
         '&nbsp;'
     );
@@ -537,8 +596,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($images, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
-            $row['filename'],
-            $row['title'],
+            $row['name'],
             $row['description'],
             "<a href='".CURRENT_PAGE.'?'.
                     GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
