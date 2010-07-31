@@ -182,16 +182,6 @@ function phphoto_echo_admin_default($db, $settings) {
     }
 
     echo "\n<div class='admin'>";
-    echo "\n    <h1>".phphoto_text($db, 'admin', 'settings')."</h1>";
-    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_DEFAULT."'>";
-    foreach ($settings as $key=>$value) {
-        echo "\n        $key: <input type='input' name='$key' value='$settings[$key]' maxlength='255'><br>";
-    }
-    echo "\n        <input type='submit' name='settings' value='".phphoto_text($db, 'button', 'update')."'>";
-    echo "\n    </form>";
-    echo "\n</div>";
-
-    echo "\n<div class='admin'>";
     echo "\n    <h1>".GALLERY_NAME."</h1>";
     echo "\n    <p>";
     echo "\n        ".phphoto_text($db, 'info', 'version', GALLERY_VERSION)."<br>";
@@ -203,6 +193,22 @@ function phphoto_echo_admin_default($db, $settings) {
     echo "\n            <img src='http://jigsaw.w3.org/css-validator/images/vcss' alt='Valid CSS!' />";
     echo "\n        </a>";
     echo "\n    </p>";
+    echo "\n</div>";
+
+    echo "\n<div class='admin'>";
+    echo "\n    <h1>".phphoto_text($db, 'admin', 'settings')."</h1>";
+    echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_DEFAULT."'>";
+    
+    $data = array();
+    foreach ($settings as $key=>$value) {
+        array_push($data, array($key, "<input type='input' name='$key' value='$settings[$key]' maxlength='255'>"));
+    }
+    array_push($data, array('&nbsp', "\n        <input type='submit' name='settings' value='".phphoto_text($db, 'button', 'update')."'>"));
+
+
+    phphoto_to_html_table($data);
+
+    echo "\n    </form>";
     echo "\n</div>";
 }
 
