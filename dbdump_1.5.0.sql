@@ -301,7 +301,7 @@ INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `c
 ('se', 'image', 'invalid_temp_file', 'Kunde inte hitta den uppladdade temp filen', 0, NOW(), NOW()),
 ('se', 'image', 'maximum_filesize', 'Största tillåtna filstorlek: %s', 1, NOW(), NOW()),
 ('se', 'image', 'note_long_time', 'Notera: detta kan ta ett tag beroende på hur många bilder som är lagrade', 0, NOW(), NOW()),
-('se', 'image', 'regenerate_thumbs', 'Regenerera miniatyr', 0, NOW(), NOW()),
+('se', 'image', 'regenerate_thumbs', 'Regenerera miniatyrer', 0, NOW(), NOW()),
 ('se', 'image', 'replace_existing', 'Ersätt existerande', 0, NOW(), NOW()),
 ('se', 'image', 'store_error', 'Kunde inte spara bilden', 0, NOW(), NOW()),
 ('se', 'image', 'thumbs_regenerated', '%d miniatyrer har regenererats', 1, NOW(), NOW()),

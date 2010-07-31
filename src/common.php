@@ -239,7 +239,6 @@ function phphoto_page_numbering($db, $page_number, $pages, $url_previous, $url_n
         $string .= "<a href='$url_next'><img src='./icons/go-next.png' /></a>";
     else
         $string .= "<img src='./icons/go-next-inactive.png' />";
-    //~ echo "\n    </div>";
     return $string;
 }
 
