@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `galleries` (
   `title` varchar(255) collate utf8_general_ci NOT NULL,
   `description` text collate utf8_general_ci,
   `views` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`),
@@ -67,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `images` (
   `title` varchar(255) collate utf8_general_ci default NULL,
   `description` text collate utf8_general_ci,
   `views` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`),
@@ -136,6 +138,7 @@ CREATE TABLE IF NOT EXISTS `tags` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) collate utf8_general_ci NOT NULL,
   `description` text collate utf8_general_ci,
+  `active` tinyint(1) NOT NULL,
   `changed` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` datetime NOT NULL,
   PRIMARY KEY  (`id`),
@@ -164,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `texts` (
 --
 
 INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `changed`, `created`) VALUES
+('en', 'admin', 'empty_value', 'All settings must have specified values', 0, NOW(), NOW()),
 ('en', 'admin', 'settings', 'Settings', 0, NOW(), NOW()),
 ('en', 'admin', 'settings_saved', 'Settings has been saved', 0, NOW(), NOW()),
 ('en', 'button', 'add', 'Add', 0, NOW(), NOW()),
@@ -253,6 +257,7 @@ INSERT INTO `texts` (`language_id`, `category`, `name`, `text`, `parameters`, `c
 ('en', 'tag', 'unknown', 'Could not find the tag requested', 0, NOW(), NOW()),
 ('en', 'tag', 'updated', 'Tag has been updated', 0, NOW(), NOW()),
 
+('se', 'admin', 'empty_value', 'Alla inställningar måste ha värden specificerade', 0, NOW(), NOW()),
 ('se', 'admin', 'settings', 'Inställningar', 0, NOW(), NOW()),
 ('se', 'admin', 'settings_saved', 'Inställningarna har sparats', 0, NOW(), NOW()),
 ('se', 'button', 'add', 'Lägg till', 0, NOW(), NOW()),

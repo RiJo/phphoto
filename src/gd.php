@@ -71,6 +71,7 @@ function phphoto_store_image($db, $uploaded_image, $replace_existing = false){
                 exif,
                 title,
                 description,
+                active,
                 created
             )
             VALUES (
@@ -84,6 +85,7 @@ function phphoto_store_image($db, $uploaded_image, $replace_existing = false){
                 '$image_exif',
                 '',
                 '',
+                TRUE,
                 NOW()
             )
         ";

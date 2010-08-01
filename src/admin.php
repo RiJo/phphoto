@@ -74,7 +74,7 @@ function phphoto_create_gallery($db) {
             phphoto_popup_message(phphoto_text($db, 'gallery', 'exists', $title), 'warning');
         }
         elseif (strlen($title) > 0) {
-            $sql = sprintf("INSERT INTO galleries (title, description, created) VALUES ('%s', '', NOW())",
+            $sql = sprintf("INSERT INTO galleries (title, description, active, created) VALUES ('%s', '', TRUE, NOW())",
                     mysql_real_escape_string($title, $db));
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message(phphoto_text($db, 'gallery', 'created', $title), 'info');
@@ -109,7 +109,7 @@ function phphoto_create_tag($db) {
             phphoto_popup_message(phphoto_text($db, 'tag', 'exists', $name), 'warning');
         }
         elseif (strlen($name) > 0) {
-            $sql = sprintf("INSERT INTO tags (name, description, created) VALUES ('%s', '', NOW())",
+            $sql = sprintf("INSERT INTO tags (name, description, active, created) VALUES ('%s', '', TRUE, NOW())",
                     mysql_real_escape_string($name, $db));
             if (phphoto_db_query($db, $sql) == 1)
                 phphoto_popup_message(phphoto_text($db, 'tag', 'created', $name), 'info');
@@ -142,7 +142,6 @@ function phphoto_image_thumbnails($db) {
     echo "\n    <h1>".phphoto_text($db, 'image', 'regenerate_thumbs')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_IMAGE."'>";
     echo "\n        <input type='submit' name='regenerate_image_thumbs' value='".phphoto_text($db, 'button', 'start')."'>";
-    echo "\n        <br>";
     echo "\n        ".phphoto_text($db, 'image', 'note_long_time');
     echo "\n    </form>";
     echo "\n</div>";
@@ -162,23 +161,34 @@ function phphoto_gallery_thumbnail($db, $gallery_id) {
     echo "\n    <h1>".phphoto_text($db, 'gallery', 'regenerate_thumb')."</h1>";
     echo "\n    <form method='post' action='".CURRENT_PAGE."?".GET_KEY_ADMIN_QUERY."=".GET_VALUE_ADMIN_GALLERY."&".GET_KEY_GALLERY_ID."=$gallery_id'>";
     echo "\n        <input type='submit' name='regenerate_gallery_thumb' value='".phphoto_text($db, 'button', 'start')."'>";
+    echo "\n        ".phphoto_text($db, 'gallery', 'note_long_time');
     echo "\n    </form>";
-    echo "\n    <p>".phphoto_text($db, 'gallery', 'note_long_time')."</p>";
     echo "\n</div>";
 }
 
 /*
- * The default page of the admin pages
+ * The default page of the admin pages, form for updating settings file
  */
 function phphoto_echo_admin_default($db, $settings) {
     if(isset($_POST['settings'])) {
+        $pending_changes = false;
         foreach ($_POST as $key=>$value) {
-            if (isset($settings[$key])) {
-                $settings[$key] = $value;
+            if (strlen($value) > 0) {
+                if (isset($settings[$key])) {
+                    $settings[$key] = $value;
+                    $pending_changes = true;
+                }
+            }
+            else {
+                $pending_changes = false;
+                phphoto_popup_message(phphoto_text($db, 'admin', 'empty_value'), 'warning');
+                break;
             }
         }
-        phphoto_dump_settings($settings);
-        phphoto_popup_message(phphoto_text($db, 'admin', 'settings_saved'), 'info');
+        if ($pending_changes) {
+            phphoto_dump_settings($settings);
+            phphoto_popup_message(phphoto_text($db, 'admin', 'settings_saved'), 'info');
+        }
     }
 
     echo "\n<div class='admin'>";
