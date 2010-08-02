@@ -823,10 +823,10 @@ function phphoto_echo_admin_images($db) {
             IF (LENGTH(title) > 0, title, filename) AS name,
             width,
             height,
-            filesize,
+            (SELECT COUNT(*) FROM image_to_gallery WHERE image_id = id) AS galleries,
+            (SELECT COUNT(*) FROM image_to_tag WHERE image_id = id) AS tags,
             views,
-            views / (SELECT SUM(views) FROM images) AS popularity,
-            (SELECT COUNT(*) FROM image_to_gallery WHERE image_id = id) AS in_use
+            views / (SELECT SUM(views) FROM images) AS popularity
         FROM
             images
         ORDER BY
@@ -840,8 +840,9 @@ function phphoto_echo_admin_images($db) {
         phphoto_text($db, 'header', 'thumbnail'),
         "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=2'>".phphoto_text($db, 'header', 'name')."</a>",
         "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'resolution')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=5'>".phphoto_text($db, 'header', 'filesize')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=6'>".phphoto_text($db, 'header', 'views')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=5'>".phphoto_text($db, 'header', 'galleries')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=6'>".phphoto_text($db, 'header', 'tags')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=7'>".phphoto_text($db, 'header', 'views')."</a>",
         '&nbsp;'
     );
     $max_text_length = 12;
@@ -852,9 +853,10 @@ function phphoto_echo_admin_images($db) {
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
             wordwrap(format_string($row['name']), 20, '<br>', true),
             $row['width'].'x'.$row['height'].'<br>'.phphoto_image_aspect_ratio($row['width'], $row['height']),
-            format_byte($row['filesize']),
+            $row['galleries'],
+            $row['tags'],
             $row['views']." (".round($row['popularity']*100)."%)",
-            ((!$row['in_use']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png' /></a>" : "<img src='./icons/process-stop-inactive.png' />")
+            ((!$row['galleries'] && !$row['tags']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='./icons/process-stop.png' /></a>" : "<img src='./icons/process-stop-inactive.png' />")
         ));
     }
 
