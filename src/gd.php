@@ -154,8 +154,6 @@ function phphoto_generate_gallery_data($images) {
     $image_width = ceil(GALLERY_THUMBNAIL_WIDTH / $size);
     $image_height = ceil(GALLERY_THUMBNAIL_HEIGHT / $size);
 
-    echo("size $size --- canvas ".GALLERY_THUMBNAIL_WIDTH." : ".GALLERY_THUMBNAIL_HEIGHT." --- images $image_width : $image_height");
-
     for ($y = 0; $y < $size; $y++) {
         for ($x = 0; $x < $size; $x++) {
             $index = $x + ($y * $size);
