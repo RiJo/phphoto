@@ -78,17 +78,10 @@
 --------------------------------------------------------------------------------
     version 1.6.0 xxxx-xx-xx
 --------------------------------------------------------------------------------
+    * Hide galleries/tags/images from first page
     * New settingsfile which can be changed with the user interface
     * Moved some of the macros to a theme specific configuration file
     * Added description field to tags
     * Gallery of a tag
     * Added tag links on first page
-
-    TODO:
-     * Bug: hide galleries/tags with only inactive images
-     * Make dropdowns of Language and Themes
-     * Ability to add camera crop factor
-     * Clean up gallery.php, remove redundant code
-     * Consistency in parameters of texts
-     * Hide galleries/tags/images from first page
 --------------------------------------------------------------------------------

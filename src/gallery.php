@@ -179,7 +179,13 @@ function phphoto_echo_galleries($db) {
         WHERE
             active = TRUE
             AND
-            (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
+            (
+                SELECT COUNT(*) FROM image_to_gallery itg WHERE itg.gallery_id = g.id
+                AND
+                (
+                    SELECT COUNT(*) FROM images i WHERE i.id = itg.image_id AND active = TRUE
+                ) > 0
+            ) > 0
         ORDER BY
             ".GALLERY_SORT_COLUMN."
     ";
@@ -194,7 +200,13 @@ function phphoto_echo_galleries($db) {
         WHERE
             active = TRUE
             AND
-            (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = t.id) > 0
+            (
+                SELECT COUNT(*) FROM image_to_tag itt WHERE itt.tag_id = t.id
+                AND
+                (
+                    SELECT COUNT(*) FROM images i WHERE i.id = itt.image_id AND active = TRUE
+                ) > 0
+            ) > 0
         ORDER BY
             name
     ";
