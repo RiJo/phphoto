@@ -36,6 +36,10 @@ function format_string($string, $max_length = 0) {
     return (strlen($string) > 0) ? $string : '&nbsp;';
 }
 
+function format_bool($bool) {
+    return ($bool) ? "<img src='./icons/check.png'>" : '&nbsp;';
+}
+
 /*
  * Nice printout for the given bytes
  */

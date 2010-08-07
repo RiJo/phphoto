@@ -319,6 +319,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
             description,
             views,
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images,
+            active,
             changed,
             created
         FROM
@@ -343,6 +344,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     array_push($table_data, array(phphoto_text($db, 'header', 'images'),        $gallery_data['images']));
     array_push($table_data, array(phphoto_text($db, 'header', 'title'),         "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
     array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$gallery_data[description]</textarea>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'active'),        format_bool($gallery_data['active'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'changed'),       format_date_time($gallery_data['changed'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'created'),       format_date_time($gallery_data['created'])));
     array_push($table_data, array('&nbsp;',                                     "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
@@ -446,6 +448,7 @@ function phphoto_echo_admin_galleries($db) {
         SELECT
             id,
             title,
+            active,
             views,
             views / (SELECT SUM(views) FROM galleries) AS popularity,
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = id) AS images
@@ -461,8 +464,9 @@ function phphoto_echo_admin_galleries($db) {
     $header = array(
         phphoto_text($db, 'header', 'thumbnail'),
         "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=2'>".phphoto_text($db, 'header', 'title')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'views')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=5'>".phphoto_text($db, 'header', 'images')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'active')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=4'>".phphoto_text($db, 'header', 'views')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_SORT_COLUMN."=6'>".phphoto_text($db, 'header', 'images')."</a>",
         '&nbsp;'
     );
 
@@ -472,6 +476,7 @@ function phphoto_echo_admin_galleries($db) {
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_GALLERY_ID."=$row[id]' /></a>",
             format_string($row['title']),
+            format_bool($row['active']),
             $row['views']." (".round($row['popularity']*100)."%)",
             $row['images'],
             ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_GALLERY_ID."=$row[id]'><img src='./icons/process-stop.png' /></a>" : "<img src='./icons/process-stop-inactive.png' />")
@@ -552,6 +557,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
             name,
             description,
             (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images,
+            active,
             changed,
             created
         FROM
@@ -571,6 +577,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $table_data = array();
     array_push($table_data, array(phphoto_text($db, 'header', 'name'), "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
     array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$tag_data[description]</textarea>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'active'), format_bool($tag_data['active'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'changed'), format_date_time($tag_data['changed'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'created'), format_date_time($tag_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
@@ -674,6 +681,7 @@ function phphoto_echo_admin_tags($db) {
         SELECT
             id,
             name,
+            active,
             (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = id) AS images
         FROM
             tags
@@ -686,7 +694,8 @@ function phphoto_echo_admin_tags($db) {
 
     $header = array(
         "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=2'>".phphoto_text($db, 'header', 'name')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'images')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'active')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_SORT_COLUMN."=4'>".phphoto_text($db, 'header', 'images')."</a>",
         '&nbsp;'
     );
 
@@ -694,6 +703,7 @@ function phphoto_echo_admin_tags($db) {
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_TAG_ID."=$row[id]'>".format_string($row['name'])."</a>",
+            format_bool($row['active']),
             $row['images'],
             ((!$row['images']) ? "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.GET_KEY_TAG_ID."=$row[id]'><img src='./icons/process-stop.png' /></a>" : "<img src='./icons/process-stop-inactive.png' />")
         ));
@@ -745,11 +755,47 @@ function phphoto_echo_admin_image($db, $image_id) {
         }
     }
 
-    $sql = "SELECT id, type, width, height, filesize, filename, exif, title, description, changed, created FROM images WHERE id = $image_id";
+    $sql = "
+        SELECT
+            id,
+            type,
+            width,
+            height,
+            filesize,
+            filename,
+            exif,
+            title,
+            description,
+            active,
+            changed,
+            created
+        FROM
+            images
+        WHERE
+            id = $image_id
+    ";
     $image_data = phphoto_db_query($db, $sql);
-    $sql = "SELECT id, title FROM galleries WHERE id IN (SELECT gallery_id FROM image_to_gallery WHERE image_id = $image_id)";
+
+    $sql = "
+        SELECT
+            id,
+            title
+        FROM
+            galleries
+        WHERE
+            id IN (SELECT gallery_id FROM image_to_gallery WHERE image_id = $image_id)
+    ";
     $gallery_data = phphoto_db_query($db, $sql);
-    $sql = "SELECT id, name FROM tags WHERE id IN (SELECT tag_id FROM image_to_tag WHERE image_id = $image_id)";
+
+    $sql = "
+        SELECT
+            id,
+            name
+        FROM
+            tags
+        WHERE
+            id IN (SELECT tag_id FROM image_to_tag WHERE image_id = $image_id)
+    ";
     $tag_data = phphoto_db_query($db, $sql);
 
     if (count($image_data) != 1) {
@@ -785,6 +831,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array(phphoto_text($db, 'header', 'tags'),          implode('<br>', $tag_names)));
     array_push($table_data, array(phphoto_text($db, 'header', 'title'),         "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$image_data[description]</textarea>"));
+    array_push($table_data, array(phphoto_text($db, 'header', 'active'),        format_bool($image_data['active'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'changed'),       format_date_time($image_data['changed'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'created'),       format_date_time($image_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
@@ -821,6 +868,7 @@ function phphoto_echo_admin_images($db) {
         SELECT
             id,
             IF (LENGTH(title) > 0, title, filename) AS name,
+            active,
             width,
             height,
             (SELECT COUNT(*) FROM image_to_gallery WHERE image_id = id) AS galleries,
@@ -839,10 +887,11 @@ function phphoto_echo_admin_images($db) {
     $header = array(
         phphoto_text($db, 'header', 'thumbnail'),
         "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=2'>".phphoto_text($db, 'header', 'name')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'resolution')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=5'>".phphoto_text($db, 'header', 'galleries')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=6'>".phphoto_text($db, 'header', 'tags')."</a>",
-        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=7'>".phphoto_text($db, 'header', 'views')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=3'>".phphoto_text($db, 'header', 'active')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=4'>".phphoto_text($db, 'header', 'resolution')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=6'>".phphoto_text($db, 'header', 'galleries')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=7'>".phphoto_text($db, 'header', 'tags')."</a>",
+        "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_SORT_COLUMN."=8'>".phphoto_text($db, 'header', 'views')."</a>",
         '&nbsp;'
     );
     $max_text_length = 12;
@@ -852,6 +901,7 @@ function phphoto_echo_admin_images($db) {
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'>
                     <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
             wordwrap(format_string($row['name']), 20, '<br>', true),
+            format_bool($row['active']),
             $row['width'].'x'.$row['height'].'<br>'.phphoto_image_aspect_ratio($row['width'], $row['height']),
             $row['galleries'],
             $row['tags'],
