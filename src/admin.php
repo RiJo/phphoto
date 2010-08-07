@@ -288,10 +288,12 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
                 // update gallery
                 $title = $_POST['title'];
                 $description = $_POST['description'];
+                $active = (isset($_POST['active'])) ? 'TRUE' : 'FALSE';
 
-                $sql = sprintf("UPDATE galleries SET title = '%s', description = '%s' WHERE id = %s",
+                $sql = sprintf("UPDATE galleries SET title = '%s', description = '%s', active = %s WHERE id = %s",
                         mysql_real_escape_string($title, $db),
                         mysql_real_escape_string($description, $db),
+                        $active,
                         $gallery_id);
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message(phphoto_text($db, 'gallery', 'updated'), 'info');
@@ -344,7 +346,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     array_push($table_data, array(phphoto_text($db, 'header', 'images'),        $gallery_data['images']));
     array_push($table_data, array(phphoto_text($db, 'header', 'title'),         "<input type='input' name='title' maxlength='255' value='$gallery_data[title]'>"));
     array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$gallery_data[description]</textarea>"));
-    array_push($table_data, array(phphoto_text($db, 'header', 'active'),        format_bool($gallery_data['active'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'active'),        "<input type='checkbox' name='active'".(($gallery_data['active'])?' checked':'').">"));
     array_push($table_data, array(phphoto_text($db, 'header', 'changed'),       format_date_time($gallery_data['changed'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'created'),       format_date_time($gallery_data['created'])));
     array_push($table_data, array('&nbsp;',                                     "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
@@ -527,10 +529,12 @@ function phphoto_echo_admin_tag($db, $tag_id) {
                 // update tag
                 $name = $_POST['name'];
                 $description = $_POST['description'];
+                $active = (isset($_POST['active'])) ? 'TRUE' : 'FALSE';
 
-                $sql = sprintf("UPDATE tags SET name = '%s', description = '%s' WHERE id = %s",
+                $sql = sprintf("UPDATE tags SET name = '%s', description = '%s', active = %s WHERE id = %s",
                         mysql_real_escape_string($name, $db),
                         mysql_real_escape_string($description, $db),
+                        $active,
                         $tag_id);
                 if (phphoto_db_query($db, $sql) == 1) {
                     phphoto_popup_message(phphoto_text($db, 'tag', 'updated'), 'info');
@@ -577,7 +581,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $table_data = array();
     array_push($table_data, array(phphoto_text($db, 'header', 'name'), "<input type='input' name='name' maxlength='255' value='$tag_data[name]'>"));
     array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$tag_data[description]</textarea>"));
-    array_push($table_data, array(phphoto_text($db, 'header', 'active'), format_bool($tag_data['active'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'active'),        "<input type='checkbox' name='active'".(($tag_data['active'])?' checked':'').">"));
     array_push($table_data, array(phphoto_text($db, 'header', 'changed'), format_date_time($tag_data['changed'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'created'), format_date_time($tag_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
@@ -733,9 +737,12 @@ function phphoto_echo_admin_image($db, $image_id) {
             // update image
             $title = $_POST['title'];
             $description = $_POST['description'];
-            $sql = sprintf("UPDATE images SET title = '%s', description = '%s' WHERE id = %s",
+            $active = (isset($_POST['active'])) ? 'TRUE' : 'FALSE';
+
+            $sql = sprintf("UPDATE images SET title = '%s', description = '%s', active = %s WHERE id = %s",
                     mysql_real_escape_string($title, $db),
                     mysql_real_escape_string($description, $db),
+                    $active,
                     $image_id);
             if (phphoto_db_query($db, $sql) == 1) {
                 phphoto_popup_message(phphoto_text($db, 'image', 'updated'), 'info');
@@ -831,7 +838,7 @@ function phphoto_echo_admin_image($db, $image_id) {
     array_push($table_data, array(phphoto_text($db, 'header', 'tags'),          implode('<br>', $tag_names)));
     array_push($table_data, array(phphoto_text($db, 'header', 'title'),         "<input type='input' name='title' maxlength='255' value='$image_data[title]'>"));
     array_push($table_data, array(phphoto_text($db, 'header', 'description'),   "<textarea name='description'>$image_data[description]</textarea>"));
-    array_push($table_data, array(phphoto_text($db, 'header', 'active'),        format_bool($image_data['active'])));
+    array_push($table_data, array(phphoto_text($db, 'header', 'active'),        "<input type='checkbox' name='active'".(($image_data['active'])?' checked':'').">"));
     array_push($table_data, array(phphoto_text($db, 'header', 'changed'),       format_date_time($image_data['changed'])));
     array_push($table_data, array(phphoto_text($db, 'header', 'created'),       format_date_time($image_data['created'])));
     array_push($table_data, array('&nbsp;',         "<input type='submit' value='".phphoto_text($db, 'button', 'update')."'>"));
