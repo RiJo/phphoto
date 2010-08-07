@@ -396,7 +396,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
         SELECT
             id,
             IF (LENGTH(title) > 0, title, filename) AS name,
-            description
+            active
         FROM
             images
         WHERE
@@ -406,7 +406,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $header = array(
         phphoto_text($db, 'header', 'thumbnail'),
         phphoto_text($db, 'header', 'name'),
-        phphoto_text($db, 'header', 'description'),
+        phphoto_text($db, 'header', 'active'),
         '&nbsp;'
     );
     $images = array();
@@ -414,7 +414,7 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
         array_push($images, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
             $row['name'],
-            $row['description'],
+            format_bool($row['active']),
             "<a href='".CURRENT_PAGE.'?'.
                     GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.
                     GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.
@@ -631,7 +631,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
         SELECT
             id,
             IF (LENGTH(title) > 0, title, filename) AS name,
-            description
+            active
         FROM
             images
         WHERE
@@ -641,7 +641,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $header = array(
         phphoto_text($db, 'header', 'thumbnail'),
         phphoto_text($db, 'header', 'name'),
-        phphoto_text($db, 'header', 'description'),
+        phphoto_text($db, 'header', 'active'),
         '&nbsp;'
     );
     $images = array();
@@ -649,7 +649,7 @@ function phphoto_echo_admin_tag($db, $tag_id) {
         array_push($images, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
             $row['name'],
-            $row['description'],
+            format_bool($row['active']),
             "<a href='".CURRENT_PAGE.'?'.
                     GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_TAG.'&'.
                     GET_KEY_OPERATION.'='.GET_VALUE_DELETE.'&'.
