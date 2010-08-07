@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 
     phphoto
-    current version:    1.5.0
+    current version:    1.6.0
     by:                 Rikard Johansson
     bugs:               http://bugs.hermit.se/index.php?project=6
 
@@ -76,7 +76,7 @@
 
 
 --------------------------------------------------------------------------------
-    version 1.6.0 xxxx-xx-xx
+    version 1.6.0 2010-08-07
 --------------------------------------------------------------------------------
     * Hide galleries/tags/images from first page
     * New settingsfile which can be changed with the user interface

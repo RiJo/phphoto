@@ -1,8 +1,8 @@
 <?php
 
 define('GALLERY_NAME',                      'phphoto');
-define('GALLERY_VERSION',                   '1.5.0');
-define('GALLERY_DATE',                      '2010-07-31');
+define('GALLERY_VERSION',                   '1.6.0');
+define('GALLERY_DATE',                      '2010-08-07');
 define('GALLERY_DEVELOPERS',                'RiJo');
 define('GALLERY_INDEX_PAGE',                'index.php');
 
