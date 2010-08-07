@@ -35,7 +35,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
                 INNER JOIN
             image_to_gallery
                 ON
-            (images.id = image_to_gallery.image_id)
+            (images.id = image_to_gallery.image_id AND active = TRUE)
         WHERE
             image_to_gallery.gallery_id = $gallery_id
         ORDER BY
@@ -112,7 +112,7 @@ function phphoto_echo_tag($db, $tag_id) {
                 INNER JOIN
             image_to_tag
                 ON
-            (images.id = image_to_tag.image_id)
+            (images.id = image_to_tag.image_id AND active = TRUE)
         WHERE
             image_to_tag.tag_id = $tag_id
         ORDER BY
@@ -177,6 +177,8 @@ function phphoto_echo_galleries($db) {
         FROM
             galleries g
         WHERE
+            active = TRUE
+            AND
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) > 0
         ORDER BY
             ".GALLERY_SORT_COLUMN."
@@ -190,6 +192,8 @@ function phphoto_echo_galleries($db) {
         FROM
             tags t
         WHERE
+            active = TRUE
+            AND
             (SELECT COUNT(*) FROM image_to_tag WHERE tag_id = t.id) > 0
         ORDER BY
             name
