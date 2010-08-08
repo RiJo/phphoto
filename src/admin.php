@@ -237,16 +237,20 @@ function phphoto_echo_admin_cameras($db) {
 
     foreach (phphoto_db_query($db, $sql) as $row) {
         $model = $row['ExifValue'];
-        if (strlen($model) > 0) {
-            $sql = "SELECT crop_factor FROM cameras WHERE model = '$model'";
-            $result = phphoto_db_query($db, $sql);
-            $crop_factor = (count($result) == 1) ? $result[0]['crop_factor'] : '-';
+        $sql = "SELECT crop_factor FROM cameras WHERE model = '$model'";
+        $result = phphoto_db_query($db, $sql);
+        $crop_factor = (count($result) == 1) ? $result[0]['crop_factor'] : '-';
 
-            $sql = phphoto_sql_exif_images('Model', $model);
-            $images = count(phphoto_db_query($db, $sql));
-
-            array_push($table_data, array($model, $crop_factor, $images));
+        if ($model == '') {
+            $sql = phphoto_sql_exif_images('Model');
+            $model = '-';
         }
+        else {
+            $sql = phphoto_sql_exif_images('Model', $model);
+        }
+        $images = count(phphoto_db_query($db, $sql));
+
+        array_push($table_data, array($model, $crop_factor, $images));
     }
 
     echo "\n<div class='admin'>";

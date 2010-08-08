@@ -252,8 +252,6 @@ function phphoto_page_numbering($db, $page_number, $pages, $url_previous, $url_n
  * TBD
  */
 function phphoto_sql_exif_values($key) {
-    /// BUG: This should not return empty rows
-    /// when fixed: clean up phphoto_echo_admin_cameras()
     return "
         SELECT
             SUBSTRING(
@@ -270,15 +268,28 @@ function phphoto_sql_exif_values($key) {
 /*
  * TBD
  */
-function phphoto_sql_exif_images($key, $value) {
-    return "
-        SELECT
-            id
-        FROM
-            images
-        WHERE
-            LOCATE('\'$key\' => \'$value\'', exif) > 0
-    ";
+function phphoto_sql_exif_images($key, $value = null) {
+    if ($value == null) {
+        // Return all images where $key does not exist in EXIF data
+        return "
+            SELECT
+                id
+            FROM
+                images
+            WHERE
+                LOCATE('\'$key\' => \'', exif) = 0
+        ";
+    }
+    else {
+        return "
+            SELECT
+                id
+            FROM
+                images
+            WHERE
+                LOCATE('\'$key\' => \'$value\'', exif) > 0
+        ";
+    }
 }
 
 ?>
