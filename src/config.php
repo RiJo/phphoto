@@ -13,7 +13,6 @@ define('DATABASE_PORT',                     3306);
 define('DATABASE_NAME',                     'phphoto');
 define('DATABASE_USER',                     'foo');
 define('DATABASE_PASSWORD',                 'bar');
-define('DATABASE_TABLE_PREFIX',             ''); /* not implemented yet */
 
 define('GET_KEY_GALLERY_ID',                'gid');
 define('GET_KEY_TAG_ID',                    'tid');
