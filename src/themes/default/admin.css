@@ -103,7 +103,7 @@ table {
 }
 
 table tr td, table tr th {
-    padding: 3px;
+    padding: 2px;
     border-bottom: 1px #cccccc solid;
 }
 
@@ -128,6 +128,10 @@ table tbody tr.row0 td {
 
 table tbody tr.row1 td {
     background-color: #dddddd;
+}
+
+table tbody tr td img.thumbnail {
+    border: 1px solid #cccccc;
 }
 
 /*

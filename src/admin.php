@@ -416,7 +416,8 @@ function phphoto_echo_admin_gallery($db, $gallery_id) {
     $images = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($images, array(
-            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'>
+                    <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' class='thumbnail' /></a>",
             $row['name'],
             format_bool($row['active']),
             "<a href='".CURRENT_PAGE.'?'.
@@ -480,7 +481,7 @@ function phphoto_echo_admin_galleries($db) {
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_GALLERY.'&'.GET_KEY_GALLERY_ID."=$row[id]'>
-                    <img src='image.php?".GET_KEY_GALLERY_ID."=$row[id]' /></a>",
+                    <img src='image.php?".GET_KEY_GALLERY_ID."=$row[id]' class='thumbnail' /></a>",
             format_string($row['title']),
             format_bool($row['active']),
             $row['views']." (".round($row['popularity']*100)."%)",
@@ -651,7 +652,8 @@ function phphoto_echo_admin_tag($db, $tag_id) {
     $images = array();
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($images, array(
-            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'><img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
+            "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'>
+                    <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' class='thumbnail' /></a>",
             $row['name'],
             format_bool($row['active']),
             "<a href='".CURRENT_PAGE.'?'.
@@ -910,7 +912,7 @@ function phphoto_echo_admin_images($db) {
     foreach (phphoto_db_query($db, $sql) as $row) {
         array_push($data, array(
             "<a href='".CURRENT_PAGE.'?'.GET_KEY_ADMIN_QUERY.'='.GET_VALUE_ADMIN_IMAGE.'&'.GET_KEY_IMAGE_ID."=$row[id]'>
-                    <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' /></a>",
+                    <img src='image.php?".GET_KEY_IMAGE_ID."=$row[id]t' class='thumbnail' /></a>",
             wordwrap(format_string($row['name']), 20, '<br>', true),
             format_bool($row['active']),
             $row['width'].'x'.$row['height'].'<br>'.phphoto_image_aspect_ratio($row['width'], $row['height']),
