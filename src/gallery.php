@@ -163,7 +163,18 @@ function phphoto_echo_galleries($db) {
             title,
             description,
             (SELECT COUNT(*) FROM image_to_gallery WHERE gallery_id = g.id) AS images,
-            (SELECT MAX(changed) FROM image_to_gallery WHERE gallery_id = g.id) AS changed
+            
+            (SELECT MAX(changed) FROM
+                (
+                    (SELECT temp1.changed, temp1.id AS gallery_id FROM galleries temp1)
+                    UNION
+                    (SELECT temp2.changed, temp2.gallery_id FROM image_to_gallery temp2)
+                    UNION
+                    (SELECT (SELECT changed FROM images WHERE id = temp3.image_id) AS changed, temp3.gallery_id FROM image_to_gallery temp3)
+                ) temp
+                WHERE
+                    gallery_id = g.id
+            ) AS changed
         FROM
             galleries g
         WHERE

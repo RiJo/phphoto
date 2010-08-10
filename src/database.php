@@ -17,7 +17,7 @@ function phphoto_db_query($db, $sql) {
     if (!$db || !$sql)
         return false;
     if (!$result = mysql_query($sql, $db))
-        die('Invalid SQL: '.$sql);
+        die('Invalid SQL: '.$sql.'<br><br>'.mysql_error());
     if ($result === true || $result === false)
         return ($result) ? mysql_affected_rows($db) : false;
     $result_array = array();
