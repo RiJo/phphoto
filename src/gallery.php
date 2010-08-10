@@ -66,7 +66,7 @@ function phphoto_echo_gallery($db, $gallery_id) {
             $exif = format_camera_settings($exif);
         }
         if (!$image['exif'] || !$exif) {
-            $exif = NO_EXIF_DATA;
+            $exif = phphoto_text($db, 'common', 'no_exif_data');
         }
         echo "\n    <div class='image'>";
         echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";
@@ -143,7 +143,7 @@ function phphoto_echo_tag($db, $tag_id) {
             $exif = format_camera_settings($exif);
         }
         if (!$image['exif'] || !$exif) {
-            $exif = NO_EXIF_DATA;
+            $exif = phphoto_text($db, 'common', 'no_exif_data');
         }
         echo "\n    <div class='image'>";
         echo "\n        <a href='image.php?".GET_KEY_IMAGE_ID."=$image[id]'>";

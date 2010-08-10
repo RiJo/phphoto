@@ -38,8 +38,7 @@ define('INVALID_ID',                        -1);
 define('CURRENT_PAGE',                      basename($_SERVER['PHP_SELF']));
 define('CURRENT_QUERY',                     $_SERVER['QUERY_STRING']);
 define('CURRENT_URL',                       CURRENT_PAGE.'?'.CURRENT_QUERY);
-define('VARIABLE_NOT_SET',                  '-');
-define('NO_EXIF_DATA',                      '(no exif data)');
+
 define('DEFAULT_ITEMS_PER_PAGE',            20); // only on admin pages
 
 define('IMAGE_TEMP_FILE',                   '/tmp/phphoto.tmp');

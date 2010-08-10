@@ -243,7 +243,7 @@ function phphoto_echo_admin_cameras($db) {
 
         if ($model == '') {
             $sql = phphoto_sql_exif_images('Model');
-            $model = NO_EXIF_DATA;
+            $model = phphoto_text($db, 'common', 'no_exif_data');
         }
         else {
             $sql = phphoto_sql_exif_images('Model', $model);
